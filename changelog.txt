@@ -1,9 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2021-12-02
+    - Balance fixes (1 biomass unit => 1 military science pack, and 90% chance to collect) and smaller creep areas generated, because Rampant1.* enemies are sieging a lot providing tons of creep.
+    - Creep can't be collected near nests and worms anymore (other abuses are sill possible, e.g. replace with path tiles).
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2021-11-30
   Features:
     - Alpha version
 	- Creep pollution absorption per tile is set as 5 dead trees (100 times less than in K2)
 	- Biters research output set to make 4 science packs per biomass unit and 40 via bio-lab.
-	Rampant agression abuse allows to collect up to 1k biomass in 10 minutes of middle-game (400% bases frequency, 10 max tier of new enemies, 70% evo, MK3 armor).
-	Need to validate this Rampant abuse possibility with 150% bases frequency.
+Rampant agression abuse allows to collect up to 1k biomass in 10 minutes of middle-game (400% bases frequency, 10 max tier of new enemies, 70% evo, MK3 armor).
+Need to validate this Rampant abuse possibility with 150% bases frequency.

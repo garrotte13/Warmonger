@@ -1,9 +1,10 @@
 {
 	"name": "Warmonger",
-	"version": "1.0",
+	"version": "1.0.1",
 	"title": "Warmonger",
 	"description": "Adding creep from K2 and biosubstance for vanilla military science",
 	"author": "garrotte",
+	"homepage" : "https://mods.factorio.com/mod/Warmonger",
 	"factorio_version": "1.1",
 	"dependencies":
 	[
