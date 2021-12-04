@@ -47,27 +47,25 @@ end)
 
 
 script.on_event(defines.events.on_built_entity, function(e)
-  corrosion.engaging(e.created_entity) 
-end, {{filter = "turret"}})
-
+  corrosion.engaging(e.created_entity)
+--end, {{filter = "turret"}})
+end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
-  corrosion.disengaging(e.entity) 
-end, {{filter = "turret"}})
+  corrosion.disengaging(e.entity)
+end)
 
 script.on_event(defines.events.on_entity_died, function(e)
-  corrosion.disengaging(e.entity) 
-end, {{filter = "turret"}})
+  corrosion.disengaging(e.entity)
+end)
 
+script.on_event(defines.events.on_robot_mined_entity, function(e)
+  corrosion.disengaging(e.entity)
+end)
 
--- function on_preplayer_mined_item(event)
-    --struct_unmanage_entity(event.entity)
---end
-
---function on_entity_destroyed (event)
-  --  struct_unmanage_entity(event.entity)
---end
-
+script.on_event(defines.events.on_robot_built_entity, function(e)
+  corrosion.engaging(e.entity)
+end)
 
 
 event.on_biter_base_built(function(e)
