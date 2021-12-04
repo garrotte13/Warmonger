@@ -8,14 +8,14 @@ data:extend(
 		enabled = false,
 		ingredients =
 		{
-			{"biomass", 800},
+			{"biomass", 900},
 			{"steel-plate", 5},
 			{"iron-gear-wheel", 5},
 			{"pipe", 5},
 			{"electronic-circuit", 5}
 		},
-		result = "kr-bio-lab"		
-    },	
+		result = "kr-bio-lab"
+    },
 
 	{
 		type = "recipe",
@@ -26,12 +26,12 @@ data:extend(
 		ingredients =
 		{
 			{"stone-wall", 2},
-			{"biomass", 2}
+			{"biomass", 6}
 		},
 		result = "biters-research-data",
 		result_count = 1
 	},
-	
+
 	{
 		type = "recipe",
 		name = "kr-biomass-growing",
@@ -40,8 +40,8 @@ data:extend(
 		enabled = false,
 		ingredients =
 		{
-			{type = "item", name = "stone-wall", amount = 20},			
-			{type = "item", name = "biomass", amount = 2},
+			{type = "item", name = "stone-wall", amount = 20},
+			{type = "item", name = "biomass", amount = 6},
 			{type = "fluid", name = "sulfuric-acid", amount = 10 }
 		},
 		result = "biters-research-data",

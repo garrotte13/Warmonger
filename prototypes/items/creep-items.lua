@@ -41,7 +41,7 @@ data:extend(
 			condition_size = 1,
 			condition = { "water-tile" }
 		},
-		stack_size = 200
+		stack_size = 400
 	},
 
 	{
@@ -78,12 +78,12 @@ data:extend(
     },
 		fuel_category = "chemical",
 		fuel_value = "2MJ",
-		fuel_emissions_multiplier = 0.8,
+		fuel_emissions_multiplier = 2.0,
 		fuel_acceleration_multiplier = 0.8,
 		fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
 		order = "a[biomass]",
-		stack_size = 200
+		stack_size = 400
 	},
 	
   {
