@@ -13,3 +13,6 @@ for i, component in pairs(militaryrecipe.ingredients) do
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 	
 -- military-recipe.ingredients[2] = {type="item", name=, amount=1}
+
+
+-- data.raw.item.concrete.condition = {"water-tile", "layer-55"}

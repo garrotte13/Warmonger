@@ -5,9 +5,13 @@ local on_tick_n = require("__flib__.on-tick-n")
 
 local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
+-- local mining_creep = require("scripts.mining_creep")
 local creep = require("scripts.creep")
+local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
 local util = require("scripts.util")
+
+util.add_commands(corrosion.commands)
 
 remote.add_interface("kr-creep", creep.remote_interface)
 
@@ -17,13 +21,52 @@ event.on_init(function()
   -- Initialize libraries
   on_tick_n.init()
 
-  -- Initialize `global` table
   creep.init()
+  corrosion.init()
 
   -- Initialize mod
   migrations.generic()
 end)
 
+event.on_nth_tick(60, function(e)
+ corrosion.affecting()
+end)
+
+event.on_configuration_changed(function(e)
+	game.print("Mod Warmonger changed.")
+  corrosion.init()
+    migrations.generic()
+  
+end)
+
+event.on_load(function()
+-- game.print("Mod Warmonger loads data from gamesave")
+-- corrosion = global.corrosion
+end)
+
+
+
+script.on_event(defines.events.on_built_entity, function(e)
+  corrosion.engaging(e.created_entity) 
+end, {{filter = "turret"}})
+
+
+script.on_event(defines.events.on_player_mined_entity, function(e)
+  corrosion.disengaging(e.entity) 
+end, {{filter = "turret"}})
+
+script.on_event(defines.events.on_entity_died, function(e)
+  corrosion.disengaging(e.entity) 
+end, {{filter = "turret"}})
+
+
+-- function on_preplayer_mined_item(event)
+    --struct_unmanage_entity(event.entity)
+--end
+
+--function on_entity_destroyed (event)
+  --  struct_unmanage_entity(event.entity)
+--end
 
 
 
@@ -39,8 +82,6 @@ event.register({
   local player = game.get_player(e.player_index)
   if e.item == "kr-creep-collector" then
     creep_collector.collect(player, e.surface, e.tiles, e.area)
---  elseif e.item == "kr-jackhammer" then
---    jackhammer.collect(player, e.surface, e.tiles, e.area)
   end
 end)
 

@@ -6,7 +6,7 @@ require("__Warmonger__/prototypes/items/creep-items")
 require("__Warmonger__/prototypes/recipes/creep-recipes")
 require("__Warmonger__/prototypes/technologies/biomass-tech")
 require("__Warmonger__/prototypes/sounds/sounds")
-require("__Warmonger__/prototypes/tiles/creep")
+require("__Warmonger__/prototypes/tiles/creep-tile")
 
 
 require("__Warmonger__/prototypes/others/key-bind-initialization")

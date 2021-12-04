@@ -6,21 +6,44 @@ local constants = require("scripts.constants")
 local util = require("scripts.util")
 
 local creep_collector = {}
-local enemies_found = 0
+
 
 function creep_collector.collect(player, surface, tiles, sel_area)
   local i = 0
+  local enemies_found = 0
   local tiles_to_set = {}
   local player_pos = player.position
+  local max_cr_range = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*10)
   
+ 
+  -- for non-Rampant way
   local protecting_entities_types = {"unit-spawner", "turret"}
   local prot_area = sel_area
-  area.expand (prot_area, constants.creep_max_range)
-  enemies_found = surface.count_entities_filtered{
+  area.expand (prot_area, max_cr_range)
+  enemies_found = enemies_found + surface.count_entities_filtered{
 	    area = prot_area,
 		type = protecting_entities_types,
 		force = "enemy"
 	}
+  -- end of non-Rampant way
+ 
+   -- Additional restrictions for Rampant
+ if settings.startup["rampant--newEnemies"].value and enemies_found==0 then 
+	area.expand (prot_area, 11)
+	local away_spawners = surface.find_entities_filtered{
+	    area = prot_area,
+		type = {"unit-spawner"},		
+		force = "enemy"
+	}
+	for _, entity in pairs(away_spawners) do
+	 if string.match (entity.name, "hive") then
+	  enemies_found = -1
+	  break
+	 end
+	end
+ end
+ -- End of Rampant's additional restrictions
+  
  if enemies_found == 0 then   
   for _, tile in pairs(tiles) do
     if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then
@@ -48,7 +71,10 @@ function creep_collector.collect(player, surface, tiles, sel_area)
    if enemies_found == 0 then
       util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = area.center(sel_area) })
    else
-      util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = area.center(sel_area) })
+    if enemies_found >0 then util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = area.center(sel_area) })
+	else
+	 util.flying_text_with_sound(player, { "message.wm-hived-creep-in-selection" }, { position = area.center(sel_area) })
+	end
    end
   end
 end
