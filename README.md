@@ -12,6 +12,8 @@ Creep must be harvested for military technologies progress. In the endgame less 
 
 Changes comparing to K2 feature:
 - creep absorbs much less pollution,
+- creep damages buildings (turrel creep requires repairing), can be turned off in console with command "/disable-corrosion"
+- creep can be collected only after purging enemy nests and worms nearby (for New Enemies it's all adjacent chunks must be clear). Abuse with path tiles replacement is allowed.
 - biters are immune to any viruses,
 - no peaceful game mode is expected. There are a lot of Factorio great mods for pure automation joy (Krastorio2, IR2, AAI-Industry, SE, B&A and many others).
 
