@@ -6,6 +6,7 @@ Date: 2021-12-05
     - Balance. Reducing to 5 biomass units for every 2 military science packs.
     - Balance. Creep footprint grows a little faster with evo.
     - Fixed Warmonger world map creep-collector abuse, because it can happen unintentionally unlike replacing with path tiles.
+    - Fixed crash on robot placing building ( Thanks to illiander42 )
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2021-12-05
