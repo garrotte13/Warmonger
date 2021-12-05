@@ -16,13 +16,13 @@ function corrosion.engaging (entity)
  local turret_area = entity.selection_box
  area.ceil(turret_area)
  local surface = entity.surface
- game.print("Installed building of name: " .. entity.name .. " located at top left x:" .. turret_area.left_top.x .. " y:" .. turret_area.left_top.y .. ", bottom right x:" .. turret_area.right_bottom.x .. " y:" .. turret_area.right_bottom.y)
+ -- game.print("Installed building of name: " .. entity.name .. " located at top left x:" .. turret_area.left_top.x .. " y:" .. turret_area.left_top.y .. ", bottom right x:" .. turret_area.right_bottom.x .. " y:" .. turret_area.right_bottom.y)
  local creep_amount = 0
  creep_amount = surface.count_tiles_filtered{
  area = turret_area,
  name = "kr-creep"
  }
- game.print("How many creep tiles are under this building: " .. creep_amount)
+ -- game.print("How many creep tiles are under this building: " .. creep_amount)
  if creep_amount > 0 then
   global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = entity
   global.corrosion.affected_num = global.corrosion.affected_num + 1
@@ -34,12 +34,12 @@ function corrosion.disengaging (entity)
  if (not global.corrosion.enabled) or (entity.force.name~="player") then return end
  local turret_area = entity.selection_box
  area.ceil(turret_area)
- game.print("Disappeared object of name: " .. entity.name)
+ -- game.print("Disappeared object of name: " .. entity.name)
 
   if global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
     global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = nil
     global.corrosion.affected_num = global.corrosion.affected_num - 1
-    game.print("Creep was underneath. Objects tortured left:" .. global.corrosion.affected_num)
+    -- game.print("Creep was underneath. Objects tortured left:" .. global.corrosion.affected_num)
   end
 end
 
@@ -81,12 +81,12 @@ function corrosion.update_tiles(surface)
       if creep_amount == 0 then
         global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil
         global.corrosion.affected_num = global.corrosion.affected_num - 1
-        game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)        
+        -- game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)        
       end
     end
  end
- game.print("Objects tortured left:" .. global.corrosion.affected_num)
- game.print("Objects tortured processed:" .. i)
+ -- game.print("Objects tortured left:" .. global.corrosion.affected_num)
+ -- game.print("Objects tortured processed:" .. i)
 end
 
 return corrosion

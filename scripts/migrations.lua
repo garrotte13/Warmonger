@@ -13,20 +13,9 @@ function migrations.generic()
 
 end
 
-local function find_on_all_surfaces(filters)
-  local output = {}
-  for _, surface in pairs(game.surfaces) do
-    local entities = surface.find_entities_filtered(filters)
-    for _, entity in pairs(entities) do
-      table.insert(output, entity)
-    end
-  end
-  return output
-end
-
 migrations.versions = {
   ["1.0.1"] = function()
- game.print("Mod Warmonger changed from 1.0.1")
+-- game.print("Mod Warmonger changed from 1.0.1")
     local old_global = global
     global = {}
 

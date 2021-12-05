@@ -19,8 +19,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   local prot_area = sel_area
   area.ceil(prot_area)
 
-  if settings.startup["rampant--newEnemies"].value then -- we miss for Rampant interface and search for nearby bases chunks
-  -- reaching hives before taking outbounding chunks
+  if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then -- we miss for Rampant interface and search for nearby bases chunks
   -- aligning to external border of a chunk
   -- adding a chunk
     prot_area.left_top.x = math.floor((prot_area.left_top.x)/32)*32 - 32
@@ -30,7 +29,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   else
     area.expand (prot_area, max_cr_range) -- checking only for creep spawners in easy game
   end
-  -- 
+
   enemies_found = enemies_found + surface.count_entities_filtered{
 	    area = prot_area,
 		type = protecting_entities_types,
