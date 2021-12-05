@@ -64,7 +64,7 @@ script.on_event(defines.events.on_robot_mined_entity, function(e)
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
-  corrosion.engaging(e.entity)
+  corrosion.engaging(e.created_entity)
 end)
 
 
