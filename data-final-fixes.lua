@@ -1,6 +1,5 @@
 
 local militaryrecipe = data.raw.recipe["military-science-pack"]
-
 for i, component in pairs(militaryrecipe.ingredients) do
       for _, value in pairs(component) do
         if value == "stone-wall" then
@@ -8,6 +7,7 @@ for i, component in pairs(militaryrecipe.ingredients) do
           break
         end
       end
-    end
+end
 
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
+table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="biomass", amount=1})

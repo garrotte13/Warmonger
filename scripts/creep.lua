@@ -11,7 +11,7 @@ local function generate_creep(entities)
     return
   end
 
-  local radius = math.random(3, (constants.creep_max_range + math.floor(game.forces.enemy.evolution_factor*10)))
+  local radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
   local to_add = {}
   local i = 0
   for _, entity in pairs(entities) do
@@ -85,7 +85,7 @@ creep.remote_interface = {
     if not global.creep.surfaces[surface.index] and not override then
       return
     end
-    local radius = math.random(3, (constants.creep_max_range + math.floor(game.forces.enemy.evolution_factor*10)))
+    local radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
     surface.set_tiles(table.map(surface.find_tiles_filtered({ position = position, radius = radius }), function(tile)
       if not global.creep then
         return

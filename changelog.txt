@@ -1,9 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.1
+Date: 2021-12-05
+  Changes:
+    - Poison capsule now additionally requires 1 biomass. A small change for vanilla, but a crucial one for Rampant Arsenal.
+    - Balance. Reducing to 5 biomass units for every 2 military science packs.
+    - Balance. Creep footprint grows a little faster with evo.
+    - Fixed Warmonger world map creep-collector abuse, because it can happen unintentionally unlike replacing with path tiles.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.0
 Date: 2021-12-05
   Changes:
     - Balance fixes (3 biomass into 1 military science pack, 95% chance to collect, stack 400). Should be good now.
-    - Creep gathering is more restricted for Rampant new enemies mode (Free adjacent chunks are required).
+    - Creep footprint slowly increases with evolution. Together with Rampant 1.2.0 enemy structures upgrade it will foster creep areas for old bases.
+    - Creep gathering is more restricted for Rampant new enemies mode (Free adjacent chunks are required). For no 'new enemies' game old miserable restriction slowly grows with evo.
     - Creep damages buildings (10% per second, but 5+ hp will be left).
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.1

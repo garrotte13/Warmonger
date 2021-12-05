@@ -26,7 +26,7 @@ data:extend(
 		ingredients =
 		{
 			{"stone-wall", 2},
-			{"biomass", 6}
+			{"biomass", 5}
 		},
 		result = "biters-research-data",
 		result_count = 1
@@ -41,7 +41,7 @@ data:extend(
 		ingredients =
 		{
 			{type = "item", name = "stone-wall", amount = 20},
-			{type = "item", name = "biomass", amount = 6},
+			{type = "item", name = "biomass", amount = 5},
 			{type = "fluid", name = "sulfuric-acid", amount = 10 }
 		},
 		result = "biters-research-data",

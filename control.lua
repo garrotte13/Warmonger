@@ -33,7 +33,7 @@ event.on_nth_tick(60, function(e)
 end)
 
 event.on_configuration_changed(function(e)
-	game.print("Mod Warmonger changed.")
+-- game.print("Mod Warmonger changed.")
   corrosion.init()
     migrations.generic()
   
@@ -78,7 +78,7 @@ event.register({
   defines.events.on_player_alt_selected_area,
 }, function(e)
   local player = game.get_player(e.player_index)
-  if e.item == "kr-creep-collector" then
+  if (e.item == "kr-creep-collector") and (player.render_mode == defines.render_mode.game) then
     creep_collector.collect(player, e.surface, e.tiles, e.area)
   end
 end)

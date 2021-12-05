@@ -1,10 +1,10 @@
 local constants = {}
 
 constants.creep_collection_rate = {
-  min = 85,
+  min = 90,
   max = 95,
 }
-constants.creep_max_range = 5 
-constants.creep_max_reach = 8
+constants.creep_max_range = 6
+constants.creep_max_reach = 9
 
 return constants

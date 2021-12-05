@@ -12,6 +12,7 @@ Creep must be harvested for military technologies progress. In the endgame less 
 
 Changes comparing to K2 feature:
 - creep absorbs much less pollution,
+- creep footprint grows with evolution,
 - creep damages buildings (turrel creep requires repairing), can be turned off in console with command "/disable-corrosion"
 - creep can be collected only after purging enemy nests and worms nearby (for New Enemies it's all adjacent chunks must be clear). Abuse with path tiles replacement is allowed.
 - biters are immune to any viruses,
@@ -20,4 +21,4 @@ Changes comparing to K2 feature:
 Mod is tested for compatibility with Rampant, Rampant Arsenal and Rampant Industry. I use SpaceX for endgame, but would be glad to find alternative (no luck so far).
 Rampant New Enemies mode is not conflicting with creep generation.
 
-Future plans - test and fix balance. Maybe make creep to bring pain not only to shotgun fans.
+Future plans - test and fix balance.
