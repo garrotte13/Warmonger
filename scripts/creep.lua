@@ -30,6 +30,9 @@ function creep.init()
   global.creep = {
     on_biter_base_built = true,
     on_chunk_generated = true,
+    creep_id_counter = 0,
+    last_creep_id_counter = 0,
+    creep_queue = {},
     surfaces = { [game.get_surface("nauvis").index] = true },
   }
 end
@@ -50,6 +53,49 @@ function creep.on_chunk_generated(chunk_area, surface)
   for _, entity in pairs(entities) do
     generate_creep({ entity })
   end
+end
+
+function creep.update()
+    if not global.creep.creep_id_counter then
+        -- THIS NEEDS TO BE MOVED TO THE control.lua
+        script.on_event(defines.events.on_tick, function()
+                creep.process_creep_queue()
+        end)
+        --
+        global.creep.creep_id_counter = 1
+    end
+    if not global.creep.last_creep_id_counter then
+        global.creep.last_creep_id_counter = 1
+    end
+    if not global.creep.creep_queue then
+        global.creep.creep_queue = {}
+    end
+end
+
+function creep.process_creep_queue()
+    if global.creep.creep_id_counter == global.creep.last_creep_id_counter then
+        return
+    end
+
+    local creep_pack = global.creep.creep_queue[global.creep.last_creep_id_counter]
+    if creep_pack.stage == 0 then
+        creep_pack.tiles = creep_pack.surface.find_tiles_filtered({
+                position = creep_pack.position,
+                radius = creep_pack.radius,
+                collision_mask={"ground-tile"}
+        })
+        creep_pack.stage = 1
+    elseif creep_pack.stage == 1 then
+        creep_pack.creep_tiles = {}
+        for i=1,#creep_pack.tiles do
+            creep_pack.creep_tiles[i] = { name = "kr-creep", position = creep_pack.tiles[i].position }
+        end
+        creep_pack.stage = 2
+    elseif creep_pack.stage == 2 then
+        creep_pack.surface.set_tiles(creep_pack.creep_tiles)
+        global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
+        global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
+    end
 end
 
 creep.remote_interface = {
@@ -85,15 +131,17 @@ creep.remote_interface = {
     if not global.creep.surfaces[surface.index] and not override then
       return
     end
-    local radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
-    surface.set_tiles(table.map(surface.find_tiles_filtered({ position = position, radius = radius }), function(tile)
-      if not global.creep then
-        return
-      end
-      if not tile.collides_with("player-layer") then
-        return { name = "kr-creep", position = tile.position }
-      end
-    end))
+    -- THIS NEEDS TO BE MOVED INTO THE MIGRATION FOR FLIB
+    creep.update()
+    --
+
+    global.creep.creep_queue[global.creep.creep_id_counter] = {
+        radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10),
+        position = position,
+        stage = 0,
+        surface = surface
+    }
+    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end,
 }
 
