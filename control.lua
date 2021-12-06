@@ -33,14 +33,13 @@ event.on_nth_tick(60, function(e)
 end)
 
 event.on_configuration_changed(function(e)
--- game.print("Mod Warmonger changed.")
+-- game.print("Mod Warmonger version or config changed.")
   corrosion.init()
     migrations.generic()
   
 end)
 
 event.on_load(function()
--- game.print("Mod Warmonger loads data from gamesave")
 -- corrosion = global.corrosion
 end)
 
@@ -72,6 +71,9 @@ event.on_biter_base_built(function(e)
   creep.on_biter_base_built(e.entity)
 end)
 
+script.on_event(defines.events.on_tick, function()
+  creep.process_creep_queue()
+end)
 
 event.register({
   defines.events.on_player_selected_area,

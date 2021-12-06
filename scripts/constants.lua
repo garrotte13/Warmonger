@@ -5,6 +5,6 @@ constants.creep_collection_rate = {
   max = 95,
 }
 constants.creep_max_range = 6
-constants.creep_max_reach = 9
+constants.creep_max_reach = 10
 
 return constants

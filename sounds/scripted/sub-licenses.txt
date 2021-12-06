@@ -1,0 +1,12 @@
+Files in this folder:
+
+- enemy_blocks_creep.wav
+CC0 1.0 license
+Public Domain Dedication
+
+
+- acid_burns.ogg
+CC BY 3.0 license
+Track was modified to be of shorter length and to accidently make fun vs vanilla factorio animation :-)
+Author and source
+https://freesound.org/people/Chinouk211/sounds/592692/

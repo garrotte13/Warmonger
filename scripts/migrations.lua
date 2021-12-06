@@ -9,7 +9,7 @@ local migrations = {}
 
 function migrations.generic()
 
-
+  creep.update()
 
 end
 

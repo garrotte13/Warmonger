@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.2
+Date: 2021-12-?
+  Changes:
+    - API-triggered creep generation changed to work slower in queue. Thanks a lot to Veden! That should be a performance fix for late game with 1k+ Rampant nests/worms on map.
+    - Added distinctive sound for creep collecting blocked by natives nearby.
+    - Added experimental sound for corrosion. Unintentionally was synced with Factorio vanilla animation :-)
+    - Removed chunk alignment for Rampant new enemies mode creep protection. 2 chunks radius.
+    - Balance. 7 biomass units for every 2 military science packs. I gather up to 1200 biomass from one biters base (~11 nests, ~12 worms) - quite a lot even for double tech cost difficulty.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 2021-12-05
   Changes:

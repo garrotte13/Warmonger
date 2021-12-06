@@ -11,7 +11,7 @@ local function generate_creep(entities)
     return
   end
 
-  local radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
+  local radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
   local to_add = {}
   local i = 0
   for _, entity in pairs(entities) do
@@ -57,11 +57,6 @@ end
 
 function creep.update()
     if not global.creep.creep_id_counter then
-        -- THIS NEEDS TO BE MOVED TO THE control.lua
-        script.on_event(defines.events.on_tick, function()
-                creep.process_creep_queue()
-        end)
-        --
         global.creep.creep_id_counter = 1
     end
     if not global.creep.last_creep_id_counter then
@@ -131,12 +126,9 @@ creep.remote_interface = {
     if not global.creep.surfaces[surface.index] and not override then
       return
     end
-    -- THIS NEEDS TO BE MOVED INTO THE MIGRATION FOR FLIB
-    creep.update()
-    --
 
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-        radius = math.random(3, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10),
+        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*10),
         position = position,
         stage = 0,
         surface = surface

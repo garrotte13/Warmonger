@@ -8,6 +8,9 @@ for i, component in pairs(militaryrecipe.ingredients) do
         end
       end
 end
-
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="biomass", amount=1})
+
+-- RampantArsenal
+-- table.insert( data.raw.recipe["repair"].normal.ingredients, {type="item", name="biomass", amount=2} )
+--

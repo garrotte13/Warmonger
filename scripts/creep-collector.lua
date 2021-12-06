@@ -14,18 +14,14 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   local enemies_found = 0
   local tiles_to_set = {}
   local player_pos = player.position
-  local max_cr_range = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*10)
+  local max_cr_range = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*10) + 1
   local protecting_entities_types = {"unit-spawner", "turret"}
   local prot_area = sel_area
   area.ceil(prot_area)
 
-  if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then -- we miss for Rampant interface and search for nearby bases chunks
-  -- aligning to external border of a chunk
-  -- adding a chunk
-    prot_area.left_top.x = math.floor((prot_area.left_top.x)/32)*32 - 32
-    prot_area.left_top.y = math.floor((prot_area.left_top.y)/32)*32 - 32
-    prot_area.right_bottom.x = math.ceil((prot_area.right_bottom.x)/32)*32 + 32
-    prot_area.right_bottom.y = math.ceil((prot_area.right_bottom.y)/32)*32 + 32
+  if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then
+    -- we miss here for Rampant interface to find nearby bases (if it's possible to do in real time)
+    area.expand (prot_area, 64) -- checking 2 not-aligned chunks radius
   else
     area.expand (prot_area, max_cr_range) -- checking only for creep spawners in easy game
   end
@@ -35,7 +31,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
 		type = protecting_entities_types,
 		force = "enemy"
 	}
-  if enemies_found == 0 then   
+  if enemies_found == 0 then
    for _, tile in pairs(tiles) do
     if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then
       i = i + 1
@@ -62,7 +58,9 @@ function creep_collector.collect(player, surface, tiles, sel_area)
    if enemies_found == 0 then
       util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = area.center(sel_area) })
    else
-    util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = area.center(sel_area) })
+    util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = area.center(sel_area),
+     sound = { path = "creep-access-denied", volume_modifier = 1 },
+    })
    end
   end
 end

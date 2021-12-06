@@ -35,7 +35,6 @@ function corrosion.disengaging (entity)
  local turret_area = entity.selection_box
  area.ceil(turret_area)
  -- game.print("Disappeared object of name: " .. entity.name)
-
   if global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
     global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = nil
     global.corrosion.affected_num = global.corrosion.affected_num - 1
@@ -59,8 +58,12 @@ function corrosion.affecting()
  if not global.corrosion.enabled then return end
  for _, entity in pairs(global.corrosion.affected) do
   if entity.valid then
-  local dmg = math.floor( entity.health * ( 0.1 + game.forces.enemy.evolution_factor/10 ) )  -- at least 5 health will be left for biters/worms to finish
-  local recieved_dmg = entity.damage(dmg, "enemy", "acid")
+    local surface = entity.surface
+    local dmg = math.floor( entity.health * ( 0.1 + game.forces.enemy.evolution_factor/10 ) )  -- at least 5 health will be left for biters/worms to finish
+    local recieved_dmg = entity.damage(dmg, "enemy", "acid")
+    if recieved_dmg > 0 then
+      surface.play_sound{path = "acid_burns", position = entity.position}
+    end
   end
  end
 end
