@@ -15,7 +15,6 @@ local function generate_creep(entities)
   local to_add = {}
   local i = 0
   for _, entity in pairs(entities) do
-    ---@type LuaTile
     for _, tile in pairs(surface.find_tiles_filtered({ position = entity.position, radius = radius })) do
       if not tile.collides_with("player-layer") then
         i = i + 1

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.3
+Date: 2021-12-08
+  Changes:
+    - Rampant Arsenal repair capsule now requires 2 biomass => reactive mending walls and medic repair capsule will need biomass.
+    - Rampant Arsenal MK3 shield and armor also require some biomass.
+    - Rampant Industry air filter buildings and advanced repair pack now require biomass.
+---------------------------------------------------------------------------------------------------
 Version: 1.1.2
 Date: 2021-12-06
   Changes:
@@ -7,7 +14,7 @@ Date: 2021-12-06
     - Added experimental sound for corrosion. Unintentionally was synced with Factorio vanilla animation :-)
     - Removed chunk alignment for Rampant new enemies mode creep protection. 2 chunks radius.
     - Balance. 7 biomass units for every 2 military science packs. I gather up to 1200 biomass from one biters base (~11 nests, ~12 worms) - quite a lot even for double tech cost difficulty.
-    - IndustrialRevolution2 compatibility added. Not sure that I got mod idea properly (military science is available only in midgame, not many tech&items depend on it). Who plays with IR2, pls give feedback.
+    - Industrial Revolution 2 compatibility added. Not sure that I got mod idea properly (military science is available only in midgame, not many tech&items depend on it). Who plays with IR2, pls give feedback.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 2021-12-05

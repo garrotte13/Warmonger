@@ -1,31 +1,26 @@
-
 local militaryrecipe = data.raw.recipe["military-science-pack"]
-for i, component in pairs(militaryrecipe.ingredients) do
-      for _, value in pairs(component) do
-        if value == "stone-wall" then
-          militaryrecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
-          break
-        end
-      end
-end
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="biomass", amount=1})
 
--- if mods["RampantArsenal"] then
---   local repaircapsulerecipe = data.raw.recipe["repair"]
---   for i, component in pairs(repaircapsulerecipe.ingredients) do
---     for _, value in pairs(component) do
---       if value == "stone-wall" then I'm kidding
---         repaircapsulerecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
---         break
---       end
---     end
---   end
-  -- table.insert( data.raw.recipe["repair"].normal.ingredients, {type="item", name="biomass", amount=2} )
--- end
+-- log(serpent.dump(data.raw.recipe))
+
+if mods["RampantArsenal"] then
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3} )
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2500} )
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3500} )
+  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=600} )
+  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=800} )
+  --table.insert( data.raw.recipe[""].ingredients, {type="item", name="biomass", amount=3} )
+ end
+
+ if mods["RampantIndustry"] then
+  table.insert( data.raw.recipe["advanced-repair-pack-rampant-industry"].ingredients, {type="item", name="biomass", amount=2} )
+  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=300} )
+  table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=120} )
+ end
 
 if mods["IndustrialRevolution"] then
-  local militaryrecipe = data.raw.recipe["military-science-pack"]
   for i, component in pairs(militaryrecipe.ingredients) do
       for _, value in pairs(component) do
         if value == "gunpowder" then
@@ -43,7 +38,14 @@ if mods["IndustrialRevolution"] then
       end
     end
   end
-
   -- Bioprocessing recipe will be fixed later if anyone notices IR2 compatibility at all...
-
+else
+  for i, component in pairs(militaryrecipe.ingredients) do
+    for _, value in pairs(component) do
+      if value == "stone-wall" then
+        militaryrecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
+        break
+      end
+    end
+  end
 end

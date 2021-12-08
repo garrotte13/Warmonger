@@ -16,7 +16,7 @@ Changes comparing to K2 feature:
 - creep damages buildings (e.g. "turrel creep" requires timely repairing them), can be turned off in console with command "/disable-corrosion"
 - creep can be collected only after purging enemy nests and worms nearby (for New Enemies it's all adjacent chunks must be clear). Abuse with path tiles replacement is allowed.
 - biters are immune to any viruses,
-- no peaceful game mode is expected in any form. Biomass is heavily used in midgame and later on. There are a lot of Factorio great mods for pure automation joy (Krastorio2, IR2, AAI-Industry, SE, B&A and many others).
+- no peaceful game mode is expected in any form. Biomass is heavily used in midgame and later on for military science packs and Rampant Arsenal items. There are a lot of Factorio great mods for pure automation joy (Krastorio2, IR2, AAI-Industry, SE, B&A and many others).
 
 Mod is tested for compatibility with Rampant, Rampant Arsenal and Rampant Industry. I use SpaceX for endgame, but would be glad to find alternative (no luck so far).
 Rampant New Enemies mode is not conflicting with creep generation.
