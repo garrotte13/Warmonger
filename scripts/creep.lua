@@ -182,6 +182,18 @@ creep.remote_interface = {
       fake = true
   }
   global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+  end,
+
+  spawn_creep_tiles = function(surface, tiles, override)
+    if not global.creep then return end
+    if not global.creep.surfaces[surface.index] and not override then return end
+    global.creep.creep_queue[global.creep.creep_id_counter] = {
+      stage = 2,
+      surface = surface,
+      fake = true,
+      creep_tiles = tiles
+  }
+  global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end
 }
 
