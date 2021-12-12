@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 2021-12-12
+  Changes:
+    - Fixed a common problem (not only for Creeper2) - Gathering creep failed when no true creep was selected.
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 2021-12-12
   Changes:
