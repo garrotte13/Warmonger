@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 2021-12-12
+  Changes:
+    - Introducing another creep type ("fake creep") with no biomass derivatives, but the same creep in everything else. We need it to support Creeper mod fork and another planned Warmonger feature. And to turn off demotivating random collecting (see below).
+    - Changed creep deployment footprint: it's not a perfect circle anymore, but has some random elements in distal tiles - fake creep or no creep at all.
+    - Creep collector doesn't loose biomass anymore (was spoiling random ~10% biomass in 1.1.3 and ~50% in original Krastorio2). Should be a balance vs fake creep elements.
+    - Planted creep searches and initiates corrosion for player's buildings it touches (Rampant's SiegeAI, forked Creeper mod ?). Creep deployment speed has been decreased on 30% to negate possible performance issues.
+    - If Rampant New Enemies is On, creep is generated only via API now to avoid double creep generation. With Rampant 1.1.1 it leads to no creep around nests/worms in starting area chunks (fixed in Rampant 2.0).
+---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 2021-12-08
   Changes:

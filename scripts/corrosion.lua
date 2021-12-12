@@ -20,7 +20,7 @@ function corrosion.engaging (entity)
  local creep_amount = 0
  creep_amount = surface.count_tiles_filtered{
  area = turret_area,
- name = "kr-creep"
+ name = {"kr-creep", "fk-creep"}
  }
  -- game.print("How many creep tiles are under this building: " .. creep_amount)
  if creep_amount > 0 then
@@ -79,7 +79,7 @@ function corrosion.update_tiles(surface)
       local creep_amount = 0
       creep_amount = surface.count_tiles_filtered{
         area = obj_area,
-        name = "kr-creep"
+        name = {"kr-creep", "fk-creep"}
       }
       if creep_amount == 0 then
         global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil

@@ -34,13 +34,14 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   if enemies_found == 0 then
    for _, tile in pairs(tiles) do
     if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then
-      i = i + 1
+      if tile.name == "kr-creep" then i = i + 1 end -- fake creep doesn't give biomass
       tiles_to_set[i] = { name = tile.hidden_tile or "landfill", position = tile.position }
     end
    end
   end
   if i > 0 then
-    local percentage = math.random(constants.creep_collection_rate.min, constants.creep_collection_rate.max)
+    -- local percentage = math.random(constants.creep_collection_rate.min, constants.creep_collection_rate.max)
+    local percentage = 100 -- no random gathering anymore
     local collected_amount = math.ceil(i * (percentage / 100))
     local inventory = player.get_main_inventory()
     if inventory.can_insert({ name = "biomass", count = collected_amount }) then

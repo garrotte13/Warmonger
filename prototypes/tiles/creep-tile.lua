@@ -228,7 +228,7 @@ local creep_transitions_between_transitions =
 
 data:extend(
 {
-	{	
+	{
 		type = "tile",
 		name = "kr-creep",
 		order = "b-a-a",
@@ -261,5 +261,40 @@ data:extend(
 		
 		transitions = creep_transitions,
 		transitions_between_transitions = creep_transitions_between_transitions		
+	},
+
+	{
+		type = "tile",
+		name = "fk-creep", -- creep with no biomass inside
+		order = "b-a-a",
+		needs_correction = false,
+		can_be_part_of_blueprint = true,
+		collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
+		minable = {mining_time = 10, result = "biomass", probability = 0, amount = 1},
+		walking_speed_modifier = 0.35,
+		layer = 200,
+		transition_overlay_layer_offset = 3,
+		decorative_removal_probability = 0.35,
+		variants = tile_variations_template
+		(
+			"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
+			"__Warmonger__/graphics/tiles/creep/hr-creep.png", "__base__/graphics/terrain/masks/hr-transition-1.png",
+			{
+				max_size = 4,
+				[1] = { weights =                  {0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05 }, },
+				[2] = { probability = 1, weights = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05 }, },
+				[4] = { probability = 1, weights = {0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05 }, },
+			}
+		),		
+		map_color={r=80, g=60, b=65},
+		pollution_absorption_per_second = 0.00005,
+		vehicle_friction_modifier = 175,
+		
+		mined_sound = collect_creep_sound,
+		walking_sound = creep_walking_sound,
+		
+		transitions = creep_transitions,
+		transitions_between_transitions = creep_transitions_between_transitions		
 	}
+
 })
