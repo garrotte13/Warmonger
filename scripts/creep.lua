@@ -7,24 +7,20 @@ local creep = {}
 
 -- We can safely assume that all of the entities will be on the same surface
 local function generate_creep(entities)
-  -- Check if this surface is allowed to generate creep
   local surface = entities[1].surface
   if not global.creep.surfaces[surface.index] then
     return
   end
-
-  local radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10)
-  local to_add = {}
-  local i = 0
   for _, entity in pairs(entities) do
-    for _, tile in pairs(surface.find_tiles_filtered({ position = entity.position, radius = radius })) do
-      if not tile.collides_with("player-layer") then
-        i = i + 1
-        to_add[i] = { name = "kr-creep", position = tile.position }
-      end
-    end
+    global.creep.creep_queue[global.creep.creep_id_counter] = {
+      radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10),
+      position = entity.position,
+      stage = 0,
+      surface = surface,
+      fake = false
+    }
+    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end
-  surface.set_tiles(to_add)
 end
 
 function creep.init()
@@ -40,19 +36,16 @@ end
 
 function creep.on_biter_base_built(entity)
   if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then return end
-  if entity.type == "unit-spawner" and global.creep.surfaces[entity.surface.index] then
+  if (entity.type == "unit-spawner" or entity.type == "unit-spawner" == "turret") and global.creep.surfaces[entity.surface.index] then
     generate_creep({ entity })
   end
 end
 
 function creep.on_chunk_generated(chunk_area, surface)
   if (not global.creep.surfaces[surface.index]) or (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-  --if (not global.creep.surfaces[surface.index]) then
     return
   end
-
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, area = chunk_area, force = "enemy" })
-
   for _, entity in pairs(entities) do
     generate_creep({ entity })
   end
@@ -86,18 +79,22 @@ function creep.process_creep_queue()
     elseif creep_pack.stage == 1 then
         creep_pack.creep_tiles = {}
         for i=1,#creep_pack.tiles do
-          if creep_pack.fake then
-            creep_pack.creep_tiles[i] = { name = "fk-creep", position = creep_pack.tiles[i].position }
+          local r = 1 -- by default it will be biomass creep
+          local actual_tile = creep_pack.surface.get_tile(creep_pack.tiles[i].position) -- the starting point we could crash replace-path-abuse with new global array
+          if actual_tile and (actual_tile.name == "fk-creep" or actual_tile.name == "kr-creep") then -- we mustn't re-write fate or double-check player's entities
+            r = 4 -- skipping this tile
+          elseif creep_pack.fake then
+            r = 3 -- fake creep definitely
           else
-            local r = 1
             local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
-            if (d > 3) and ( (creep_pack.radius - d) <= 3) then r = math.random(1,5) end
-            if r < 4 then
+            if (d > 4) and ( (creep_pack.radius - d) <= 4) then r = math.random(2,4)  -- 33% chance for biomass on distal rings, 33% chance for skipping
+            elseif (d > 2) and ( (creep_pack.radius - d) <= 6) then r = math.random(1,3) end -- 67% chance for biomass closer to center, 33% for fake creep
+          end
+            if r < 3 then
               creep_pack.creep_tiles[i] = { name = "kr-creep", position = creep_pack.tiles[i].position }
-            elseif r == 4 then
+            elseif r == 3 then
               creep_pack.creep_tiles[i] = { name = "fk-creep", position = creep_pack.tiles[i].position }
             end
-          end
         end
         creep_pack.stage = 2
     elseif creep_pack.stage == 2 then
