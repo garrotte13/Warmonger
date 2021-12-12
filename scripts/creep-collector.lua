@@ -11,6 +11,7 @@ local creep_collector = {}
 
 function creep_collector.collect(player, surface, tiles, sel_area)
   local i = 0
+  local j = 0
   local enemies_found = 0
   local tiles_to_set = {}
   local player_pos = player.position
@@ -34,27 +35,31 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   if enemies_found == 0 then
    for _, tile in pairs(tiles) do
     if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then
-      if tile.name == "kr-creep" then i = i + 1 end -- fake creep doesn't give biomass
-      tiles_to_set[i] = { name = tile.hidden_tile or "landfill", position = tile.position }
+      j = j + 1
+      if tile.name == "kr-creep" then
+        i = i + 1 -- fake creep doesn't give biomass
+      end
+      tiles_to_set[j] = { name = tile.hidden_tile or "landfill", position = tile.position }
     end
    end
   end
-  if i > 0 then
+  if j > 0 then
     -- local percentage = math.random(constants.creep_collection_rate.min, constants.creep_collection_rate.max)
     local percentage = 100 -- no random gathering anymore
     local collected_amount = math.ceil(i * (percentage / 100))
     local inventory = player.get_main_inventory()
-    if inventory.can_insert({ name = "biomass", count = collected_amount }) then
+    if i>0 and inventory.can_insert({ name = "biomass", count = collected_amount }) then
       inventory.insert({ name = "biomass", count = collected_amount })
+     elseif i>0 then
+      util.flying_text_with_sound(player, { "message.kr-inventory-is-full" }, { position = area.center(sel_area) })
+      return creep_collector
+    end
+      util.flying_text_with_sound(player, { "message.kr-collected-amount", collected_amount, { "item-name.biomass" } }, {
+      position = area.center(sel_area),
+      sound = { path = "kr-collect-creep", volume_modifier = 1 },
+    })
       surface.set_tiles(tiles_to_set)
       corrosion.update_tiles(surface)
-      util.flying_text_with_sound(player, { "message.kr-collected-amount", collected_amount, { "item-name.biomass" } }, {
-        position = area.center(sel_area),
-        sound = { path = "kr-collect-creep", volume_modifier = 1 },
-      })
-    else
-      util.flying_text_with_sound(player, { "message.kr-inventory-is-full" }, { position = area.center(sel_area) })
-    end
   else
    if enemies_found == 0 then
       util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = area.center(sel_area) })
