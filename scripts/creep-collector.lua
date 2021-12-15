@@ -17,12 +17,12 @@ end
 
 function NoEnemiesFound (check_surface, tiles_array)
   for a=1, #tiles_array do
-    if check_surface.get_tile(tiles_array[a]).name == "kr-creep" then
+    if check_surface.get_tile(tiles_array[a]).name == "kr-creep" then  --we check only true creep for collision with enemies, because fake creep is never under enemy buildings!
       if check_surface.count_entities_filtered{
         position = tiles_array[a],
       type = {"unit-spawner", "turret"},
       force = "enemy"
-    } > 0 then return false
+    } > 0 then return false -- check failed, immediate exit
     end
     end
   end
@@ -53,14 +53,14 @@ function creep_collector.collect(player, surface, tiles, sel_area)
 
   if enemies_found == 0 then
    for _, tile in pairs(tiles) do
-    if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then
+    if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then --filtering out all tiles exceeding shovel reach
       j = j + 1
       if tile.name == "kr-creep" then
         if search_enemy_tiles then
           if ( enemies_found == 0 ) and (IsTileInArray(tile.position, search_enemy_tiles) ) then  -- it's a fast function or LUA sucks!
             i = i + 1
             tiles_to_set[j] = { name = tile.hidden_tile or "landfill", position = tile.position }
-          elseif enemies_found == 0 then s = s + 1 end -- hey, man you selected two separate creep areas, go to hell!
+          elseif enemies_found == 0 then s = s + 1 end -- hey, man you selected two separate creep areas, debug counter incremented
         else
           search_enemy_tiles = surface.get_connected_tiles (tile.position, {"fk-creep", "kr-creep"}) -- this can be a little slow function
           if NoEnemiesFound (surface, search_enemy_tiles) then  -- this can be really slow, need to test!
@@ -74,7 +74,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
     end
    end
   end
-  if s > 0 then game.print("How many foreign true creep tiles you wrongly selected: " .. s) end
+  if s > 0 then game.print("How many foreign true creep tiles you wrongly selected: " .. s) end -- number of tiles selected from another footprint (not the one with enemy check done)
   if j > 0 and enemies_found == 0 then
     -- local percentage = math.random(constants.creep_collection_rate.min, constants.creep_collection_rate.max)
     local percentage = 100 -- no random gathering anymore
