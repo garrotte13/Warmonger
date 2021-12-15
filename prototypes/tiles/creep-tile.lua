@@ -270,9 +270,9 @@ data:extend(
 		needs_correction = false,
 		can_be_part_of_blueprint = true,
 		collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
-		minable = {mining_time = 10, result = "biomass", probability = 0, amount = 1},
+		minable = {mining_time = 10, result = "wood", probability = 0, amount = 1},
 		walking_speed_modifier = 0.35,
-		layer = 200,
+		layer = 201,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
 		variants = tile_variations_template

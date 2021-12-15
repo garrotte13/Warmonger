@@ -32,7 +32,7 @@ data:extend(
         scale = 0.25,
         mipmap_count = 4,
       },
-    }, 
+    },
 		subgroup = "terrain",
 		order = "z[creep]-z[creep]",
 		place_as_tile =
@@ -42,6 +42,49 @@ data:extend(
 			condition = { "water-tile" }
 		},
 		stack_size = 400
+	},
+
+  {
+		type = "item",
+		name = "fk-creep",
+		icon = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
+		icon_size = 64,
+		icon_mipmaps = 4,
+		pictures = {
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-1.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-2.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-3.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+    },
+		subgroup = "terrain",
+		order = "z[creep]-z[creep]",
+		place_as_tile =
+		{
+			result = "fk-creep",
+			condition_size = 1,
+			condition = { "water-tile" }
+		},
+		stack_size = 100
 	},
 
 	{
