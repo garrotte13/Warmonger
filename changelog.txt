@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.3
+Date: 2021-12-16
+  Changes:
+    - Footprint generation (more optimizations, less biomass in big late game areas).
+    - Fix for fake creep deconstruction (bots will bring back some unexpected ingredients, because they are forced by Wube to bring you something...).
+    - Complete logics change for creep collecting restrictions. Simple large protection range for Rampant new enemies mode is replaced with some smart restrictions for everyone.
+    - Fake creep has only basic restriction. Should work fine with Creeper2 and future Warmonger late game specials.
+---------------------------------------------------------------------------------------------------
 Version: 1.2.2
 Date: 2021-12-13
   Changes:

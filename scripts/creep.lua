@@ -91,7 +91,7 @@ function creep.process_creep_queue()
             local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
             if (d > 4) and ( (creep_pack.radius - d) <= 4) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
-            elseif (d > 2) then r = math.random(1,3) end -- 67% chance for biomass closer to center, 33% for fake creep
+            elseif (d > 3) then r = math.random(2,3) end -- 50% chance for biomass closer to center, 50% for fake creep
           end
             if r < 3 then
               creep_pack.creep_tiles[i] = { name = "kr-creep", position = creep_pack.tiles[i].position }
