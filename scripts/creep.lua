@@ -81,18 +81,21 @@ function creep.process_creep_queue()
         for i=1,#creep_pack.tiles do
           local r = 1 -- by default it will be biomass creep
           local actual_tile = creep_pack.surface.get_tile(creep_pack.tiles[i].position) -- the starting point we could crash replace-path-abuse with new global array
-          if actual_tile and (actual_tile.name == "fk-creep" or actual_tile.name == "kr-creep") then -- we mustn't re-write fate or double-check player's entities
-            r = 4 -- skipping this tile
+          local actual_name = ""
+          if actual_tile then actual_name = actual_tile.name end
+          if actual_name == "kr-creep" then -- we mustn't change fate
+            r = 4
           elseif creep_pack.fake then
-            r = 3 -- fake creep definitely
+            r = 3
           else
             local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
-            if (d > 4) and ( (creep_pack.radius - d) <= 4) then r = math.random(2,4)  -- 33% chance for biomass on distal rings, 33% chance for skipping
-            elseif (d > 2) and ( (creep_pack.radius - d) <= 6) then r = math.random(1,3) end -- 67% chance for biomass closer to center, 33% for fake creep
+            if (d > 4) and ( (creep_pack.radius - d) <= 4) then   -- no biomass on distal rings
+              if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
+            elseif (d > 2) then r = math.random(1,3) end -- 67% chance for biomass closer to center, 33% for fake creep
           end
             if r < 3 then
               creep_pack.creep_tiles[i] = { name = "kr-creep", position = creep_pack.tiles[i].position }
-            elseif r == 3 then
+            elseif (r == 3) and (actual_name ~="fk-creep" ) then -- if placing fake creep we need to avoid redundant work
               creep_pack.creep_tiles[i] = { name = "fk-creep", position = creep_pack.tiles[i].position }
             end
         end
