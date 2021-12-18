@@ -15,7 +15,7 @@ local bio_lab_working_sound =
 }
 
 data:extend(
-{   
+{
 	{
 		type = "assembling-machine",
 		name = "kr-bio-lab",
@@ -27,7 +27,12 @@ data:extend(
 		corpse = "kr-big-random-pipes-remnant",
 		dying_explosion = "big-explosion",
 		damaged_trigger_effect = hit_effects.entity(),
-		resistances = 
+		module_specification =
+		{
+			module_slots = 1
+		},
+		allowed_effects = {"speed", "pollution"},
+		resistances =
 		{
 			{type = "impact", percent = 50}
 		},
@@ -36,7 +41,7 @@ data:extend(
 			{
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
-				pipe_covers = pipecoverspictures(),				
+				pipe_covers = pipecoverspictures(),
 				base_area = 10,
 				height = 2,
 				base_level = -1,
@@ -55,7 +60,7 @@ data:extend(
 				pipe_connections = 
 				{
 					{ type="input-output", position = {4, 0} },
-					{ type="input-output", position = {-4, 0} }					
+					{ type="input-output", position = {-4, 0} }
 				}
 			},
 			off_when_no_fluid_recipe = false
@@ -145,6 +150,6 @@ data:extend(
 		},
 		energy_usage = "210KW",
 		ingredient_count = 3,
-		allowed_effects = nil
-	}
+	},
+
 })

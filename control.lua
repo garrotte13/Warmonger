@@ -5,7 +5,7 @@ local on_tick_n = require("__flib__.on-tick-n")
 
 local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
--- local mining_creep = require("scripts.mining_creep")
+local creep_eater = require("scripts.creep-eater")
 local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
@@ -23,6 +23,7 @@ event.on_init(function()
 
   creep.init()
   corrosion.init()
+  creep_eater.init()
 
   -- Initialize mod
   migrations.generic()
@@ -32,9 +33,14 @@ event.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
+event.on_nth_tick(5, function(e)
+  creep_eater.process()
+end)
+
 event.on_configuration_changed(function(e)
 -- game.print("Mod Warmonger version or config changed.")
   corrosion.init()
+  creep_eater.init()
     migrations.generic()
   
 end)
@@ -47,23 +53,37 @@ end)
 
 script.on_event(defines.events.on_built_entity, function(e)
   corrosion.engaging(e.created_entity)
---end, {{filter = "turret"}})
+  if e.created_entity.valid and (e.created_entity.name == "creep-processor0") or (e.created_entity.name == "creep-processor1") then
+    creep_eater.add (e.created_entity)
+  end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   corrosion.disengaging(e.entity)
+  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+    creep_eater.remove (e.entity)
+  end
 end)
 
 script.on_event(defines.events.on_entity_died, function(e)
   corrosion.disengaging(e.entity)
+  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+    creep_eater.remove (e.entity)
+  end
 end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e)
   corrosion.disengaging(e.entity)
+  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+    creep_eater.remove (e.entity)
+  end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
   corrosion.engaging(e.created_entity)
+  if e.created_entity.valid and (e.created_entity.name == "creep-processor0") or (e.created_entity.name == "creep-processor1") then
+    creep_eater.add (e.created_entity)
+  end
 end)
 
 
@@ -84,8 +104,6 @@ event.register({
     creep_collector.collect(player, e.surface, e.tiles, e.area)
   end
 end)
-
-
 
 event.on_chunk_generated(function(e)
   creep.on_chunk_generated(e.area, e.surface)

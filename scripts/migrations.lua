@@ -2,6 +2,7 @@ local on_tick_n = require("__flib__.on-tick-n")
 
 local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
+local creep_eater = require("scripts.creep-eater")
 
 local util = require("scripts.util")
 
@@ -10,6 +11,7 @@ local migrations = {}
 function migrations.generic()
 
   creep.update()
+  
 
 end
 
@@ -24,7 +26,8 @@ migrations.versions = {
     on_tick_n.init()
 
     creep.init()
-	corrosion.init()
+	  corrosion.init()
+    creep_eater.init()
 
     -- MIGRATE
 --    local old_enabled = old_global.radioactivity_enabled
