@@ -10,7 +10,7 @@ local creep_collector = {}
 
 function IsTileInArray (tile_position, tiles_array)
   for a=1, #tiles_array do
-    if ( tiles_array[a][1] == tile_position[1] ) and ( tiles_array[a][2] == tile_position[2] ) then return true end
+    if ( tiles_array[a].x == tile_position.x ) and ( tiles_array[a].y == tile_position.y ) then return true end
   end
   return false
 end

@@ -13,7 +13,7 @@ local function generate_creep(entities)
   end
   for _, entity in pairs(entities) do
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-      radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*10),
+      radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*20),
       position = entity.position,
       stage = 0,
       surface = surface,
@@ -89,9 +89,11 @@ function creep.process_creep_queue()
             r = 3
           else
             local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
-            if (d > 4) and ( (creep_pack.radius - d) <= 4) then   -- no biomass on distal rings
+            if (d > 4) and ( (creep_pack.radius - d) < 4) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
-            elseif (d > 3) then r = math.random(2,3) end -- 50% chance for biomass closer to center, 50% for fake creep
+            elseif (d > (2 + math.floor(5.4 * game.forces.enemy.evolution_factor)) ) then -- bigger and bigger 100% biomass core
+              if math.random(1,(3 + math.floor(5.5 * game.forces.enemy.evolution_factor))) > 1 then r = 3 end -- less biomass with every ~15% evo increase
+            end
           end
             if r < 3 then
               creep_pack.creep_tiles[i] = { name = "kr-creep", position = creep_pack.tiles[i].position }
@@ -159,7 +161,7 @@ creep.remote_interface = {
     end
 
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*10),
+        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*20),
         position = position,
         stage = 0,
         surface = surface,
