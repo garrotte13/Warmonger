@@ -68,6 +68,34 @@ function corrosion.affecting()
  end
 end
 
+
+function corrosion.update_tile(surface, position)
+  if not global.corrosion.enabled then return end
+  local i = 0
+  for _, entity in pairs(global.corrosion.affected) do
+    i = i + 1
+    if entity.valid then
+      local obj_area = entity.selection_box
+      area.ceil(obj_area)
+      if area.contains_position(obj_area, position) then
+        local creep_amount = 0
+        creep_amount = surface.count_tiles_filtered{
+          area = obj_area,
+          name = {"kr-creep", "fk-creep"}
+        }
+        if creep_amount == 0 then
+          global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil
+          global.corrosion.affected_num = global.corrosion.affected_num - 1
+          -- game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)        
+        end
+        return -- only ONE entity can collide with particular tile after rounding up its selection box, am I right?!
+      end
+    end
+ end
+ -- game.print("Objects tortured left:" .. global.corrosion.affected_num)
+ -- game.print("Objects tortured processed:" .. i)
+end
+
 function corrosion.update_tiles(surface)
   if not global.corrosion.enabled then return end
   local i = 0

@@ -19,17 +19,13 @@ data:extend(
 		},
 		crafting_categories = {"creep-raw-material-recipe"},
 		crafting_speed = 1.0,
-		--mining_drill_radius = 10,
-		--reach_resource_distance = 10,
-		--reach_distance = 10,
-		--created_effect = {}
 		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 3.75, },
-		energy_usage = "600kW",
+		energy_usage = "600W",
 		ingredient_count = 1,
 		return_ingredients_on_change = false,
 		show_recipe_icon = false,
 		fixed_recipe = "biomass-collecting",
-		--{{fluid_boxes =
+		--[[fluid_boxes =
 		{
 			off_when_no_fluid_recipe = true,
 			{
@@ -51,7 +47,7 @@ data:extend(
 
 	{
 		type="item", name="creep-processor1", icon_size="32", icon="__Warmonger__/graphics/entities/creep-processor1/crusher33_icon.png",
-		subgroup="production-machine", order="c1",
+		subgroup="production-machine", order="z[creep-processor1]",
 		stack_size = 25,
 		place_result="creep-processor1",
 	 },
@@ -65,7 +61,7 @@ data:extend(
 		minable = {mining_time = 1, result = "creep-processor0"},
 		max_health = 400,
 		corpse = "big-remnants",
-		resistances = {{type = "acid",percent = 20},{type = "impact", percent = 30}},
+		resistances = {{type = "acid",percent = 35},{type = "impact", percent = 30}},
 		repair_sound = { filename = "__base__/sound/manual-repair-simple.ogg" },
 		mined_sound = { filename = "__base__/sound/deconstruct-bricks.ogg" },
 		open_sound = { filename = "__base__/sound/machine-open.ogg", volume = 0.85 },
@@ -79,7 +75,7 @@ data:extend(
 		selection_box = {{-1.5, -1}, {1.5, 1}},
 		crafting_categories = {"creep-raw-material-recipe"},
 		result_inventory_size = 1,
-		energy_usage = "100kW",
+		energy_usage = "60kJ",
 		crafting_speed = 1,
 		source_inventory_size = 1,
 		fixed_recipe = "biomass-collecting",
@@ -91,8 +87,8 @@ data:extend(
 		  type = "burner",
 		  fuel_category = "chemical",
 		  effectivity = 1,
-		  fuel_inventory_size = 1,
-		  emissions = 1,
+		  fuel_inventory_size = 2,
+		  emissions_per_minute = 20,
 		  smoke =
 		  {
 			{
@@ -149,17 +145,20 @@ data:extend(
 		subgroup = "production-machine",
 		order = "z[creep-processor0]",
 		place_result = "creep-processor0",
-		stack_size = 50
+		stack_size = 25
 	  },
 
 	  {
 		type = "recipe",
 		name = "creep-processor0",
 		enabled = false,
+		energy_required = 3.00,
 		ingredients =
 		{
 		  {"stone-brick", 10},
-		  {"iron-plate", 5}
+		  {"iron-gear-wheel", 5},
+		  {"steel-plate", 4},
+		  {"electronic-circuit", 7}
 		},
 		result = "creep-processor0"
 	  },
@@ -167,12 +166,12 @@ data:extend(
 	  {
 		type = "recipe",
 		name = "creep-processor1",
-		category = "crafting",
-		enabled = "true",
-		energy_required = 2.00,
+		category = "basic-crafting",
+		enabled = "false",
+		energy_required = 5.00,
 		ingredients = {
-		  { type = "item", name = "assembling-machine-2" , amount = 1.0, },
-		  { type = "item", name = "electric-furnace" , amount = 1.0, },
+		  { type = "item", name = "assembling-machine-2" , amount = 1, },
+		  { type = "item", name = "stone-brick" , amount = 10, },
 		},
 		results = {
 		  { type = "item", name = "creep-processor1", amount = 1.0, },

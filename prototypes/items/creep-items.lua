@@ -1,7 +1,7 @@
 data:extend(
 {
 
-   --[[ {
+   {
 		type = "item",
 		name = "kr-creep",
 		icon = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
@@ -85,7 +85,7 @@ data:extend(
 			condition = { "water-tile" }
 		},
 		stack_size = 100
-	}, --]]
+	},
 
 	{
 		type = "item",

@@ -33,7 +33,7 @@ event.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
-event.on_nth_tick(5, function(e)
+event.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
 
