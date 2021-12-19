@@ -47,7 +47,8 @@ data:extend(
   {
 		type = "item",
 		name = "fk-creep",
-		icon = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
+		--icon = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
+    icon = "__base__/graphics/icons/dry-tree.png",
 		icon_size = 64,
 		icon_mipmaps = 4,
 		pictures = {
