@@ -53,35 +53,35 @@ end)
 
 script.on_event(defines.events.on_built_entity, function(e)
   corrosion.engaging(e.created_entity)
-  if e.created_entity.valid and (e.created_entity.name == "creep-processor0") or (e.created_entity.name == "creep-processor1") then
+  if e.created_entity.valid and e.created_entity.name == "creep-miner-chest" then
     creep_eater.add (e.created_entity)
   end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+  if e.entity.valid and e.entity.name == "creep-miner-chest" then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_entity_died, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+  if e.entity.valid and e.entity.name == "creep-miner-chest" then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-processor0") or (e.entity.name == "creep-processor1") then
+  if e.entity.valid and e.entity.name == "creep-miner-chest" then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
   corrosion.engaging(e.created_entity)
-  if e.created_entity.valid and (e.created_entity.name == "creep-processor0") or (e.created_entity.name == "creep-processor1") then
+  if e.created_entity.valid and e.created_entity.name == "creep-miner-chest" then
     creep_eater.add (e.created_entity)
   end
 end)

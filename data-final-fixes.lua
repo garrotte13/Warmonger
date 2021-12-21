@@ -1,8 +1,8 @@
 local militaryrecipe = data.raw.recipe["military-science-pack"]
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="biomass", amount=1})
-table.insert(data.raw.technology["steel-processing"].effects, { type = "unlock-recipe", recipe = "creep-processor0"})
-table.insert(data.raw.technology["electric-energy-distribution-1"].effects, { type = "unlock-recipe", recipe = "creep-processor1"})
+-- table.insert(data.raw.technology["steel-processing"].effects, { type = "unlock-recipe", recipe = "creep-processor0"})
+table.insert(data.raw.technology["electric-energy-distribution-1"].effects, { type = "unlock-recipe", recipe = "creep-miner-chest"})
 
 
 -- log(serpent.dump(data.raw.recipe))

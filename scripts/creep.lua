@@ -121,6 +121,15 @@ function creep.process_creep_queue()
           end
         end
       end
+      if creep_pack.fake then
+        global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
+        global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
+      else
+        creep_pack.stage = 4
+      end
+    elseif creep_pack.stage == 4 then
+      -- adding creep to true creep protection array will be initiated here
+      
       global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
       global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
     end

@@ -3,56 +3,78 @@ data:extend(
 {
 
 	{
-		type = "assembling-machine",
-		name = "creep-processor1",
-		icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-processor1/crusher33_icon.png",
-		flags = {"placeable-neutral","player-creation"},
-		minable = {mining_time = 1, result = "creep-processor1"},
-		max_health = 500,
-		corpse = "big-remnants",
-		resistances = {{type = "acid",percent = 40},{type = "impact", percent = 50}},
-		collision_box = {{-1.2,-1.2},{1.2,1.2}},
-		selection_box = {{-1.5,-1.5},{1.5,1.5}},
-		animation = {
-			filename = "__Warmonger__/graphics/entities/creep-processor1/crusher33_sheet.png",
-			priority = "medium", width = 128, height = 128, frame_count = 12, shift = {0.4, 0.1}, scale=0.85, animation_speed=0.5,
+		type = "radar",
+		name = "creep-miner-radar",
+		-- icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		
+		
+		--corpse = "big-remnants",
+		--collision_box = {{-0.1,-0.1},{0.1,0.1}},
+		selection_box = {{-0.5,-0.5},{0.5,0.5}},
+		allow_copy_paste = false,
+		selection_priority = 70,
+
+		flags = {"not-blueprintable", "not-deconstructable", "placeable-off-grid"},
+		pictures = {
+			filename = "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_sheet.png",
+			priority = "high", width = 256, height = 256, direction_count = 16, shift = {0.1, 0.1}, scale=0.5, animation_speed=0.5,
 		},
-		crafting_categories = {"creep-raw-material-recipe"},
-		crafting_speed = 1.0,
 		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 3.75, },
-		energy_usage = "600W",
-		ingredient_count = 1,
-		return_ingredients_on_change = false,
-		show_recipe_icon = false,
-		fixed_recipe = "biomass-collecting",
-		--[[fluid_boxes =
-		{
-			off_when_no_fluid_recipe = true,
-			{
-				production_type = "input",
-				--pipe_covers = pipecoverspictures(),
-				base_area = 10,
-				base_level = -1,
-				pipe_connections = {{ type="input", position = { 0, 2} }}
-			},
-			{
-				production_type = "output",
-				--pipe_covers = pipecoverspictures(),
-				base_level = 1,
-				pipe_connections = {{position = { 0, -2} }}
-			},
-		},--]]
-		allowed_effects = nil
+		energy_usage = "1200KW",
+		max_distance_of_nearby_sector_revealed = 1,
+		max_distance_of_sector_revealed = 0,
+		energy_per_nearby_scan = "4.8MJ",
+		
+
+	},
+	{
+		type = "container",
+		name = "creep-miner-chest",
+		resistances = {{type = "acid",percent = 40},{type = "impact", percent = 50}},
+		max_health = 500,
+		inventory_size = 48,
+		minable = {mining_time = 2, result = "creep-miner-chest"},
+		icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		collision_box = {{-1.5,-1.5},{1.5,1.5}},
+		selection_box = {{-1.5,-1.5},{1.5,1.5}},
+		selection_priority = 50,
+		picture = {
+			filename = "__core__/graphics/empty.png",
+			priority = "low",
+			width = 1,
+			height = 1,
+			line_length = 1,
+			shift = {0.1875, -0.2}
+		},
+	},
+	{
+		type="item", name="creep-miner-chest", icon_size="32", icon="__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		subgroup="production-machine", order="z[creep-miner-chest]",
+		stack_size = 50,
+		place_result="creep-miner-chest"
 	},
 
 	{
-		type="item", name="creep-processor1", icon_size="32", icon="__Warmonger__/graphics/entities/creep-processor1/crusher33_icon.png",
-		subgroup="production-machine", order="z[creep-processor1]",
-		stack_size = 25,
-		place_result="creep-processor1",
-	 },
+		type = "recipe",
+		name = "creep-miner-chest",
+		category = "basic-crafting",
+		enabled = "false",
+		energy_required = 5.00,
+		ingredients = {
+		  { type = "item", name = "radar" , amount = 1, },
+		  { type = "item", name = "steel-furnace" , amount = 1, },
+		  { type = "item", name = "steel-chest" , amount = 2, },
+		  { type = "item", name = "electronic-circuit" , amount = 5, }
+		},
+		results = {
+		  { type = "item", name = "creep-miner-chest", amount = 1.0, },
+		},
+		main_product = "creep-miner-chest",
+		icon = "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		icon_size = "32"
+	},
 
-	{
+--[[	{
 		type = "assembling-machine",
 		name = "creep-processor0",
 		icon = "__Warmonger__/graphics/icons/entities/bt-Pollution-Production-Machine.png",
@@ -161,56 +183,5 @@ data:extend(
 		  {"electronic-circuit", 7}
 		},
 		result = "creep-processor0"
-	  },
-
-	  {
-		type = "recipe",
-		name = "creep-processor1",
-		category = "basic-crafting",
-		enabled = "false",
-		energy_required = 5.00,
-		ingredients = {
-		  { type = "item", name = "assembling-machine-2" , amount = 1, },
-		  { type = "item", name = "stone-brick" , amount = 10, },
-		},
-		results = {
-		  { type = "item", name = "creep-processor1", amount = 1.0, },
-		},
-		main_product = "creep-processor1",
-		icon = "__Warmonger__/graphics/entities/creep-processor1/crusher33_icon.png",
-		icon_size = "32"
-
-	  },
-
-	  {
-		type = "item",
-		name = "extracted-creep",
-		icon = "__Warmonger__/graphics/icons/items/creep-virus.png",
-		icon_size = 64,
-		icon_mipmaps = 4,
-		pictures = {
-      {
-        size = 64,
-        filename = "__Warmonger__/graphics/icons/items/creep-virus.png",
-        scale = 0.25,
-        mipmap_count = 4,
-      },
-		},
-		order = "z[extracted-creep]",
-		subgroup = "raw-material",
-		hidden = true,
-		stack_size = 500
-	},
-
-	  {
-		type = "recipe",
-		name = "biomass-collecting",
-		enabled = "true",
-		energy_required = 2,
-		ingredients = {{type = "item", name = "extracted-creep", amount = 20}},
-		result = "biomass",
-		result_count = 1,
-		category="creep-raw-material-recipe",
-		order="dfd1",
-	},
+	  },--]]
 })
