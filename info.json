@@ -13,7 +13,8 @@
 		"? RampantArsenal >= 1.0.3",
 		"? RampantIndustry >= 1.0.5",
 		"? Rampant >= 1.1.0",
-		"? IndustrialRevolution >= 2.3.0",		
+		"? IndustrialRevolution >= 2.3.0",
+		"? pycoalprocessing >= 1.8.8",
 		"! Krastorio2 >= 0.0.1",
 		"! Krastorio2Assets >= 1.0.0"
 	]

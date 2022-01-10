@@ -21,7 +21,7 @@ data:extend(
 		type = "recipe",
 		name = "biters-research-data",
 		energy_required = 5,
-		category = "basic-crafting",
+		category = "advanced-crafting",
 		enabled = false,
 		ingredients =
 		{
