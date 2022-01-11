@@ -60,7 +60,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
           if ( enemies_found == 0 ) and (IsTileInArray(tile.position, search_enemy_tiles) ) then  -- it's a fast function or LUA sucks!
             i = i + 1
             tiles_to_set[j] = { name = tile.hidden_tile or "landfill", position = tile.position }
-          elseif enemies_found == 0 then s = s + 1 end -- hey, man you selected two separate creep areas, debug counter incremented
+          elseif enemies_found == 0 then s = s + 1 end -- hey man, you selected two separate creep areas, debug counter incremented
         else
           search_enemy_tiles = surface.get_connected_tiles (tile.position, {"fk-creep", "kr-creep"}) -- this can be a little slow function
           if NoEnemiesFound (surface, search_enemy_tiles) then  -- this can be really slow, need to test!
@@ -74,7 +74,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
     end
    end
   end
-  if s > 0 then game.print("How many foreign true creep tiles you wrongly selected: " .. s) end -- number of tiles selected from another footprint (not the one with enemy check done)
+  -- if s > 0 then game.print("How many foreign true creep tiles you wrongly selected: " .. s) end -- number of tiles selected from another footprint (not the one with enemy check done)
   if j > 0 and enemies_found == 0 then
     -- local percentage = math.random(constants.creep_collection_rate.min, constants.creep_collection_rate.max)
     local percentage = 100 -- no random gathering anymore

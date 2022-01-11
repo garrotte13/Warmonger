@@ -21,7 +21,7 @@ data:extend(
 		type = "recipe",
 		name = "biters-research-data",
 		energy_required = 5,
-		category = "basic-crafting",
+		category = "advanced-crafting",
 		enabled = false,
 		ingredients =
 		{
@@ -41,8 +41,8 @@ data:extend(
 		ingredients =
 		{
 			{type = "item", name = "stone-wall", amount = 20},
-			{type = "item", name = "biomass", amount = 8},
-			{type = "fluid", name = "sulfuric-acid", amount = 20 }
+			{type = "item", name = "biomass", amount = 9},
+			{type = "fluid", name = "sulfuric-acid", amount = 30 }
 		},
 		result = "biters-research-data",
 		result_count = 10

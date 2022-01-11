@@ -2,7 +2,7 @@
 	"name": "Warmonger",
 	"version": "1.3.0",
 	"title": "Warmonger",
-	"description": "Creep from Krastorio without entire K2. Creep features: buildings corrosion and ingredient of vanilla military science. Best played with Rampant.",
+	"description": "Creep from Krastorio without entire K2. With new creep features. Best played with Rampant.",
 	"author": "garrotte",
 	"homepage" : "https://mods.factorio.com/mod/Warmonger",
 	"factorio_version": "1.1",
@@ -13,7 +13,8 @@
 		"? RampantArsenal >= 1.0.3",
 		"? RampantIndustry >= 1.0.5",
 		"? Rampant >= 1.1.0",
-		"? IndustrialRevolution >= 2.3.0",		
+		"? IndustrialRevolution >= 2.3.0",
+		"? pycoalprocessing >= 1.8.8",
 		"! Krastorio2 >= 0.0.1",
 		"! Krastorio2Assets >= 1.0.0"
 	]

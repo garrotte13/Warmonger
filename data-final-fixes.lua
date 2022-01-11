@@ -8,9 +8,9 @@ table.insert(data.raw.technology["electric-energy-distribution-1"].effects, { ty
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2} )
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3} )
-  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2500} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=3} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=4} )
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2800} )
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3500} )
   table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=600} )
   table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=800} )
