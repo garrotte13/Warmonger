@@ -35,7 +35,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   local enemies_found = 0
   local tiles_to_set = {}
   local player_pos = player.position
-  local max_cr_range = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*10) + 1
+  local max_cr_range = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*20) + 1
   local protecting_entities_types = {"unit-spawner", "turret"}
   local prot_area = sel_area
   local search_enemy_tiles = nil
@@ -91,7 +91,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
       sound = { path = "kr-collect-creep", volume_modifier = 1 },
     })
       surface.set_tiles(tiles_to_set)
-      corrosion.update_tiles(surface)
+      corrosion.update_surface(surface)
   else
    if enemies_found == 0 then
       util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = area.center(sel_area) })

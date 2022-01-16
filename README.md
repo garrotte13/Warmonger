@@ -1,8 +1,6 @@
 # Warmonger
-Creep for vanilla Factiorio completely based on Krastorio2 code (ver 1.2.6). Thanks to Krastor, Linver, raiguard and their supporters for that.
+Creep for vanilla Factiorio completely based on Krastorio2 code (ver 1.2.x). Thanks to Krastor, Linver, raiguard and their supporters for that.
 https://github.com/raiguard/krastorio-2
-
-https://mods.factorio.com/mod/Krastorio2
 
 Only creep-related staff, biters research and bio lab are taken from Krastorio.
 
@@ -14,7 +12,8 @@ Changes comparing to K2 feature:
 - creep absorbs much less pollution,
 - creep footprint grows with evolution,
 - creep damages buildings (e.g. "turrel creep" requires timely repairing them), can be turned off in console with command "/disable-corrosion"
-- creep can be collected only after purging enemy nests and worms nearby (for New Enemies it's all adjacent chunks must be clear). Abuse with path tiles replacement is allowed.
+- creep is collected by special buildings, not manually. Graphics for them was taken from Amator Phasma Coal&Steam and Yuoki Industries mods.
+- creep can be collected only after purging enemy nests and worms nearby. Abuse with path tiles replacement is allowed.
 - biters are immune to any viruses,
 - no peaceful game mode is expected in any form. Biomass is heavily used in midgame and later on for military science packs and Rampant Arsenal items. There are a lot of Factorio great mods for pure automation joy (Krastorio2, IR2, AAI-Industry, SE, B&A and many others).
 

@@ -33,7 +33,7 @@ event.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
-event.on_nth_tick(3, function(e)
+ event.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
 
@@ -52,38 +52,36 @@ end)
 
 
 script.on_event(defines.events.on_built_entity, function(e)
-  corrosion.engaging(e.created_entity)
-  if e.created_entity.valid and e.created_entity.name == "creep-miner-chest" then
+  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay" or e.created_entity.name == "stone-furnace") then
     creep_eater.add (e.created_entity)
-  end
+  else corrosion.engaging(e.created_entity) end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and e.entity.name == "creep-miner-chest" then
+  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_entity_died, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and e.entity.name == "creep-miner-chest" then
+  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and e.entity.name == "creep-miner-chest" then
+  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
     creep_eater.remove (e.entity)
   end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
-  corrosion.engaging(e.created_entity)
-  if e.created_entity.valid and e.created_entity.name == "creep-miner-chest" then
+  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay") then
     creep_eater.add (e.created_entity)
-  end
+  else corrosion.engaging(e.created_entity) end
 end)
 
 
@@ -94,6 +92,11 @@ end)
 script.on_event(defines.events.on_tick, function()
   creep.process_creep_queue()
 end)
+
+script.on_event(defines.events.on_sector_scanned, function(e)
+  creep_eater.scanned(e.radar)
+end, {{filter="name", name="creep-miner1-radar"}, {filter="name", name="creep-miner0-radar"}} )
+
 
 event.register({
   defines.events.on_player_selected_area,
