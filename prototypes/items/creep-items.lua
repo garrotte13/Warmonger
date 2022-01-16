@@ -83,7 +83,7 @@ data:extend(
 		{
 			result = "fk-creep",
 			condition_size = 1,
-			condition = { "water-tile" }
+      condition = { "water-tile" }
 		},
 		stack_size = 100
 	},

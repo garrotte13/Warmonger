@@ -6,6 +6,7 @@ local on_tick_n = require("__flib__.on-tick-n")
 local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
 local creep_eater = require("scripts.creep-eater")
+local circle_rendering = require("scripts.miner-circle-rendering")
 local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
@@ -49,32 +50,46 @@ event.on_load(function()
 -- corrosion = global.corrosion
 end)
 
+script.on_event(defines.events.on_player_main_inventory_changed, function(e)
+  local player = game.players[e.player_index]
+  circle_rendering.SwapInventory(player)
+end)
 
+script.on_event(defines.events.on_selected_entity_changed, function(e)
+  local player = game.players[e.player_index]
+  circle_rendering.selection_changed(player)
+end)
+
+script.on_event(defines.events.on_player_cursor_stack_changed, function(e)
+  local player = game.players[e.player_index]
+  circle_rendering.SwapItemStack(player)
+  circle_rendering.cursor_changed(player)
+end)
 
 script.on_event(defines.events.on_built_entity, function(e)
-  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay" or e.created_entity.name == "stone-furnace") then
+  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay") then
     creep_eater.add (e.created_entity)
   else corrosion.engaging(e.created_entity) end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
-    creep_eater.remove (e.entity)
+  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest" or e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
+    creep_eater.remove (e.entity, false)
   end
 end)
 
 script.on_event(defines.events.on_entity_died, function(e)
   corrosion.disengaging(e.entity)
   if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
-    creep_eater.remove (e.entity)
+    creep_eater.remove (e.entity, true)
   end
 end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e)
   corrosion.disengaging(e.entity)
   if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
-    creep_eater.remove (e.entity)
+    creep_eater.remove (e.entity, false)
   end
 end)
 

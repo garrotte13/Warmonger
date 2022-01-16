@@ -253,7 +253,7 @@ data:extend(
 			}
 		),		
 		map_color={r=80, g=60, b=65},
-		pollution_absorption_per_second = 0.00005,
+		pollution_absorption_per_second = 0.0001,
 		vehicle_friction_modifier = 175,
 		
 		mined_sound = collect_creep_sound,
@@ -287,7 +287,7 @@ data:extend(
 			}
 		),		
 		map_color={r=80, g=60, b=65},
-		pollution_absorption_per_second = 0.00005,
+		pollution_absorption_per_second = 0.0001,
 		vehicle_friction_modifier = 175,
 		
 		mined_sound = collect_creep_sound,

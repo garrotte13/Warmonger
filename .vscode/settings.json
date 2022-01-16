@@ -1,0 +1,20 @@
+{
+    "Lua.diagnostics.globals": [
+        "data",
+        "mods",
+        "settings",
+        "game",
+        "commands",
+        "make_rotated_animation_variations_from_sheet",
+        "make_generic_transition_template",
+        "init_transition_between_transition_common_options",
+        "pipecoverspictures",
+        "log",
+        "serpent",
+        "script",
+        "defines",
+        "remote",
+        "tile_variations_template",
+        "rendering"
+    ]
+}

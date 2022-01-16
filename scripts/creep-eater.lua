@@ -1,6 +1,6 @@
 local area = require("__flib__.area")
 local math = require("__flib__.math")
-local misc = require("__flib__.misc")
+local circle_rendering = require("scripts.miner-circle-rendering")
 local corrosion = require("scripts.corrosion")
 
 local constants = require("scripts.constants")
@@ -28,8 +28,8 @@ function creep_eater.process()
         then
             if global.creep_miners[id].entity.burner
                 and global.creep_miners[id].entity.burner.valid
-                    and global.creep_miners[id].entity.burner.inventory.valid
-                        and (global.creep_miners[id].entity.burner.inventory.is_empty()) then
+                    and global.creep_miners[id].entity.get_inventory(defines.inventory.fuel)
+                        and (global.creep_miners[id].entity.get_inventory(defines.inventory.fuel).is_empty()) then
                 local entity = global.creep_miners[id].entity
                 local last_user = entity.last_user
                 game.print("Time to add some fuel")
@@ -47,8 +47,8 @@ function creep_eater.process()
         
                         for _, item in pairs (fuel_items) do
                             local removed = 0
-                            local count =  math.min(game.item_prototypes[item.name].stack_size/2, math.ceil((inv.get_item_count(item.name))/2))
-                            local fuel_inv = entity.burner.inventory
+                            local count =  math.min(math.ceil(game.item_prototypes[item.name].stack_size/4), math.ceil((inv.get_item_count(item.name))/2))
+                            local fuel_inv = entity.get_inventory(defines.inventory.fuel)
                             if count > 0 and fuel_inv then
                                 removed = inv.remove({name = item.name, count = count})
                                 if removed > 0 then
@@ -75,9 +75,8 @@ function creep_eater.process()
     global.creep_miners_id = id
     local miner = global.creep_miners[id]
     local surface = miner.entity.surface
-    local miner_range = constants.electric_miner_range
-    if miner.entity.name == "creep-miner0-radar" then miner_range = constants.burner_miner_range end
-
+    local miner_range = constants.miner_range(miner.entity)
+    
     if miner.stage == 0 then -- building creep tiles array
 
         miner.cr_tiles = {}
@@ -282,16 +281,18 @@ function creep_eater.add (entity)
     local position = entity.position
     local force = entity.force
     local last_user= entity.last_user
-
+    if not last_user then
+        game.print("We have a problem! Radar was built by no player!")
+    end
     local chest_name = "creep-miner1-chest"
     local radar_name = "creep-miner1-radar"
-    if entity.name == "creep-miner0-overlay" then
+    if entity.name == "creep-miner0-overlay" or entity.name == "creep-miner0-radar" then
         chest_name = "creep-miner0-chest"
         radar_name = "creep-miner0-radar"
     end
 
-    --if entity.name == "creep-miner1-overlay" or entity.name == "creep-miner0-overlay" then
-    if entity.name == "creep-miner1-overlay" then
+    if entity.name == "creep-miner1-overlay" or entity.name == "creep-miner0-overlay" then
+    -- if entity.name == "creep-miner1-overlay" then
         entity.destroy()
         chest = surface.create_entity({
             name = chest_name,
@@ -314,9 +315,9 @@ function creep_eater.add (entity)
     end
     -- game.print("Chest health must be: " .. health_)
 
-    if entity.name == "stone-furnace" or "creep-miner0-overlay" then
-        chest = entity
-    end
+    --if entity.name == "stone-furnace" or "creep-miner0-overlay" then
+    --    chest = entity
+    --end
 
     local r = 0
     for ids_num = 1, global.creep_miners_last do
@@ -339,7 +340,7 @@ function creep_eater.add (entity)
     fakecreep = false,
     corroded_help = false
     }
-    --global.locked_creep[global.creep_miners_last] = {"landfill", entity.position}
+    circle_rendering.add_circle(entity, last_user)
     if r == global.creep_miners_last then global.creep_miners_last = global.creep_miners_last + 1 end
     global.creep_miners_count = global.creep_miners_count + 1
     global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
@@ -348,7 +349,7 @@ function creep_eater.add (entity)
     game.print("Total amount of installed creep miners: " .. global.creep_miners_count)
 end
 
-function creep_eater.remove (entit)
+function creep_eater.remove (entit, died)
     local r = 0
     for i=1, global.creep_miners_last do
         if global.creep_miners[i]
@@ -370,9 +371,14 @@ function creep_eater.remove (entit)
         game.print("Index number of miner pending for removal is:" .. r)
         game.print("Delete pending creep miner with the name: " .. removing.name .. " located at x:" .. removing.position.x .. " y:" .. removing.position.y)
         global.creep_radars[removing.position.x .. ":" .. removing.position.y] = nil
+        circle_rendering.remove_circle(removing)
         global.creep_miners[r].killed = true
-        if last_user and (not removing.mine({inventory = last_user.get_main_inventory(), force = true, raise_destroyed = true, ignore_minable = true})) then
-            game.print("Radar doesn't want to be mined!" .. r)
+        if died then
+            removing.destroy()
+        else
+            if last_user and (not removing.mine({inventory = last_user.get_main_inventory(), force = true, raise_destroyed = true, ignore_minable = true})) then
+                game.print("Radar doesn't want to be mined!" .. r)
+            end
         end
     else
         game.print("WTF?! No creep miner found for destroying!")

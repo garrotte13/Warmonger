@@ -1,4 +1,4 @@
-require ("util")
+
 local generic_impact =
 {
   {
@@ -56,7 +56,7 @@ data:extend(
 		name = "creep-miner1-overlay",
 		icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
 		
-		minable = {mining_time = 1, result = "creep-miner1"},
+		minable = {mining_time = 1, result = "creep-miner1-overlay"},
 		--corpse = "big-remnants",
 		selection_box = {{-1.5,-1.5},{1.5,1.5}},
 		collision_box = {{-1.4,-1.4},{1.4,1.4}},
@@ -126,7 +126,7 @@ data:extend(
 		resistances = {{type = "acid",percent = 25},{type = "fire",percent = 70},{type = "impact", percent = 40}},
 		max_health = 500,
 		inventory_size = 24,
-		minable = {mining_time = 1, result = "creep-miner1"},
+		minable = {mining_time = 1, result = "creep-miner1-overlay"},
 		icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
 		collision_box = {{-1.4,-1.4},{1.4,1.4}},
 		selection_box = {{-1.5,-1.5},{1.5,1.5}},
@@ -146,7 +146,7 @@ data:extend(
 		},
 	},
 	{
-		type="item", name="creep-miner1", icon_size="32", icon="__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		type="item", name="creep-miner1-overlay", icon_size="32", icon="__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
 		subgroup="defensive-structure", order="z[creep-miner1]",
 		stack_size = 50,
 		place_result="creep-miner1-overlay"
@@ -154,7 +154,7 @@ data:extend(
 
 	{
 		type = "recipe",
-		name = "creep-miner1",
+		name = "creep-miner1-overlay",
 		category = "advanced-crafting",
 		enabled = "false",
 		energy_required = 5.00,
@@ -165,16 +165,16 @@ data:extend(
 		  { type = "item", name = "substation" , amount = 1 }
 		},
 		results = {
-		  { type = "item", name = "creep-miner1", amount = 1.0, },
+		  { type = "item", name = "creep-miner1-overlay", amount = 1.0, },
 		},
-		main_product = "creep-miner1",
+		main_product = "creep-miner1-overlay",
 		icon = "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
 		icon_size = "32"
 	},
 
 	{
 		type = "item",
-		name = "creep-miner0",
+		name = "creep-miner0-overlay",
 		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		icon_size = 64,
 		subgroup = "defensive-structure",
@@ -184,8 +184,32 @@ data:extend(
 	  },
 
 	  {
+		type = "item",
+		name = "creep-miner0-radar",
+		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
+		icon_size = 64,
+		subgroup = "defensive-structure",
+		order = "z[creep-miner0]",
+		flags = {"hidden"},
+		place_result = "creep-miner0-radar",
+		stack_size = 25
+	  },
+
+	  {
+		type = "item",
+		name = "creep-miner0-chest",
+		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
+		icon_size = 64,
+		subgroup = "defensive-structure",
+		order = "z[creep-miner0]",
+		flags = {"hidden"},
+		place_result = "creep-miner0-chest",
+		stack_size = 25
+	  },
+
+	  {
 		type = "recipe",
-		name = "creep-miner0",
+		name = "creep-miner0-overlay",
 		category = "advanced-crafting",
 		enabled = false,
 		energy_required = 3.00,
@@ -196,7 +220,7 @@ data:extend(
 			{ type = "item", name = "iron-chest" , amount = 1, },
 			{ type = "item", name = "electronic-circuit" , amount = 5, }
 		},
-		result = "creep-miner0"
+		result = "creep-miner0-overlay"
 	  },
 
 	  {
@@ -205,7 +229,7 @@ data:extend(
 		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		icon_size = 64,
 		flags = {"placeable-player", "player-creation"},
-		minable = {mining_time = 1, result = "creep-miner0"},
+		minable = {mining_time = 1, result = "creep-miner0-overlay"},
 		max_health = 300,
 		corpse = "big-remnants",
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
@@ -325,7 +349,7 @@ data:extend(
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
 		max_health = 300,
 		inventory_size = 24,
-		minable = {mining_time = 1, result = "creep-miner0"},
+		minable = {mining_time = 1, result = "creep-miner0-chest"},
 		corpse = "big-remnants",
 		icon_size = 64, icon =  "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		collision_box = {{-1.35,-1.35},{1.35,1.35}},
@@ -353,7 +377,9 @@ data:extend(
 		name = "creep-miner0-radar",
 		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		icon_size = 64,
-		flags = {"placeable-player", "player-creation", "not-deconstructable"},
+		flags = {"placeable-player", "player-creation", "not-deconstructable", "not-blueprintable"},
+		-- flags = {"placeable-player", "player-creation"},
+		-- minable = {mining_time = 1, result = "creep-miner0-radar"},
 		-- max_health = 300,
 		-- corpse = "big-remnants",
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
