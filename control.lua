@@ -34,7 +34,7 @@ event.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
- event.on_nth_tick(3, function(e)
+ event.on_nth_tick(2, function(e)
   creep_eater.process()
 end)
 
@@ -99,6 +99,18 @@ script.on_event(defines.events.on_robot_built_entity, function(e)
   else corrosion.engaging(e.created_entity) end
 end)
 
+script.on_event(defines.events.script_raised_built, function(e)
+  if e.entity.valid and (e.entity.name == "creep-miner1-overlay" or e.entity.name == "creep-miner0-overlay") then
+    local last_user = game.players[e.player_index]
+    circle_rendering.add_circle(e.entity, last_user)
+  end
+end)
+
+script.on_event(defines.events.script_raised_destroy, function(e)
+  if e.entity.valid and (e.entity.name == "creep-miner1-overlay" or e.entity.name == "creep-miner0-overlay") then
+    circle_rendering.remove_circle(e.entity)
+  end
+end)
 
 event.on_biter_base_built(function(e)
   creep.on_biter_base_built(e.entity)

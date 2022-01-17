@@ -30,6 +30,28 @@ function corrosion.engaging (entity)
 
 end
 
+function corrosion.engaging_fast (entity)
+  -- check for moving object needed
+  local e_area = entity.selection_box
+  area.ceil(e_area)
+  if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
+    global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = entity
+    global.corrosion.affected_num = global.corrosion.affected_num + 1
+    if entity.name:match("creep%-miner%d%-") and (not entity.active) then
+      for i=1, global.creep_miners_last do
+          if global.creep_miners[i]
+  --        and global.creep_miners[i].entity
+  --        and global.creep_miners[i].entity.valid
+          and (global.creep_miners[i].x == entity.position.x) and (global.creep_miners[i].y == entity.position.y) then
+              entity.active = true
+              global.creep_miners[i].stage = 0
+              break
+          end
+      end
+    end
+  end
+end
+
 function corrosion.disengaging (entity)
  if (not global.corrosion.enabled) or (entity.force.name~="player") then return end
  local turret_area = entity.selection_box

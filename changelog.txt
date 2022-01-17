@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.0
+Date: 2022-0?-?
+  Changes:
+      - Creep miner buildings introduced. Chemical fuel energy based and Electric energy based. Graphics for them was taken from Amator Phasma Coal&Steam and Yuoki Industries mods.
+      First one is portable and self re-fueling from player inventory. Second one has bigger reach area, more power-hungry and produce pollution only on creep excavation.
+      They work slower than Krastorio cheat-shovel, consume energy permanently, produce pollution per each creep tile removed. But can sometimes remove fake creep where shovel can't (in early game).
+      Most important - should give factorio automation gameplay, help vs coming-soon Warmonger painful feature and vs Creeper. They do sleep to keep base energy consumption and UPS down.
+      Veden's Rampant Industry airfilter (low UPS consumption goes here!) and ItemCollector mods ideas and code used.
+      - Creep generation balance. One more attempt to avoid too much biomass for 200%+ enemy bases density.
+      - Creep pollution absorption increased from 5 to 10 dead trees per tile for Deathworld mode and Creeper mod balance.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.2.5
 Date: 2022-01-11
   Changes:

@@ -1,4 +1,4 @@
-
+local constants = require("scripts.constants")
 local generic_impact =
 {
   {
@@ -70,6 +70,18 @@ data:extend(
 			shift = {0.5, -0.325},
 			 scale=0.5, animation_speed=0.5, line_length = 4
 		},
+		radius_visualisation_specification = {
+			distance = constants.miner_range("creep-miner1-overlay"),
+			sprite = {
+				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				priority = "high",
+				width = 32,
+				height = 32,
+				line_length = 1,
+				tint = {r=0.5, g=0.2, b=0.5}
+			},
+			draw_in_cursor = true
+		},
 		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 0, },
 		energy_usage = "600KW",
 		max_distance_of_nearby_sector_revealed = 1,
@@ -89,8 +101,20 @@ data:extend(
 		selection_box = {{-0.8,-0.8},{0.8,0.8}},
 		allow_copy_paste = false,
 		selection_priority = 70,
-
+		create_ghost_on_death = false,
 		flags = {"not-deconstructable", "player-creation"},
+		radius_visualisation_specification = {
+			distance = constants.miner_range("creep-miner1-radar"),
+			sprite = {
+				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				priority = "high",
+				width = 32,
+				height = 32,
+				line_length = 1,
+				tint = {r=0.5, g=0.2, b=0.5}
+			},
+			draw_in_cursor = true
+		},
 		pictures = {
 			filename = "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_sheet.png",
 			priority = "high", width = 256, height = 256, direction_count = 16,
@@ -101,7 +125,7 @@ data:extend(
 		energy_usage = "600KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
-		energy_per_sector = "1800KJ",
+		energy_per_sector = "2400KJ",
 		energy_per_nearby_scan = "1200KJ",
 		working_sound =
     {
@@ -132,6 +156,7 @@ data:extend(
 		selection_box = {{-1.5,-1.5},{1.5,1.5}},
 		selection_priority = 50,
 		allow_copy_paste = true,
+		create_ghost_on_death = false,
 		flags = {"placeable-player", "player-creation"},
 		vehicle_impact_sound = generic_impact,
 		open_sound = { filename = "__base__/sound/metallic-chest-open.ogg", volume=0.43 },
@@ -150,6 +175,20 @@ data:extend(
 		subgroup="defensive-structure", order="z[creep-miner1]",
 		stack_size = 50,
 		place_result="creep-miner1-overlay"
+	},
+	{
+		type="item", name="creep-miner1-chest", icon_size="32", icon="__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		subgroup="defensive-structure", order="z[creep-miner1]",
+		stack_size = 50,
+		flags = {"hidden"},
+		place_result="creep-miner1-chest"
+	},
+	{
+		type="item", name="creep-miner1-radar", icon_size="32", icon="__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
+		subgroup="defensive-structure", order="z[creep-miner1]",
+		stack_size = 50,
+		flags = {"hidden"},
+		place_result="creep-miner1-radar"
 	},
 
 	{
@@ -180,7 +219,7 @@ data:extend(
 		subgroup = "defensive-structure",
 		order = "z[creep-miner0]",
 		place_result = "creep-miner0-overlay",
-		stack_size = 25
+		stack_size = 50
 	  },
 
 	  {
@@ -192,7 +231,7 @@ data:extend(
 		order = "z[creep-miner0]",
 		flags = {"hidden"},
 		place_result = "creep-miner0-radar",
-		stack_size = 25
+		stack_size = 50
 	  },
 
 	  {
@@ -204,7 +243,7 @@ data:extend(
 		order = "z[creep-miner0]",
 		flags = {"hidden"},
 		place_result = "creep-miner0-chest",
-		stack_size = 25
+		stack_size = 50
 	  },
 
 	  {
@@ -282,6 +321,18 @@ data:extend(
 			}
 		  }
 		},
+		radius_visualisation_specification = {
+			distance = constants.miner_range("creep-miner0-overlay"),
+			sprite = {
+				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				priority = "high",
+				width = 32,
+				height = 32,
+				line_length = 1,
+				tint = {r=0.5, g=0.2, b=0.5}
+			},
+			draw_in_cursor = true
+		},
 		pictures =
 		{
 		layers =
@@ -351,6 +402,7 @@ data:extend(
 		inventory_size = 24,
 		minable = {mining_time = 1, result = "creep-miner0-chest"},
 		corpse = "big-remnants",
+		create_ghost_on_death = false,
 		icon_size = 64, icon =  "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		collision_box = {{-1.35,-1.35},{1.35,1.35}},
 		selection_box = {{-1.5,-1.5},{1.5,1.5}},
@@ -382,6 +434,7 @@ data:extend(
 		-- minable = {mining_time = 1, result = "creep-miner0-radar"},
 		-- max_health = 300,
 		-- corpse = "big-remnants",
+		create_ghost_on_death = false,
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
 		vehicle_impact_sound =  { filename = "__base__/sound/car-stone-impact.ogg", volume = 1.0 },
 		working_sound =
@@ -420,6 +473,18 @@ data:extend(
 			  slow_down_factor = 1
 			}
 		  }
+		},
+		radius_visualisation_specification = {
+			distance = constants.miner_range("creep-miner0-radar"),
+			sprite = {
+				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				priority = "high",
+				width = 32,
+				height = 32,
+				line_length = 1,
+				tint = {r=0.5, g=0.2, b=0.5}
+			},
+			draw_in_cursor = true
 		},
 		pictures =
 		{

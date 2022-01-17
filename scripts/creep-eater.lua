@@ -75,7 +75,7 @@ function creep_eater.process()
     global.creep_miners_id = id
     local miner = global.creep_miners[id]
     local surface = miner.entity.surface
-    local miner_range = constants.miner_range(miner.entity)
+    local miner_range = constants.miner_range(miner.entity.name)
     
     if miner.stage == 0 then -- building creep tiles array
 
@@ -88,8 +88,12 @@ function creep_eater.process()
         })
         if miner.cr_tiles and miner.cr_tiles[1] then miner.stage = 1
         else
-            game.print("Creep miner with Id: " .. id .. " has lost excessive energy due to no creep in radius.")
-            if miner.ready_tiles > 5 then miner.ready_tiles = 5 end
+            game.print("Creep miner with Id: " .. id .. " has no creep in radius. Turning off...")
+            miner.entity.active = false
+            miner.deactivation_tick = game.ticks_played
+            miner.stage = 50
+            -- if miner.ready_tiles > 5 then miner.ready_tiles = 5 end
+            -- miner.ready_tiles = 0
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         end
 
@@ -142,7 +146,7 @@ function creep_eater.process()
             force = "enemy"
         }
         if (not miner.fakecreep) and miner.enemies_found > 0 then -- all creep tiles are protected
-            game.print("All true creep is protected! No fake creep is available. Miner index: ".. id)
+            game.print("All true creep is protected! While no fake creep is available. Miner index: ".. id)
             if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
             miner.stage = 0
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
@@ -185,20 +189,20 @@ function creep_eater.process()
         end
         if tiles_free < 0 then game.print("WTF! Free tiles number is negative (".. tiles_free.. ") for miner Index: ".. id)
         elseif tiles_free == 0 then
-            game.print("All creep is protected! Miner index: ".. id)
+            game.print("All reachable creep is protected! Miner index: ".. id)
             if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
             miner.stage = 0
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
-        elseif tiles_free <= miner.ready_tiles then
+        elseif tiles_free <= miner.ready_tiles then -- No need to sort or prioritize anything
             if global.corrosion.enabled then miner.corroded_help = true end
             miner.stage = 30
         elseif global.corrosion.enabled then miner.stage = 10 else miner.stage = 11 end
 
-    elseif miner.stage == 10 then -- Priority for corroding tiles
+    elseif miner.stage == 10 then -- Priority for corroding free tiles
 
         local d = miner_range * miner_range
         for _, corroded in pairs(global.corrosion.affected) do
-            if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x)-0.5)^2+((corroded.position.y - miner.entity.position.y)-0.5)^2 < d  ) then
+            if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x))^2+((corroded.position.y - miner.entity.position.y))^2 <= (d+0.5)  ) then
                 local building_area = corroded.selection_box
                 area.ceil(building_area)
                 for i=1,#miner.cr_tiles do
@@ -267,6 +271,15 @@ function creep_eater.process()
         miner.cr_tiles = {}
         if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
 
+    elseif miner.stage == 50 then
+
+        if (game.ticks_played - miner.deactivation_tick) > 10800 then
+            miner.entity.active = true
+            miner.stage = 0
+        else
+            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+        end
+
 
     end
 
@@ -297,7 +310,7 @@ function creep_eater.add (entity)
         chest = surface.create_entity({
             name = chest_name,
             position = position,
-            raise_built = true,
+            raise_built = false,
             player = last_user,
             force = force
         })
@@ -305,7 +318,7 @@ function creep_eater.add (entity)
             name = radar_name,
             position = position,
             player = last_user,
-            raise_built = true,
+            raise_built = false,
             force = force
         })
         entity.destructible = false
@@ -329,6 +342,7 @@ function creep_eater.add (entity)
     ready_tiles = 0,
     x = chest.position.x,
     y = chest.position.y,
+    deactivation_tick = 0,
     killed = false,
     entity = entity,
     chest = chest,
@@ -357,7 +371,6 @@ function creep_eater.remove (entit, died)
 --        and global.creep_miners[i].entity.valid
         and (global.creep_miners[i].x == entit.position.x) and (global.creep_miners[i].y == entit.position.y) then
             r = i
-            game.print("Value of found r is:" .. r)
             break
         end
     end
@@ -376,7 +389,7 @@ function creep_eater.remove (entit, died)
         if died then
             removing.destroy()
         else
-            if last_user and (not removing.mine({inventory = last_user.get_main_inventory(), force = true, raise_destroyed = true, ignore_minable = true})) then
+            if last_user and (not removing.mine({inventory = last_user.get_main_inventory(), force = true, raise_destroyed = false, ignore_minable = true})) then
                 game.print("Radar doesn't want to be mined!" .. r)
             end
         end

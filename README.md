@@ -1,5 +1,5 @@
 # Warmonger
-Creep for vanilla Factiorio completely based on Krastorio2 code (ver 1.2.x). Thanks to Krastor, Linver, raiguard and their supporters for that.
+Creep for vanilla Factorio completely based on Krastorio2 code (ver 1.2.x). Thanks to Krastor, Linver, raiguard and their supporters for that.
 https://github.com/raiguard/krastorio-2
 
 Only creep-related staff, biters research and bio lab are taken from Krastorio.

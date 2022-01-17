@@ -19,9 +19,9 @@ constants.minersTable = {
   miner_range = {18, 28}
 }
 
-function constants.miner_range(entity)
+function constants.miner_range(name)
   local r = constants.electric_miner_range
-  if entity.name == "creep-miner0-radar" or entity.name == "creep-miner0-overlay" or entity.name == "creep-miner0-chest" then r = constants.burner_miner_range end
+  if name == "creep-miner0-radar" or name == "creep-miner0-overlay" or name == "creep-miner0-chest" then r = constants.burner_miner_range end
   return r
 end
 

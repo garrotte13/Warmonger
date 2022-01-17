@@ -2,6 +2,7 @@ local table = require("__flib__.table")
 local misc = require("__flib__.misc")
 local area = require("__flib__.area")
 local constants = require("scripts.constants")
+local corrosion = require("scripts.corrosion")
 
 local creep = {}
 
@@ -121,17 +122,12 @@ function creep.process_creep_queue()
           local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
           for _, entity in pairs(entities) do
             if entity.valid and entity.destructible and entity.is_entity_with_health then
-              local turret_area = entity.selection_box
-              area.ceil(turret_area)
               local hitpoints = entity.max_health -- Need to add health_bonus for player here
               local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- bigger one time damage and can be lethal
               local recieved_dmg = entity.damage(dmg, "enemy", "acid")
               game.print("Natives strike back with lethal corrosion on your: " .. entity.name .. ". Damage received: " .. recieved_dmg)
-              -- add check for remaining health here !
-              if not global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
-                global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = entity
-                global.corrosion.affected_num = global.corrosion.affected_num + 1
-              end
+              -- add check for remaining health is needed here !
+              corrosion.engaging_fast(entity)
             end
           end
         else
@@ -139,12 +135,7 @@ function creep.process_creep_queue()
           local entities = creep_pack.surface.find_entities_filtered{ position = tile.position, force = "player" }
           for _, entity in pairs(entities) do
             if entity.valid and entity.destructible and entity.is_entity_with_health then
-              local turret_area = entity.selection_box
-              area.ceil(turret_area)
-              if not global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
-                global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = entity
-                global.corrosion.affected_num = global.corrosion.affected_num + 1
-              end
+              corrosion.engaging_fast(entity)
             end
           end
         end
