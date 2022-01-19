@@ -29,7 +29,7 @@ function NoEnemiesFound (check_surface, tiles_array)
   return true
 end
 
-function creep_collector.collect(player, surface, tiles, sel_area)
+function creep_collector.collect_obsolete(player, surface, tiles, sel_area)
   local i = 0
   local j = 0
   local enemies_found = 0
@@ -101,6 +101,19 @@ function creep_collector.collect(player, surface, tiles, sel_area)
     })
    end
   end
+end
+
+function creep_collector.collect(player, surface, tiles, sel_area)
+  local cr_true = 0
+  local cr_fake = 0
+  for _, tile in pairs(tiles) do
+    if tile.name == "kr-creep" then cr_true = cr_true + 1 else cr_fake = cr_fake + 1 end
+  end
+  player.create_local_flying_text({
+    -- create_at_cursor = not options.position,
+    position = area.center(sel_area),
+    text = {"message.kr-amount-in-selection", cr_true, {"item-name.kr-creep"}, cr_fake, {"item-name.fk-creep"}}
+  })
 end
 
 return creep_collector

@@ -81,11 +81,11 @@ function circle_rendering.add_circle(miner, player)
     local id
     local miner_range = constants.miner_range(miner.name)
     if player and miner_cursor(player) then
-      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.25}, radius = miner_range, filled=true, target=miner, players={player}, surface = miner.surface, draw_on_ground=true, visible=true}
-      game.print("Drawn visible circle:".. id)
+      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.05}, radius = miner_range, filled=true, target=miner, players={player}, surface = miner.surface, draw_on_ground=true, visible=true}
+      --game.print("Drawn visible circle:".. id)
     else
-      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.25}, radius = miner_range, filled=true, target=miner, players={}, surface = miner.surface, visible=false, draw_on_ground=true}
-      game.print("Drawn invisible circle:".. id)
+      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.05}, radius = miner_range, filled=true, target=miner, players={}, surface = miner.surface, visible=false, draw_on_ground=true}
+      --game.print("Drawn invisible circle:".. id)
     end
 
   end
@@ -194,22 +194,24 @@ function circle_rendering.SwapInventory(player)
     end
     itemCount = inventory.get_item_count("creep-miner0-radar")
     if (itemCount > 0) then inventory.remove({name = "creep-miner0-radar", count = itemCount}) end
-  end
 
-  local itemCount = inventory.get_item_count("creep-miner1-chest")
-  if (itemCount > 0) then
+    itemCount = inventory.get_item_count("creep-miner1-chest")
+    if (itemCount > 0) then
       inventory.remove({name = "creep-miner1-chest", count = itemCount})
       inventory.insert({name = "creep-miner1-overlay", count = itemCount})
+    end
+    itemCount = inventory.get_item_count("creep-miner1-radar")
+    if (itemCount > 0) then inventory.remove({name = "creep-miner1-radar", count = itemCount}) end
   end
-  itemCount = inventory.get_item_count("creep-miner1-radar")
-  if (itemCount > 0) then inventory.remove({name = "creep-miner1-radar", count = itemCount}) end
 end
 
 function circle_rendering.SwapItemStack(player)
   local stack
+  local inv = player.get_main_inventory()
   if player and player.valid then
     stack = player.cursor_stack
   else return end
+
   local dst
   if stack and stack.valid and stack.valid_for_read then
     if (stack.name == "creep-miner0-radar") then dst = "creep-miner0-overlay"
@@ -218,11 +220,16 @@ function circle_rendering.SwapItemStack(player)
     elseif (stack.name == "creep-miner1-chest") then dst = "creep-miner1-overlay"
     else return end
   else return end
-  local item = { name = dst, count = stack.count }
+  local itemCount = inv.get_item_count(dst)
+  if itemCount == 0 then itemCount = stack.prototype.stack_size end
+  local item = { name = dst, count = itemCount }
+  local DelCount =  math.min(itemCount, stack.prototype.stack_size)
+  inv.remove({name = dst, count = DelCount})
   if stack.can_set_stack(item) then
     stack.set_stack(item)
   end
-end
+  
 
+end
 
 return circle_rendering

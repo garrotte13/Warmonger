@@ -88,7 +88,7 @@ function creep_eater.process()
         })
         if miner.cr_tiles and miner.cr_tiles[1] then miner.stage = 1
         else
-            game.print("Creep miner with Id: " .. id .. " has no creep in radius. Turning off...")
+            --game.print("Creep miner with Id: " .. id .. " has no creep in radius. Turning off...")
             miner.entity.active = false
             miner.deactivation_tick = game.ticks_played
             miner.stage = 50
@@ -189,7 +189,7 @@ function creep_eater.process()
         end
         if tiles_free < 0 then game.print("WTF! Free tiles number is negative (".. tiles_free.. ") for miner Index: ".. id)
         elseif tiles_free == 0 then
-            game.print("All reachable creep is protected! Miner index: ".. id)
+            --game.print("All reachable creep is protected! Miner index: ".. id)
             if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
             miner.stage = 0
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
@@ -245,7 +245,7 @@ function creep_eater.process()
             end
             surface.set_tiles(tiles)
         else
-            game.print("No tiles to collect, but there are tiles! Miner index: ".. id)
+            --game.print("No tiles to collect, but there are tiles! Miner index: ".. id)
             if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
         end
         miner.cr_tiles = {}
@@ -407,7 +407,7 @@ function creep_eater.scanned (radar)
     --m = radar.position.x .. ":" .. radar.position.y
     --local id = global.creep_radars[m]
     if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. "has been lost") return end
-    global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + 5
+    global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + 7
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
 end
 

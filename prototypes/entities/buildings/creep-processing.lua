@@ -55,12 +55,12 @@ data:extend(
 		type = "radar",
 		name = "creep-miner1-overlay",
 		icon_size = 32, icon =  "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
-		
+
 		minable = {mining_time = 1, result = "creep-miner1-overlay"},
 		--corpse = "big-remnants",
 		selection_box = {{-1.5,-1.5},{1.5,1.5}},
 		collision_box = {{-1.4,-1.4},{1.4,1.4}},
-		-- allow_copy_paste = false,
+		allow_copy_paste = true,
 		selection_priority = 70,
 		max_health = 500,
 		flags = {"placeable-player", "player-creation"},
@@ -73,10 +73,10 @@ data:extend(
 		radius_visualisation_specification = {
 			distance = constants.miner_range("creep-miner1-overlay"),
 			sprite = {
-				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",
-				width = 32,
-				height = 32,
+				width = 512,
+				height = 512,
 				line_length = 1,
 				tint = {r=0.5, g=0.2, b=0.5}
 			},
@@ -99,17 +99,17 @@ data:extend(
 		--corpse = "big-remnants",
 		collision_box = {{-0.1,-0.1},{0.1,0.1}},
 		selection_box = {{-0.8,-0.8},{0.8,0.8}},
-		allow_copy_paste = false,
+		allow_copy_paste = true,
 		selection_priority = 70,
 		create_ghost_on_death = false,
 		flags = {"not-deconstructable", "player-creation"},
 		radius_visualisation_specification = {
 			distance = constants.miner_range("creep-miner1-radar"),
 			sprite = {
-				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",
-				width = 32,
-				height = 32,
+				width = 512,
+				height = 512,
 				line_length = 1,
 				tint = {r=0.5, g=0.2, b=0.5}
 			},
@@ -147,7 +147,7 @@ data:extend(
 	{
 		type = "container",
 		name = "creep-miner1-chest",
-		resistances = {{type = "acid",percent = 25},{type = "fire",percent = 70},{type = "impact", percent = 40}},
+		resistances = {{type = "acid", percent = 25},{type = "fire", percent = 70},{type = "impact", percent = 50}},
 		max_health = 500,
 		inventory_size = 24,
 		minable = {mining_time = 1, result = "creep-miner1-overlay"},
@@ -268,9 +268,10 @@ data:extend(
 		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		icon_size = 64,
 		flags = {"placeable-player", "player-creation"},
-		minable = {mining_time = 1, result = "creep-miner0-overlay"},
+		minable = {mining_time = 1, result = "creep-miner0-overlay", count = 1},
 		max_health = 300,
 		corpse = "big-remnants",
+		allow_copy_paste = true,
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
 		repair_sound = { filename = "__base__/sound/manual-repair-simple.ogg" },
 		mined_sound = { filename = "__base__/sound/deconstruct-bricks.ogg" },
@@ -324,10 +325,10 @@ data:extend(
 		radius_visualisation_specification = {
 			distance = constants.miner_range("creep-miner0-overlay"),
 			sprite = {
-				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",
-				width = 32,
-				height = 32,
+				width = 512,
+				height = 512,
 				line_length = 1,
 				tint = {r=0.5, g=0.2, b=0.5}
 			},
@@ -400,7 +401,7 @@ data:extend(
 		resistances = {{type = "acid",percent = 15},{type = "impact", percent = 40},{type = "fire",percent = 60}},
 		max_health = 300,
 		inventory_size = 24,
-		minable = {mining_time = 1, result = "creep-miner0-chest"},
+		minable = {mining_time = 1, result = "creep-miner0-chest", count = 1},
 		corpse = "big-remnants",
 		create_ghost_on_death = false,
 		icon_size = 64, icon =  "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
@@ -429,7 +430,7 @@ data:extend(
 		name = "creep-miner0-radar",
 		icon = "__Warmonger__/graphics/icons/entities/apm_machine_base_0.png",
 		icon_size = 64,
-		flags = {"placeable-player", "player-creation", "not-deconstructable", "not-blueprintable"},
+		flags = {"placeable-player", "player-creation", "not-deconstructable"},
 		-- flags = {"placeable-player", "player-creation"},
 		-- minable = {mining_time = 1, result = "creep-miner0-radar"},
 		-- max_health = 300,
@@ -444,7 +445,7 @@ data:extend(
 		collision_box = {{-0.1, -0.1}, {0.1, 0.1}},
 		selection_box = {{-0.8, -0.8}, {0.8, 0.8}},
 		selection_priority = 70,
-		allow_copy_paste = false,
+		allow_copy_paste = true,
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
 		energy_per_sector = "1200KJ",
@@ -477,10 +478,10 @@ data:extend(
 		radius_visualisation_specification = {
 			distance = constants.miner_range("creep-miner0-radar"),
 			sprite = {
-				filename = "__Warmonger__/graphics/entities/circle-32.png",
+				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",
-				width = 32,
-				height = 32,
+				width = 512,
+				height = 512,
 				line_length = 1,
 				tint = {r=0.5, g=0.2, b=0.5}
 			},

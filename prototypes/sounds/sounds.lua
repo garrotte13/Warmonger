@@ -41,4 +41,19 @@ data:extend({
       count_already_playing = false,
     },
   },
+
+  {
+    type = "sound",
+    name = "creep-counter-attack-explosion",
+    category = "game-effect",
+    filename = "__Warmonger__/sounds/scripted/counter_attack_explosion.ogg",
+    volume = 1.0,
+    audible_distance_modifier = 0.8,
+    aggregation = {
+      max_count = 5,
+      remove = false,
+      --count_already_playing = false,
+    },
+  },
+  
 })

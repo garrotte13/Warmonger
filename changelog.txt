@@ -9,6 +9,12 @@ Date: 2022-0?-?
       Veden's Rampant Industry airfilter (low UPS consumption goes here!) and ItemCollector mods ideas and code used.
       - Creep generation balance. One more attempt to avoid too much biomass for 200%+ enemy bases density.
       - Creep pollution absorption increased from 5 to 10 dead trees per tile for Deathworld mode and Creeper mod balance.
+      - Creep retaliation strikes feature introduced in raw version. Turn on/off with command (look for it in readme).
+      Description: Biters counterattack with creep-2 deploying shells for big-range attacks on their bases (three levels depending on distance) after evolution exceeds 35%.
+      Everything (including player and vehicles) in target area receives some acid+physical damage (grows with evo) and creep stays on the ground to be collected.
+      Area size and target accuracy depend on attacking object distance from enemy base.
+      - Halved evo progression of creep corrosion DoT, because creep miners are not so fast with removing creep if it's artillery autofire and buildings loose too much hitpoints sometimes.
+      Also it will make turret creep easier in early-mid game for not big fans of RTS games :-) .
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.5

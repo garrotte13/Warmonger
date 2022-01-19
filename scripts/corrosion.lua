@@ -6,6 +6,7 @@ local corrosion = {}
 function corrosion.init()
  global.corrosion = {
  enabled = true,
+ strike_back = true,
  affected = {},
  affected_num = 0
  }
@@ -32,23 +33,12 @@ end
 
 function corrosion.engaging_fast (entity)
   -- check for moving object needed
+  if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character" then return end
   local e_area = entity.selection_box
   area.ceil(e_area)
   if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
     global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = entity
     global.corrosion.affected_num = global.corrosion.affected_num + 1
-    if entity.name:match("creep%-miner%d%-") and (not entity.active) then
-      for i=1, global.creep_miners_last do
-          if global.creep_miners[i]
-  --        and global.creep_miners[i].entity
-  --        and global.creep_miners[i].entity.valid
-          and (global.creep_miners[i].x == entity.position.x) and (global.creep_miners[i].y == entity.position.y) then
-              entity.active = true
-              global.creep_miners[i].stage = 0
-              break
-          end
-      end
-    end
   end
 end
 
@@ -73,6 +63,14 @@ corrosion.commands = {
     global.corrosion.enabled = true
     game.print({ "message.corrosion-enabled" })
   end,
+  ["disable-corrosion-strikes"] = function()
+    global.corrosion.strike_back = false
+    game.print({ "message.corrosion-strikes-disabled" })
+  end,
+  ["enable-corrosion-strikes"] = function()
+    global.corrosion.strike_back = true
+    game.print({ "message.corrosion-strikes-enabled" })
+  end,
 }
 
 
@@ -81,7 +79,7 @@ function corrosion.affecting()
  for _, entity in pairs(global.corrosion.affected) do
   if entity.valid then
     local surface = entity.surface
-    local dmg = math.floor( entity.health * ( 0.1 + game.forces.enemy.evolution_factor/10 ) )  -- at least 5 health will be left for biters/worms to finish
+    local dmg = math.floor( entity.health * ( 0.05 + game.forces.enemy.evolution_factor/15 ) )  -- at least 5 health will be left for biters/worms to finish
     local recieved_dmg = entity.damage(dmg, "enemy", "acid")
     if recieved_dmg > 0 then
       surface.play_sound{path = "acid_burns", position = entity.position}

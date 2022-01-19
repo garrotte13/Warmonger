@@ -115,35 +115,43 @@ function creep.process_creep_queue()
         creep_pack.stage = 2
     elseif creep_pack.stage == 2 then
         creep_pack.surface.set_tiles(creep_pack.creep_tiles)
-        creep_pack.stage = 3
-    elseif creep_pack.stage == 3 then
-      if global.corrosion.enabled then
-        if creep_pack.fake and creep_pack.position then
-          local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
-          for _, entity in pairs(entities) do
-            if entity.valid and entity.destructible and entity.is_entity_with_health then
-              local hitpoints = entity.max_health -- Need to add health_bonus for player here
-              local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- bigger one time damage and can be lethal
-              local recieved_dmg = entity.damage(dmg, "enemy", "acid")
-              game.print("Natives strike back with lethal corrosion on your: " .. entity.name .. ". Damage received: " .. recieved_dmg)
-              -- add check for remaining health is needed here !
-              corrosion.engaging_fast(entity)
-            end
-          end
+        if global.corrosion.enabled then
+          creep_pack.stage = 3
         else
-        for _, tile in pairs(creep_pack.creep_tiles) do
-          local entities = creep_pack.surface.find_entities_filtered{ position = tile.position, force = "player" }
-          for _, entity in pairs(entities) do
-            if entity.valid and entity.destructible and entity.is_entity_with_health then
-              corrosion.engaging_fast(entity)
+          global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
+          global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
+        end
+    elseif creep_pack.stage == 3 then
+      if creep_pack.fake and creep_pack.position then
+        for i=1, global.creep_miners_last do
+          if global.creep_miners[i] and global.creep_miners[i].stage == 50
+           and global.creep_miners[i].entity and global.creep_miners[i].entity.valid then
+            local d = (constants.miner_range(global.creep_miners[i].entity.name) + creep_pack.radius)^2
+            if ((global.creep_miners[i].x - creep_pack.position.x)^2 + (global.creep_miners[i].y - creep_pack.position.y)^2) <= d then
+              global.creep_miners[i].entity.active = true
+              global.creep_miners[i].stage = 0
             end
           end
         end
+        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
+        for _, entity in pairs(entities) do
+          if entity.valid and entity.destructible and entity.is_entity_with_health then
+            corrosion.engaging_fast(entity)
+          end
+        end
+      else
+          for _, tile in pairs(creep_pack.creep_tiles) do
+            local entities = creep_pack.surface.find_entities_filtered{ position = tile.position, force = "player" }
+            for _, entity in pairs(entities) do
+              if entity.valid and entity.destructible and entity.is_entity_with_health then
+                corrosion.engaging_fast(entity)
+              end
+            end
+          end
       end
-    end
       global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
       global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
-  end
+    end
 end
 
 creep.remote_interface = {
@@ -218,5 +226,53 @@ creep.remote_interface = {
   global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end
 }
+
+function creep.check_strike (killed_e, killer_e, killer_force)
+  if (killer_force and killer_force.name == "enemy") or not killer_e or not killer_e.valid or math.random(1,3) < 2 then return end
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  if range_ratio < 1.74 then return end
+  local revengers = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 63, type = "unit-spawner", force = "enemy" }
+  local punisher
+  if revengers and revengers[1] then
+    punisher = revengers[math.random(1,#revengers)]
+    range_ratio = ( math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  else return end
+  local attack_area_radius = 2
+  local attack_inaccuracy = 2
+  if range_ratio > 5 then
+    attack_area_radius = 5
+    attack_inaccuracy = 7
+  elseif range_ratio > 3 then
+    attack_area_radius = 3
+    attack_inaccuracy = 4
+  end
+  local rnd_x = math.random(1,attack_inaccuracy*2+1)-(attack_inaccuracy+1)
+  local rnd_y = math.random(1,attack_inaccuracy*2+1)-(attack_inaccuracy+1)
+  local attack_pos = {x = killer_e.position.x+rnd_x, y = killer_e.position.y+rnd_y}
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", killer_e.surface, attack_pos, true, attack_area_radius)
+
+  killer_e.surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 1, position = attack_pos}
+  local entities = killer_e.surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius,  force = "player" }
+  local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
+  for _, entity in pairs(entities) do
+    if entity.valid and entity.destructible and entity.is_entity_with_health then
+      local hitpoints = entity.prototype.max_health
+      if entity.prototype.type == "character" then
+        hitpoints = hitpoints * (1 + entity.player.character_health_bonus) + 300
+        --game.print("Player was hit! His health is:".. hitpoints-200)
+      end
+      local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- big one time damage and can be lethal
+      dmg = dmg * dmg_coeff
+      local recieved_dmg1 = entity.damage(dmg/3, "enemy", "acid")
+      if entity.valid then
+        local recieved_dmg2 = entity.damage((2*dmg)/3, "enemy", "impact")
+        --if entity.valid then
+          --game.print("Natives strike back with lethal corrosion on your: " .. entity.name .. ". Damage received: " .. recieved_dmg1+recieved_dmg2)
+        --end
+      end
+    end
+  end
+
+end
 
 return creep

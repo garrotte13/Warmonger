@@ -10,3 +10,11 @@ CC BY 3.0 license
 Track was modified to be of shorter length and to accidently make fun vs vanilla factorio animation :-)
 Author and source
 https://freesound.org/people/Chinouk211/sounds/592692/
+
+
+- counter_attack_explosion.ogg
+Attribution 3.0 Unported (CC BY 3.0) 
+Track was modified to be of shorter length 
+Author and source
+https://freesound.org/people/Tazy/sounds/369935/
+

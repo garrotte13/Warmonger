@@ -1,6 +1,6 @@
 data:extend(
 {
-
+--[[
    {
 		type = "item",
 		name = "kr-creep",
@@ -87,7 +87,7 @@ data:extend(
 		},
 		stack_size = 100
 	},
-
+--]]
 	{
 		type = "item",
 		name = "biomass",
@@ -120,11 +120,11 @@ data:extend(
         mipmap_count = 4,
       },
     },
-		fuel_category = "chemical",
-		fuel_value = "2MJ",
-		fuel_emissions_multiplier = 2.0,
-		fuel_acceleration_multiplier = 0.8,
-		fuel_top_speed_multiplier = 0.8,
+	--	fuel_category = "chemical",
+	--	fuel_value = "2MJ",
+	--	fuel_emissions_multiplier = 2.0,
+	--	fuel_acceleration_multiplier = 0.8,
+	--	fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
 		order = "a[biomass]",
 		stack_size = 400
