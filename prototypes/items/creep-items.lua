@@ -131,6 +131,48 @@ data:extend(
 	},
 	
   {
+		type = "item",
+		name = "wm-bio-remains",
+		icon = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
+		icon_size = 32,
+		--icon_mipmaps = 4,
+		pictures = {
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-1.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-2.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-3.png",
+        scale = 0.25,
+        mipmap_count = 4,
+      },
+    },
+		fuel_category = "chemical",
+		fuel_value = "1MJ",
+		fuel_emissions_multiplier = 3.0,
+		fuel_acceleration_multiplier = 0.8,
+		fuel_top_speed_multiplier = 0.8,
+		subgroup = "raw-material",
+		order = "a[wm-bio-remains]",
+		stack_size = 300
+	},
+
+  {
     type = "selection-tool",
     name = "kr-creep-collector",
     icon = "__Warmonger__/graphics/icons/items/creep-collector.png",

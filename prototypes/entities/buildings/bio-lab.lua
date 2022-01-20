@@ -29,7 +29,7 @@ data:extend(
 		damaged_trigger_effect = hit_effects.entity(),
 		module_specification =
 		{
-			module_slots = 1
+			module_slots = 2
 		},
 		allowed_effects = {"speed", "pollution"},
 		resistances =
@@ -45,29 +45,52 @@ data:extend(
 				base_area = 10,
 				height = 2,
 				base_level = -1,
-				pipe_connections = 
+				pipe_connections =
 				{
 					{ type="input-output", position = {0, -4} },
-					{ type="input-output", position = {0, 4} }
 				}
 			},
 			{
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
-				pipe_covers = pipecoverspictures(),				
+				pipe_covers = pipecoverspictures(),
 				base_area = 10,
+				height = 2,
 				base_level = -1,
-				pipe_connections = 
+				pipe_connections =
 				{
-					{ type="input-output", position = {4, 0} },
+					{ type="input-output", position = {0, 4} }
+				}
+			},
+			{
+				production_type = "output",
+				pipe_picture = kr_pipe_path,
+				pipe_covers = pipecoverspictures(),
+				base_area = 10,
+				height = 2,
+				base_level = -1,
+				pipe_connections =
+				{
+					{ type="input-output", position = {4, 0} }
+				}
+			},
+			{
+				production_type = "output",
+				pipe_picture = kr_pipe_path,
+				pipe_covers = pipecoverspictures(),
+				base_area = 10,
+				height = 2,
+				base_level = -1,
+				pipe_connections =
+				{
 					{ type="input-output", position = {-4, 0} }
 				}
 			},
-			off_when_no_fluid_recipe = false
+			off_when_no_fluid_recipe = true
 		},
 		collision_box = {{-3.25, -3.25}, {3.25, 3.25}},
 		selection_box = {{-3.5, -3.5}, {3.5, 3.5}},
-		fast_replaceable_group = "kr-greenhouse",
+		--fast_replaceable_group = "kr-greenhouse",
 		animation =
 		{
 			layers =

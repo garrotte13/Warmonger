@@ -16,6 +16,10 @@ data:extend(
 			{
 				type = "unlock-recipe",
 				recipe = "kr-biomass-growing"
+			},
+			{
+				type = "unlock-recipe",
+				recipe = "wm-residue-sulphuric-acid"
 			}
 		},
 		prerequisites = { "kovarex-enrichment-process", "power-armor-mk2"},

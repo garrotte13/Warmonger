@@ -46,6 +46,29 @@ data:extend(
 		},
 		result = "biters-research-data",
 		result_count = 10
+	},
+
+	{
+		type = "recipe",
+		name = "wm-residue-sulphuric-acid",
+		icon = "__Warmonger__/graphics/icons/items/mud_recycle.png",
+		icon_size = 32,
+		--icon_mipmaps = 4,
+		category = "bioprocessing",
+		subgroup = "fluid-recipes",
+		energy_required = 4,
+		enabled = false,
+		ingredients =
+		{
+			{type = "item", name = "wm-bio-remains", amount = 10},
+			{type = "fluid", name = "steam", amount = 10, minimum_temperature = 400, maximum_temperature = 650},
+			{type = "fluid", name = "sulfuric-acid", amount = 10 }
+		},
+		results=
+		{
+		  {type="fluid", name="sulfuric-acid", amount=25},
+		  {type="fluid", name="heavy-oil", amount=5}
+		}
 	}
 
 })

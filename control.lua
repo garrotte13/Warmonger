@@ -50,38 +50,41 @@ event.on_load(function()
 -- corrosion = global.corrosion
 end)
 
+--[[
 script.on_event(defines.events.on_player_main_inventory_changed, function(e)
   local player = game.players[e.player_index]
   circle_rendering.SwapInventory(player)
 end)
+--]]
 
 script.on_event(defines.events.on_selected_entity_changed, function(e)
   local player = game.players[e.player_index]
   circle_rendering.selection_changed(player)
 end)
 
+
 script.on_event(defines.events.on_player_cursor_stack_changed, function(e)
   local player = game.players[e.player_index]
-  circle_rendering.SwapItemStack(player)
   circle_rendering.cursor_changed(player)
 end)
 
+
 script.on_event(defines.events.on_built_entity, function(e)
-  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay") then
+  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-radar" or e.created_entity.name == "creep-miner0-radar") then
     creep_eater.add (e.created_entity)
   else corrosion.engaging(e.created_entity) end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest" or e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, false)
   end
 end)
 
 script.on_event(defines.events.on_entity_died, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, true)
   elseif global.corrosion.enabled and global.corrosion.strike_back
    and e.entity.valid and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
@@ -92,26 +95,26 @@ end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e)
   corrosion.disengaging(e.entity)
-  if e.entity.valid and (e.entity.name == "creep-miner1-chest" or e.entity.name == "creep-miner0-chest") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, false)
   end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
-  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-overlay" or e.created_entity.name == "creep-miner0-overlay") then
+  if e.created_entity.valid and (e.created_entity.name == "creep-miner1-radar" or e.created_entity.name == "creep-miner0-radar") then
     creep_eater.add (e.created_entity)
   else corrosion.engaging(e.created_entity) end
 end)
 
 script.on_event(defines.events.script_raised_built, function(e)
-  if e.entity.valid and (e.entity.name == "creep-miner1-overlay" or e.entity.name == "creep-miner0-overlay") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     local last_user = game.players[e.player_index]
     circle_rendering.add_circle(e.entity, last_user)
   end
 end)
 
 script.on_event(defines.events.script_raised_destroy, function(e)
-  if e.entity.valid and (e.entity.name == "creep-miner1-overlay" or e.entity.name == "creep-miner0-overlay") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     circle_rendering.remove_circle(e.entity)
   end
 end)
@@ -142,4 +145,3 @@ end)
 event.on_chunk_generated(function(e)
   creep.on_chunk_generated(e.area, e.surface)
 end)
-
