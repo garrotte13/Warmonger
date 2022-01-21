@@ -213,7 +213,7 @@ data:extend(
 		order = "a01[biters-research-data]",
 		stack_size = 200
 	},
-	
+
   {
     type = "item",
     name = "kr-bio-lab",
@@ -224,6 +224,15 @@ data:extend(
     order = "d-g2[bio-lab]",
     place_result = "kr-bio-lab",
     stack_size = 50,
-  }
+  },
 
+  {
+    type = "flying-text",
+    name = "true_creep_protected",
+    speed = 0.01,
+    time_to_live = 150,
+    text_alignment = "center",
+    --localised_name = "message.wm-true-creep-protected",
+
+  }
 })

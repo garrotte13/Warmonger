@@ -13,6 +13,7 @@ Date: 2022-01-21
       Miners without chest remove only creep type-2 (wasting all obtained bio-remnants). Burner miner tries to store bio-remnants in its burner slots to ease early game.
       Burner miner searches for chemical fuel in that chest (not in other nearby chests!) before searching for player and steal from his inventory in nearby range.
       - Burner miner select to take fuel with less emission when stealing from chest/player to avoid natives attention whenever possible.
+      - Flying text hints are added to give a clue why miner paused removing creep in its range. Can be turned off with /disable-creepminer-hints command.
       - Not sure about old 1.2.* game saves support.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.0

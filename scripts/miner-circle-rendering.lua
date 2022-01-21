@@ -32,7 +32,7 @@ function circle_rendering.remove_circle(miner)
     if rendering.is_valid(id) and rendering.get_type(id):match("circle") then
       target = rendering.get_target(id)
       if target.entity == miner then
-        game.print("Destroyed circle:".. id)
+        --game.print("Destroyed circle:".. id)
         rendering.destroy(id)
         return
       end
@@ -81,10 +81,10 @@ function circle_rendering.add_circle(miner, player)
     local id
     local miner_range = constants.miner_range(miner.name)
     if player and miner_cursor(player) then
-      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.05}, radius = miner_range, filled=true, target=miner, players={player}, surface = miner.surface, draw_on_ground=true, visible=true}
+      id = rendering.draw_circle{color={r=0.05, g=0.10, b=0.10, a=0.05}, radius = miner_range, filled=true, target=miner, players={player}, surface = miner.surface, draw_on_ground=true, visible=true}
       --game.print("Drawn visible circle:".. id)
     else
-      id = rendering.draw_circle{color={r=0.5, g=0.2, b=0.5, a=0.05}, radius = miner_range, filled=true, target=miner, players={}, surface = miner.surface, visible=false, draw_on_ground=true}
+      id = rendering.draw_circle{color={r=0.05, g=0.10, b=0.10, a=0.05}, radius = miner_range, filled=true, target=miner, players={}, surface = miner.surface, visible=false, draw_on_ground=true}
       --game.print("Drawn invisible circle:".. id)
     end
 

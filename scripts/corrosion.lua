@@ -8,7 +8,8 @@ function corrosion.init()
  enabled = true,
  strike_back = true,
  affected = {},
- affected_num = 0
+ affected_num = 0,
+ creepminer_hints = true
  }
 end
 
@@ -70,6 +71,14 @@ corrosion.commands = {
   ["enable-corrosion-strikes"] = function()
     global.corrosion.strike_back = true
     game.print({ "message.corrosion-strikes-enabled" })
+  end,
+  ["disable-creepminer-hints"] = function()
+    global.corrosion.creepminer_hints = false
+    game.print({ "message.creepminer-hints-disabled" })
+  end,
+  ["enable-creepminer-hints"] = function()
+    global.corrosion.creepminer_hints = true
+    game.print({ "message.creepminer-hints-enabled" })
   end,
 }
 

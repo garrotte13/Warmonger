@@ -40,7 +40,7 @@ function creep_eater.process()
         then
             global.creep_miners[id] = nil
             global.creep_miners_count = global.creep_miners_count - 1
-            game.print ("Finished deleting miner with index: ".. id)
+            --game.print ("Finished deleting miner with index: ".. id)
         end
         if global.creep_miners[id]
             and global.creep_miners[id].entity
@@ -184,9 +184,14 @@ function creep_eater.process()
             force = "enemy"
         }
         if (not miner.fakecreep) and miner.enemies_found > 0 then -- all creep tiles are protected
-            game.print("All true creep is protected! While no fake creep is available. Miner index: ".. id)
-            if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
-            miner.stage = 0
+            --game.print("All true creep is protected! While no fake creep is available. Miner index: ".. id)
+            if global.corrosion.creepminer_hints then
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "Creep miner is blocked by enemies to collect biomass creep"}
+            end
+            --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
+            miner.entity.active = false
+            miner.deactivation_tick = game.ticks_played
+            miner.stage = 51
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         else miner.stage = 5 end
 
@@ -228,8 +233,14 @@ function creep_eater.process()
         if tiles_free < 0 then game.print("WTF! Free tiles number is negative (".. tiles_free.. ") for miner Index: ".. id)
         elseif tiles_free == 0 then
             --game.print("All reachable creep is protected! Miner index: ".. id)
-            if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
-            miner.stage = 0
+            if global.corrosion.creepminer_hints then
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All reachable creep is protected by enemies"}
+            end
+            --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
+            miner.entity.active = false
+            miner.deactivation_tick = game.ticks_played
+            miner.stage = 51
+
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         elseif tiles_free <= miner.ready_tiles then -- No need to sort or prioritize anything
             if global.corrosion.enabled then miner.corroded_help = true end
@@ -322,14 +333,12 @@ function creep_eater.process()
             if bio2 > 0 then
                 local lost_biomass2 = 0
                 if chest and chest.valid then lost_biomass2 = bio2 - chest.insert({name="wm-bio-remains", count=bio2}) else lost_biomass2 = bio2 end
-                if lost_biomass2 > 0 and creep3_cap > 999
-                 and miner.entity.burner.valid then lost_biomass2 = lost_biomass2 - miner.entity.get_inventory(defines.inventory.fuel).insert({name="wm-bio-remains", count=lost_biomass2}) end
+                if lost_biomass2 > 0 and creep3_cap > 999 and miner.entity.burner.valid then
+                    lost_biomass2 = lost_biomass2 - miner.entity.get_inventory(defines.inventory.fuel).insert({name="wm-bio-remains", count=lost_biomass2})
+                end
                 if lost_biomass2 > 0 then game.print(lost_biomass2 .. " of bio remnants were lost by creep miner during extraction !") end
             end
             surface.set_tiles(tiles)
-        else
-            game.print("There are creep tiles, but we can't collect them (nowhere to store biomass or all creep type-2 is protected)! Miner index: ".. id)
-            miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
         end
         miner.cr_tiles = {}
         miner.enemies = nil
@@ -337,7 +346,16 @@ function creep_eater.process()
         miner.fakecreep = false
         miner.truecreep = false
         miner.sort_tiles = {}
-        if miner.corroded_help and #tiles > 0 then
+        if #tiles == 0 then
+            --game.print("There are creep tiles, but we can't collect them (nowhere to store biomass or all creep type-2 is protected)! Miner index: ".. id)
+            if global.corrosion.creepminer_hints then
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "No chest found to store biomass of excavated biter creep"}
+            end
+            --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
+            miner.entity.active = false
+            miner.deactivation_tick = game.ticks_played
+            miner.stage = 51
+        elseif miner.corroded_help then
             miner.stage = 45
             for j=1,#tiles do
                 miner.cr_tiles[j]= {position = tiles[j].position}
@@ -363,6 +381,14 @@ function creep_eater.process()
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         end
 
+    elseif miner.stage == 51 then
+
+        if (game.ticks_played - miner.deactivation_tick) > 180 then
+            miner.entity.active = true
+            miner.stage = 0
+        else
+            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+        end
 
     end
 
@@ -409,8 +435,8 @@ function creep_eater.add (entity)
     if r == global.creep_miners_last then global.creep_miners_last = global.creep_miners_last + 1 end
     global.creep_miners_count = global.creep_miners_count + 1
     global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
-    game.print("Installed creep miner with the name: " .. entity.name .. " located at x:" .. entity.position.x .. " y:" .. entity.position.y .. " Miner index:" .. r)
-    game.print("Total amount of installed creep miners: " .. global.creep_miners_count)
+    --game.print("Installed creep miner with the name: " .. entity.name .. " located at x:" .. entity.position.x .. " y:" .. entity.position.y .. " Miner index:" .. r)
+    --game.print("Total amount of installed creep miners: " .. global.creep_miners_count)
 end
 
 function creep_eater.remove (entit, died)
@@ -425,8 +451,8 @@ function creep_eater.remove (entit, died)
         end
     end
     if r>0 then
-        game.print("Index number of miner pending for removal is:" .. r)
-        game.print("Delete pending creep miner with the name: " .. entit.name .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
+        --game.print("Index number of miner pending for removal is:" .. r)
+        --game.print("Delete pending creep miner with the name: " .. entit.name .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
         global.creep_radars[entit.position.x .. ":" .. entit.position.y] = nil
         circle_rendering.remove_circle(entit)
         global.creep_miners[r].killed = true
@@ -444,7 +470,7 @@ function creep_eater.scanned (radar)
     if radar.valid then id = global.creep_radars[radar.position.x .. ":" .. radar.position.y]  else return end
     --m = radar.position.x .. ":" .. radar.position.y
     --local id = global.creep_radars[m]
-    if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. "has been lost") return end
+    if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. " has been lost") return end
     global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + 7
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
 end
