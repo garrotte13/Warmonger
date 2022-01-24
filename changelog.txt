@@ -2,16 +2,16 @@
 Version: 1.3.2
 Date: 2022-01-24
   Changes:
-      - Reduced burner creep miner energy consumption to make 1 residue item energy enough for one remove creep iteration.
-      - Burner creep miner will gather all collected residue (if any!) in current iteration in its fuel slots when no fuel is left and nowhere to take.
+      - Reduced burner creep miner energy consumption by 20% to make 1 residue item energy enough for one remove creep iteration.
+      - Burner creep miner will gather all collected residue (if any!) in current iteration into its fuel slots when no fuel is left and nowhere to take.
       - Fixed issue: Burner creep miner searched for fuel too often when it is already out of energy. Now will do it only once per 20 seconds.
-      - Slightly increased burner creep miner building recipe cost.
+      - Balance. Halved pollution created by creep excavation. Slightly increased burner creep miner building recipe cost.
       - Minor fixes.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.1
 Date: 2022-01-21
   Changes:
-      - Bio residue item introduced. Has 30% chance to be gathered from biter creep type-2. Has fuel value of 1MJ and high emissions rate.
+      - Bio residue (bio-remains) item introduced. Has 30% chance to be gathered from biter creep type-2. Has fuel value of 1MJ and high emissions rate.
       Later can be bio-processed into sulphuric acid in complex recipe (Bio-lab is required) - can incorporate it into recipes of other mods if needed.
       - Creep miner buildings were completely re-designed. Removed all complex entities.
       I had to kill ItemCollector mod idea inside me to give chest configuration freedom and avoid all limitations&inconveniences.

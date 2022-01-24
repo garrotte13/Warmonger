@@ -115,7 +115,7 @@ function creep_eater.process()
     global.creep_miners_id = id
     local miner = global.creep_miners[id]
     local surface = miner.entity.surface
-    local miner_range = constants.miner_range(miner.entity.name)
+    local miner_range = constants.miner_range(miner.entity.name)+1
 
     if miner.stage == 0 then -- building creep tiles array
 
@@ -388,7 +388,7 @@ function creep_eater.process()
 
     elseif miner.stage == 50 then
 
-        if (game.ticks_played - miner.deactivation_tick) > 10800 then
+        if (game.ticks_played - miner.deactivation_tick) > 7200 then --checking once per 2 minutes for new creep in case new enemy bases are built or Creeper comes up
             miner.entity.active = true
             miner.stage = 0
         else
@@ -464,9 +464,9 @@ function creep_eater.add (entity)
     if entity.name == "creep-miner0-radar" then
         global.creep_miners[r].stage = 60
     end
+    global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
     if r == global.creep_miners_last then global.creep_miners_last = global.creep_miners_last + 1 end
     global.creep_miners_count = global.creep_miners_count + 1
-    global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
     --game.print("Installed creep miner with the name: " .. entity.name .. " located at x:" .. entity.position.x .. " y:" .. entity.position.y .. " Miner index:" .. r)
     --game.print("Total amount of installed creep miners: " .. global.creep_miners_count)
 end
@@ -484,7 +484,7 @@ function creep_eater.remove (entit, died)
     end
     if r>0 then
         --game.print("Index number of miner pending for removal is:" .. r)
-        --game.print("Delete pending creep miner with the name: " .. entit.name .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
+        game.print("Delete pending creep miner with Id: " .. r .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
         global.creep_radars[entit.position.x .. ":" .. entit.position.y] = nil
         circle_rendering.remove_circle(entit)
         global.creep_miners[r].killed = true

@@ -19,7 +19,7 @@ constants.select_chest_logic = {
 constants.creep_mining_energy = 200
 constants.electric_miner_range = 28
 constants.burner_miner_range = 18
-constants.pollution_miner = 5
+constants.pollution_miner = 2
 
 function constants.miner_range(name)
   local r = constants.electric_miner_range

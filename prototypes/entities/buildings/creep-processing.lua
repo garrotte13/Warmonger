@@ -68,7 +68,7 @@ data:extend(
 		vehicle_impact_sound = generic_impact,
 		flags = {"placeable-player", "player-creation"},
 		radius_visualisation_specification = {
-			distance = constants.miner_range("creep-miner1-radar"),
+			distance = constants.miner_range("creep-miner1-radar")+0.6,
 			sprite = {
 				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",
@@ -186,7 +186,7 @@ data:extend(
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
 		energy_per_sector = "960KJ",
-		energy_per_nearby_scan = "440KJ",
+		energy_per_nearby_scan = "480KJ",
 		energy_usage = "240KW",
 		energy_source =
 		{
@@ -213,7 +213,7 @@ data:extend(
 		  }
 		},
 		radius_visualisation_specification = {
-			distance = constants.miner_range("creep-miner0-radar"),
+			distance = constants.miner_range("creep-miner0-radar")+0.6,
 			sprite = {
 				filename = "__Warmonger__/graphics/entities/circle-512.png",
 				priority = "high",

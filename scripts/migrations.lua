@@ -27,7 +27,7 @@ migrations.versions = {
 
     creep.init()
 	  corrosion.init()
-    creep_eater.init()
+    --creep_eater.init()
 
     -- MIGRATE
 --    local old_enabled = old_global.radioactivity_enabled
