@@ -31,6 +31,61 @@ function creep_eater.find_chest(miner)
     return false
 end
 
+local fuel_items
+
+function creep_eater.refuel(entity, chest_given)
+   local chest
+   if chest_given then chest = chest_given end
+   if not fuel_items then
+    fuel_items = {}
+    for _, item in pairs (game.item_prototypes) do
+        if item.fuel_value > 0 and item.fuel_category == "chemical" then
+            table.insert(fuel_items, {name = item.name, count = 1})
+        end
+    end
+    table.sort(fuel_items, function(a, b) return game.item_prototypes[a.name].stack_size > game.item_prototypes[b.name].stack_size end)
+    table.sort(fuel_items, function(a, b) return game.item_prototypes[a.name].fuel_emissions_multiplier < game.item_prototypes[b.name].fuel_emissions_multiplier end)
+   end
+
+   local inv
+   local removed = 0
+   local fuel_inv = entity.get_inventory(defines.inventory.fuel)
+   if chest and chest.valid then
+       inv = chest.get_inventory(defines.inventory.chest)
+       for _, item in pairs (fuel_items) do
+           local count =  math.min(math.ceil(game.item_prototypes[item.name].stack_size/4), math.ceil((inv.get_item_count(item.name))/2))
+           if count > 0 then
+               removed = inv.remove({name = item.name, count = count})
+               if removed > 0 then
+                   fuel_inv.insert({name = item.name, count = removed})
+               end
+           end
+           if removed > 0 then
+             return true
+           end
+       end
+   end
+       local last_user = entity.last_user
+       if last_user and last_user.character then
+           local character = last_user.character
+           if character and last_user.character.get_main_inventory()
+            and ((character.position.x - entity.position.x)^2 + (character.position.y - entity.position.y)^2) <= constants.burner_miner_range^2 then
+               inv = last_user.character.get_main_inventory()
+               for _, item in pairs (fuel_items) do
+                   local count =  math.min(math.ceil(game.item_prototypes[item.name].stack_size/4), math.ceil((inv.get_item_count(item.name))/2))
+                   if count > 0 and fuel_inv then
+                       removed = inv.remove({name = item.name, count = count})
+                       if removed > 0 then
+                           fuel_inv.insert({name = item.name, count = removed})
+                       end
+                   end
+                   if removed > 0 then return true end
+               end
+           end
+       end
+       return false
+end
+
 function creep_eater.process()
     if global.creep_miners_count == 0 then return end
     local id = global.creep_miners_id
@@ -47,60 +102,7 @@ function creep_eater.process()
                 and global.creep_miners[id].entity.valid
          --       and global.creep_miners[id].entity.energy > constants.creep_mining_energy
         then
-            if global.creep_miners[id].entity.burner
-             and global.creep_miners[id].entity.burner.valid
-              and global.creep_miners[id].entity.get_inventory(defines.inventory.fuel)
-               and (global.creep_miners[id].entity.get_inventory(defines.inventory.fuel).is_empty()) then
-                local inv
-                local entity = global.creep_miners[id].entity
-                local fuel_inv = entity.get_inventory(defines.inventory.fuel)
-                local fuel_items = {}
-                local removed = 0
-                for _, item in pairs (game.item_prototypes) do
-                    if item.fuel_value > 0 and item.fuel_category == "chemical" then
-                        table.insert(fuel_items, {name = item.name, count = 1})
-                    end
-                end
-                table.sort(fuel_items, function(a, b) return game.item_prototypes[a.name].stack_size > game.item_prototypes[b.name].stack_size end)
-                table.sort(fuel_items, function(a, b) return game.item_prototypes[a.name].fuel_emissions_multiplier < game.item_prototypes[b.name].fuel_emissions_multiplier end)
-                if global.creep_miners[id].chest and global.creep_miners[id].chest.valid then
-                    inv = global.creep_miners[id].chest.get_inventory(defines.inventory.chest)
-                    for _, item in pairs (fuel_items) do
-                        local count =  math.min(math.ceil(game.item_prototypes[item.name].stack_size/4), math.ceil((inv.get_item_count(item.name))/2))
-                        if count > 0 and fuel_inv then
-                            removed = inv.remove({name = item.name, count = count})
-                            if removed > 0 then
-                                fuel_inv.insert({name = item.name, count = removed})
-                            end
-                        end
-                        if removed > 0 then
-                          break
-                        end
-                    end
-                end
-                if removed == 0 then
-                    local last_user = entity.last_user
-                    if last_user.character then
-                        --game.print("Time to add some fuel")
-                        local character = last_user.character
-                        if character and last_user.character.get_main_inventory()
-                         and ((character.position.x - entity.position.x)^2 + (character.position.y - entity.position.y)^2) <= constants.burner_miner_range^2 then
-                            inv = last_user.character.get_main_inventory()
-                            for _, item in pairs (fuel_items) do
-                                local count =  math.min(math.ceil(game.item_prototypes[item.name].stack_size/4), math.ceil((inv.get_item_count(item.name))/2))
-                                if count > 0 and fuel_inv then
-                                    removed = inv.remove({name = item.name, count = count})
-                                    if removed > 0 then
-                                        fuel_inv.insert({name = item.name, count = removed})
-                                    end
-                                end
-                                if removed > 0 then break end
-                            end
-                        end
-                    end
-                end
-            end
-            if global.creep_miners[id].ready_tiles > 0 then
+            if global.creep_miners[id].ready_tiles > 0 or global.creep_miners[id].stage == 60 then
                 not_found_id = false
                 break
             else if id < global.creep_miners_last then id = id + 1 else id = 1 end end
@@ -114,9 +116,18 @@ function creep_eater.process()
     local miner = global.creep_miners[id]
     local surface = miner.entity.surface
     local miner_range = constants.miner_range(miner.entity.name)
-    
+
     if miner.stage == 0 then -- building creep tiles array
 
+        if miner.entity.burner and miner.entity.burner.valid
+         and miner.entity.get_inventory(defines.inventory.fuel)
+          and (miner.entity.get_inventory(defines.inventory.fuel).is_empty()) then
+            if not creep_eater.refuel(miner.entity, miner.chest) then
+                miner.stage = 60
+                miner.deactivation_tick = game.ticks_played
+                if not miner.entity.burner.remaining_burning_fuel or miner.entity.burner.remaining_burning_fuel == 0 then return end
+            end
+        end
         miner.cr_tiles = {}
         miner.cr_tiles = surface.find_tiles_filtered({ -- Tiles array
             position = miner.entity.position,
@@ -299,6 +310,9 @@ function creep_eater.process()
             if f_inv and f_inv.valid and f_inv.get_insertable_count("wm-bio-remains") > 0 then
                 creep3_cap = 1000 + f_inv.get_insertable_count("wm-bio-remains")
             end
+            if f_inv and f_inv.is_empty() then
+               if not creep_eater.refuel(miner.entity, miner.chest) then creep2_cap = 0 end -- if no fuel, then gather all bioremains in burner
+            end
        end
         local tiles = {}
         local i = 1
@@ -390,8 +404,23 @@ function creep_eater.process()
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         end
 
-    end
+    elseif miner.stage == 60 then -- re-fuelling cycle
 
+        if miner.entity.burner and miner.entity.burner.valid and miner.entity.get_inventory(defines.inventory.fuel)
+         and (miner.entity.get_inventory(defines.inventory.fuel).is_empty()) then
+            if (game.ticks_played - miner.deactivation_tick) > 600 then
+                if not creep_eater.refuel(miner.entity, miner.chest) then
+                    miner.deactivation_tick = game.ticks_played
+                    if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+                else miner.stage = 0 end
+            else
+                if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+            end
+        else
+            miner.stage = 0
+        end
+
+    end
 end
 
 function creep_eater.add (entity)
@@ -432,6 +461,9 @@ function creep_eater.add (entity)
     corroded_help = false
     }
     circle_rendering.add_circle(entity, last_user)
+    if entity.name == "creep-miner0-radar" then
+        global.creep_miners[r].stage = 60
+    end
     if r == global.creep_miners_last then global.creep_miners_last = global.creep_miners_last + 1 end
     global.creep_miners_count = global.creep_miners_count + 1
     global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
@@ -482,7 +514,6 @@ function creep_eater.init()
     global.creep_miners_count = 0
     global.creep_miners_last = 1
     global.creep_miners_id = 1
-    global.locked_creep = {}
     global.creep_radars = {}
 end
 

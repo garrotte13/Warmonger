@@ -155,7 +155,7 @@ data:extend(
 		{
 			{ type = "item", name = "radar" , amount = 1, },
 			{ type = "item", name = "steel-furnace" , amount = 1, },
-			{ type = "item", name = "electronic-circuit" , amount = 5, }
+			{ type = "item", name = "electronic-circuit" , amount = 7, }
 		},
 		result = "creep-miner0-radar"
 	  },
@@ -185,9 +185,9 @@ data:extend(
 		allow_copy_paste = true,
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
-		energy_per_sector = "1200KJ",
-		energy_per_nearby_scan = "600KJ",
-		energy_usage = "300KW",
+		energy_per_sector = "960KJ",
+		energy_per_nearby_scan = "440KJ",
+		energy_usage = "240KW",
 		energy_source =
 		{
 		  type = "burner",

@@ -34,20 +34,20 @@ event.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
- event.on_nth_tick(2, function(e)
+ event.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
 
 event.on_configuration_changed(function(e)
 -- game.print("Mod Warmonger version or config changed.")
-  corrosion.init()
-  creep_eater.init()
+--  corrosion.init()
+--  creep_eater.init()
     migrations.generic()
   
 end)
 
 event.on_load(function()
--- corrosion = global.corrosion
+
 end)
 
 --[[
