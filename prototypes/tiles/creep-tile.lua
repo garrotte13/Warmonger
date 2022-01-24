@@ -239,6 +239,7 @@ data:extend(
 		minable = {mining_time = 10, result = "biomass", probability = 0.40, amount = 1},
 		walking_speed_modifier = 0.35,
 		layer = 200,
+    flags = { "hidden" },
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
 		variants = tile_variations_template
@@ -273,6 +274,7 @@ data:extend(
 		minable = {mining_time = 10, result = "wood", probability = 0, amount = 1},
 		walking_speed_modifier = 0.35,
 		layer = 201,
+    flags = { "hidden" },
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
 		variants = tile_variations_template
@@ -294,7 +296,7 @@ data:extend(
 		walking_sound = creep_walking_sound,
 		
 		transitions = creep_transitions,
-		transitions_between_transitions = creep_transitions_between_transitions		
+		transitions_between_transitions = creep_transitions_between_transitions
 	}
 
 })

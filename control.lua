@@ -1,7 +1,7 @@
 local event = require("__flib__.event")
 local gui = require("__flib__.gui")
-local migration = require("__flib__.migration")
-local on_tick_n = require("__flib__.on-tick-n")
+--local migration = require("__flib__.migration")
+--local on_tick_n = require("__flib__.on-tick-n")
 
 local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
@@ -20,7 +20,7 @@ remote.add_interface("kr-creep", creep.remote_interface)
 
 event.on_init(function()
   -- Initialize libraries
-  on_tick_n.init()
+  --on_tick_n.init()
 
   creep.init()
   corrosion.init()
@@ -38,11 +38,11 @@ end)
   creep_eater.process()
 end)
 
-event.on_configuration_changed(function(e)
+event.on_configuration_changed(function(ChangedModData)
 -- game.print("Mod Warmonger version or config changed.")
 --  corrosion.init()
 --  creep_eater.init()
-    migrations.generic()
+    migrations.generic(ChangedModData)
   
 end)
 
