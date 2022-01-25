@@ -484,7 +484,7 @@ function creep_eater.remove (entit, died)
     end
     if r>0 then
         --game.print("Index number of miner pending for removal is:" .. r)
-        game.print("Delete pending creep miner with Id: " .. r .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
+        --game.print("Delete pending creep miner with Id: " .. r .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
         global.creep_radars[entit.position.x .. ":" .. entit.position.y] = nil
         circle_rendering.remove_circle(entit)
         global.creep_miners[r].killed = true

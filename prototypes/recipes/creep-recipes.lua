@@ -60,7 +60,7 @@ data:extend(
 		enabled = false,
 		ingredients =
 		{
-			{type = "item", name = "wm-bio-remains", amount = 10},
+			{type = "item", name = "wm-bio-remains", amount = 20},
 			{type = "fluid", name = "steam", amount = 10, minimum_temperature = 400, maximum_temperature = 650},
 			{type = "fluid", name = "sulfuric-acid", amount = 10 }
 		},

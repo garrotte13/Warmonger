@@ -11,21 +11,23 @@ local migrations = {}
 function migrations.generic(ChangedModsData)
 
   creep.update()
-  local old = ChangedModsData.mod_changes["Warmonger"].old_version
-  if old and (old:match("1%.2%.%d") or old:match("1%.0%.%d") or old:match("1%.1%.%d") ) then
-    creep_eater.init()
-    if game.forces["player"].technologies["advanced-material-processing"].researched then
-      game.forces["player"].recipes["creep-miner0-radar"].enabled = true
+  if ChangedModsData.mod_changes["Warmonger"] then
+    local old = ChangedModsData.mod_changes["Warmonger"].old_version
+    if old and (old:match("1%.2%.%d") or old:match("1%.0%.%d") or old:match("1%.1%.%d") ) then
+      creep_eater.init()
+      if game.forces["player"].technologies["advanced-material-processing"].researched then
+        game.forces["player"].recipes["creep-miner0-radar"].enabled = true
+      end
+      if game.forces["player"].technologies["electric-energy-distribution-2"].researched then
+        game.forces["player"].recipes["creep-miner1-radar"].enabled = true
+      end
+      if game.forces["player"].technologies["kr-bio-processing"].researched then
+        game.forces["player"].recipes["wm-residue-sulphuric-acid"].enabled = true
+      end
     end
-    if game.forces["player"].technologies["electric-energy-distribution-2"].researched then
-      game.forces["player"].recipes["creep-miner1-radar"].enabled = true
+    if old and (old:match("1%.0%.%d") ) then
+      corrosion.init()
     end
-    if game.forces["player"].technologies["kr-bio-processing"].researched then
-      game.forces["player"].recipes["wm-residue-sulphuric-acid"].enabled = true
-    end
-  end
-  if old and (old:match("1%.0%.%d") ) then
-    corrosion.init()
   end
 end
 

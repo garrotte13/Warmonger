@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.3
+Date: 2022-01-25
+  Changes:
+      - Loading fresh game save crash issue fix (occasionally added with old gamesaves support).
+      - Residue bio processing recipe balance fix.
+      - Electric burner energy consumption reduced.
+---------------------------------------------------------------------------------------------------
 Version: 1.3.2
 Date: 2022-01-24
   Changes:

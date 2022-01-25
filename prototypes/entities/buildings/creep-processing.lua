@@ -61,7 +61,7 @@ data:extend(
 		collision_box = {{-1.4,-1.4},{1.4,1.4}},
 		allow_copy_paste = true,
 		max_health = 500,
-		resistances = {{type = "acid", percent = 25},{type = "fire", percent = 70},{type = "impact", percent = 50}},
+		resistances = {{type = "acid", percent = 30},{type = "fire", percent = 70},{type = "impact", percent = 50}},
 		minable = {mining_time = 1, result = "creep-miner1-radar"},
 		--selection_priority = 70,
 		create_ghost_on_death = true,
@@ -86,11 +86,11 @@ data:extend(
 			  scale=0.5, animation_speed=0.5, line_length = 4
 		},
 		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 0, },
-		energy_usage = "600KW",
+		energy_usage = "500KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
-		energy_per_sector = "2400KJ",
-		energy_per_nearby_scan = "1200KJ",
+		energy_per_sector = "1500KJ",
+		energy_per_nearby_scan = "1000KJ",
 		working_sound =
     {
       sound =
