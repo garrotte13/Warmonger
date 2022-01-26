@@ -164,7 +164,7 @@ data:extend(
     },
 		fuel_category = "chemical",
 		fuel_value = "1MJ",
-		fuel_emissions_multiplier = 2.99999,
+		fuel_emissions_multiplier = 2.4,
 		fuel_acceleration_multiplier = 0.8,
 		fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
