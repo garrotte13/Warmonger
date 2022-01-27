@@ -26,8 +26,7 @@ event.on_init(function()
   corrosion.init()
   creep_eater.init()
 
-  -- Initialize mod
-  migrations.generic()
+
 end)
 
 event.on_nth_tick(60, function(e)

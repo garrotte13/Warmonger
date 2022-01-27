@@ -1,8 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.4
-Date: 2022-01-?
+Date: 2022-01-28
   Changes:
       - Balance. 240% emissions multiplier for bio residue.
+      - Balance. Increased acid resistance for creep miners.
+      - Balance. Reduced biters science pack cost from 8 to 7 biomass and added creep type-1 generation for low evolution (early game), because Rampant 2.2.0 changed enemy buildings density.
+      - Fixed crash on new game.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.3
 Date: 2022-01-25
