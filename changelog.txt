@@ -1,10 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.5
+Date: 2022-02-01
+  Changes:
+      - Balance: Increased acid resistance for creep miners. Reduced corrosion DoT. Doubled creep type-1 pollution absorption.
+      - Balance: Reduced Rampant Arsenal repair capsule biomass ingredient cost 3->2 (4->3 expensive mode).
+---------------------------------------------------------------------------------------------------
 Version: 1.3.4
 Date: 2022-01-28
   Changes:
       - Balance. 240% emissions multiplier for bio residue.
       - Balance. Increased acid resistance for creep miners.
-      - Balance. Reduced biters science pack cost from 8 to 7 biomass and added creep type-1 generation for low evolution (early game), because Rampant 2.2.0 changed enemy buildings density.
+      - Balance. Reduced biters science pack cost from 8 to 7 biomass and increased creep type-1 generation for low evolution (early game), because Rampant 2.2.0 changed enemy buildings density.
       - Fixed crash on new game.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.3

@@ -190,7 +190,7 @@ function creep_eater.process()
 
         miner.enemies_found = surface.count_entities_filtered{
             position = miner.entity.position,
-            radius = 65,
+            radius = 63,
             type =  {"unit-spawner", "turret", "unit"},
             force = "enemy"
         }
