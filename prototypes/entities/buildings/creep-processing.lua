@@ -123,11 +123,12 @@ data:extend(
 		energy_required = 5.00,
 		ingredients = {
 		  { type = "item", name = "radar" , amount = 1 },
-		  { type = "item", name = "accumulator" , amount = 2 },
-		  { type = "item", name = "substation" , amount = 1 }
+		  { type = "item", name = "accumulator" , amount = 1 },
+		  { type = "item", name = "substation" , amount = 1 },
+		  { type = "item", name = "electric-furnace" , amount = 1 }
 		},
 		results = {
-		  { type = "item", name = "creep-miner1-radar", amount = 1.0, },
+		  { type = "item", name = "creep-miner1-radar", amount = 1 },
 		},
 		main_product = "creep-miner1-radar",
 		icon = "__Warmonger__/graphics/entities/creep-miner/fuel_mixer_icon.png",
