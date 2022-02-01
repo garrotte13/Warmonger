@@ -8,19 +8,19 @@ table.insert(data.raw.technology["electric-energy-distribution-2"].effects, { ty
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2} )
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3} )
-  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2800} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=1} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=2} )
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2500} )
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3500} )
-  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=600} )
+  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=500} )
   table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=800} )
   --table.insert( data.raw.recipe[""].ingredients, {type="item", name="biomass", amount=3} )
  end
 
  if mods["RampantIndustry"] then
-  table.insert( data.raw.recipe["advanced-repair-pack-rampant-industry"].ingredients, {type="item", name="biomass", amount=2} )
-  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=300} )
-  table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=120} )
+  table.insert( data.raw.recipe["advanced-repair-pack-rampant-industry"].ingredients, {type="item", name="biomass", amount=1} )
+  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=250} )
+  table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=100} )
  end
 
 if mods["IndustrialRevolution"] then

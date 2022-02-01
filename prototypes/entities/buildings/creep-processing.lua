@@ -86,11 +86,11 @@ data:extend(
 			  scale=0.5, animation_speed=0.5, line_length = 4
 		},
 		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 0, },
-		energy_usage = "500KW",
+		energy_usage = "600KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
-		energy_per_sector = "1500KJ",
-		energy_per_nearby_scan = "1000KJ",
+		energy_per_sector = "1800KJ",
+		energy_per_nearby_scan = "1200KJ",
 		working_sound =
     {
       sound =

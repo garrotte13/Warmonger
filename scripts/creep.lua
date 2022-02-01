@@ -100,8 +100,8 @@ function creep.process_creep_queue()
             local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
             if (d > 4) and ( (creep_pack.radius - d) < 4) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
-            elseif (d > (2 + math.ceil(ne_coef * game.forces.enemy.evolution_factor)) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
-              if math.random(1,(7 + math.ceil(ne_prob * game.forces.enemy.evolution_factor))) > 1 then r = 3 end -- less biomass with every ~9% or 6% evo increase
+            elseif (d > (2 + math.floor(ne_coef * game.forces.enemy.evolution_factor)) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
+              if math.random(1,(3 + math.ceil(ne_prob * game.forces.enemy.evolution_factor))) > 1 then r = 3 end -- less biomass with every ~9% or 6% evo increase
             end
           end
             if r < 3 then

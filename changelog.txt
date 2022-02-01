@@ -2,8 +2,11 @@
 Version: 1.3.5
 Date: 2022-02-01
   Changes:
-      - Balance: Increased acid resistance for creep miners. Increased recipe cost of electric creep miner. Reduced corrosion DoT. Doubled creep type-1 pollution absorption.
-      - Balance: Reduced Rampant Arsenal repair capsule biomass ingredient cost 3->2 (4->3 expensive mode).
+      - Balance: Electric creep miner. Increased energy consumption. Added electric furnace in recipe.
+      - Balance: Reduced corrosion DoT. Increased acid resistance for creep miners.
+      - Balance: Doubled creep type-1 pollution absorption.
+      - Balance: Reduced Rampant Arsenal repair capsule biomass cost 3->1 (4->2 expensive mode), reduced biomass amount in recipe for power shield MK-3 and other RA/RI items.
+      - Balance: Reduced creep type-1 generation to average between 1.3.0 and 1.3.4.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.4
 Date: 2022-01-28
