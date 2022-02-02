@@ -56,6 +56,13 @@ script.on_event(defines.events.on_player_main_inventory_changed, function(e)
 end)
 --]]
 
+
+script.on_event(defines.events.on_script_trigger_effect, function(e)
+  local surface = game.surfaces[e.surface_index]
+    creep.landed_strike(e.effect_id, surface, e.target_position, e.target_entity)
+end)
+
+
 script.on_event(defines.events.on_selected_entity_changed, function(e)
   local player = game.players[e.player_index]
   circle_rendering.selection_changed(player)
@@ -87,7 +94,7 @@ script.on_event(defines.events.on_entity_died, function(e)
     creep_eater.remove (e.entity, true)
   elseif global.corrosion.enabled and global.corrosion.strike_back
    and e.entity.valid and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
-    and game.forces.enemy.evolution_factor > 0.35 then
+    and game.forces.enemy.evolution_factor > 0.38 then
      creep.check_strike(e.entity, e.cause, e.force)
   end
 end)

@@ -8,6 +8,7 @@ require("__Warmonger__/prototypes/entities/buildings/creep-processing")
 require("__Warmonger__/prototypes/technologies/biomass-tech")
 require("__Warmonger__/prototypes/sounds/sounds")
 require("__Warmonger__/prototypes/tiles/creep-tile")
+require("__Warmonger__/prototypes/entities/remnants/strike-back")
 
 
 require("__Warmonger__/prototypes/others/key-bind-initialization")

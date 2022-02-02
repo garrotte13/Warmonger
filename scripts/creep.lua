@@ -228,7 +228,7 @@ creep.remote_interface = {
 }
 
 function creep.check_strike (killed_e, killer_e, killer_force)
-  if (killer_force and killer_force.name == "enemy") or not killer_e or not killer_e.valid or math.random(1,3) < 2 then return end
+  if (killer_force and killer_force.name == "enemy") or not killer_e or not killer_e.valid or math.random(1,6) < 2 then return end
   local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
   if range_ratio < 1.74 then return end
   local revengers = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 63, type = "unit-spawner", force = "enemy" }
@@ -249,17 +249,71 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local rnd_x = math.random(1,attack_inaccuracy*2+1)-(attack_inaccuracy+1)
   local rnd_y = math.random(1,attack_inaccuracy*2+1)-(attack_inaccuracy+1)
   local attack_pos = {x = killer_e.position.x+rnd_x, y = killer_e.position.y+rnd_y}
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", killer_e.surface, attack_pos, true, attack_area_radius)
+  local doll = killed_e.surface.create_entity {name = "wm-revenge-doll", position = attack_pos, force = "neutral"}
+  if not doll then
+    game.print("We failed to create a revenge strike target!")
+    return
+  end
+  local proj
+  if attack_area_radius == 5 then
+    proj = killed_e.surface.create_entity {
+      name = "wm-revenge-projectile3",
+      position = punisher.position,
+      force = "enemy",
+      target = doll,
+      source = punisher,
+      speed = 1,
+      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
+  }
+  elseif attack_area_radius == 3 then
+    proj = killed_e.surface.create_entity {
+      name = "wm-revenge-projectile2",
+      position = punisher.position,
+      force = "enemy",
+      target = doll,
+      source = punisher,
+      speed = 2,
+      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
+    }
+  else
+    proj = killed_e.surface.create_entity {
+      name = "wm-revenge-projectile1",
+      position = punisher.position,
+      force = "enemy",
+      target = doll,
+      source = punisher,
+      speed = 2,
+      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
+    }
+  end
+  if not proj then
+    game.print("We failed to launch revenge strike shell!")
+  end
+  doll.destroy{}
+end
 
-  killer_e.surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 1, position = attack_pos}
-  local entities = killer_e.surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius,  force = "player" }
+function creep.landed_strike(effect_id, surface, target_position, target)
+  local attack_pos
+  if target_position then attack_pos = target_position
+  elseif target and target.position then attack_pos = target.position
+  else
+    game.print("We have lost target on revenge strike landing!")
+    return
+  end
+  local attack_area_radius
+  if effect_id == "wm-strike-back-3" then attack_area_radius = 5
+  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 3
+  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 2
+  else return end
+
+  surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 1, position = attack_pos}
+  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
     if entity.valid and entity.destructible and entity.is_entity_with_health then
       local hitpoints = entity.prototype.max_health
       if entity.prototype.type == "character" then
         hitpoints = hitpoints * (1 + entity.player.character_health_bonus) + 300
-        --game.print("Player was hit! His health is:".. hitpoints-200)
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- big one time damage and can be lethal
       dmg = dmg * dmg_coeff
@@ -272,7 +326,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       end
     end
   end
-
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius)
 end
 
 return creep
