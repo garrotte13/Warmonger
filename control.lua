@@ -93,8 +93,8 @@ script.on_event(defines.events.on_entity_died, function(e)
   if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, true)
   elseif global.corrosion.enabled and global.corrosion.strike_back
-   and e.entity.valid and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
-    and game.forces.enemy.evolution_factor > 0.38 then
+   and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner")
+    and game.forces.enemy.evolution_factor > 0.37 then
      creep.check_strike(e.entity, e.cause, e.force)
   end
 end)

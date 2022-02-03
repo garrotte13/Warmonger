@@ -228,21 +228,38 @@ creep.remote_interface = {
 }
 
 function creep.check_strike (killed_e, killer_e, killer_force)
-  if (killer_force and killer_force.name == "enemy") or not killer_e or not killer_e.valid or math.random(1,6) < 2 then return end
+  if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) or math.random(1,3) < 2 then return end
+  local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
   local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
   if range_ratio < 1.74 then return end
-  local revengers = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 63, type = "unit-spawner", force = "enemy" }
+  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 64, type = "unit-spawner", force = "enemy" }
   local punisher
-  if revengers and revengers[1] then
-    punisher = revengers[math.random(1,#revengers)]
-    range_ratio = ( math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  local revengers = {}
+  if revengers_raw and revengers_raw[1] then
+    local k = 1
+    for i=1, #revengers_raw do
+      if revengers_raw[i].valid and not (revengers_raw[i].position.x == killed_e.position.x and revengers_raw[i].position.y == killed_e.position.y) then
+        revengers[k] = revengers_raw[i]
+        k = k + 1
+      end
+    end
   else return end
+  if revengers[1] then
+    punisher = revengers[math.random(1,#revengers)]
+  else
+    --game.print("There is no one left nearby to revenge!")
+    return
+  end
+    local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
+    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+
   local attack_area_radius = 2
   local attack_inaccuracy = 2
-  if range_ratio > 5 then
+  if range_ratio > 8.5 then
     attack_area_radius = 5
     attack_inaccuracy = 7
-  elseif range_ratio > 3 then
+  elseif range_ratio > 3.2 then
     attack_area_radius = 3
     attack_inaccuracy = 4
   end
@@ -263,8 +280,9 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       target = doll,
       source = punisher,
       speed = 1,
-      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
-  }
+      max_range = 5 + range
+    }
+    --game.print("sending big one..")
   elseif attack_area_radius == 3 then
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile2",
@@ -273,8 +291,9 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       target = doll,
       source = punisher,
       speed = 2,
-      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
+      max_range = 5 + range
     }
+    --game.print("sending middle one..")
   else
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile1",
@@ -282,9 +301,10 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       force = "enemy",
       target = doll,
       source = punisher,
-      speed = 2,
-      max_range = 5 + (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range) * range_ratio
+      speed = 2.5,
+      max_range = 2 + range
     }
+    --game.print("sending small one..")
   end
   if not proj then
     game.print("We failed to launch revenge strike shell!")
@@ -302,12 +322,12 @@ function creep.landed_strike(effect_id, surface, target_position, target)
   end
   local attack_area_radius
   if effect_id == "wm-strike-back-3" then attack_area_radius = 5
-  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 3
-  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 2
+  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 2.9
+  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 1.8
   else return end
 
-  surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 1, position = attack_pos}
-  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius,  force = "player" }
+  surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 0.7, position = attack_pos}
+  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius+0.5,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
     if entity.valid and entity.destructible and entity.is_entity_with_health then
@@ -326,7 +346,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
       end
     end
   end
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius)
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius+0.5)
 end
 
 return creep
