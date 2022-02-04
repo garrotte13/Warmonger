@@ -1,9 +1,15 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.3.6
+Version: 1.3.7
 Date: 2022-02-
   Changes:
-      - Added special effects to revenge creep strikes for better understanding what happened.
-      - All damage effects and creep deploy take place only after shell lands. So moving player, car, tank and even spidertron can easily avoid damage.
+      - Balance: Electric creep miner. Added small pollution (0.5 per minute).
+      - Fixed creep friction abnormal coefficient: vehicles bog down when entering creep, then get +1000% speed until driving out creep area.
+---------------------------------------------------------------------------------------------------
+Version: 1.3.6
+Date: 2022-02-03
+  Changes:
+      - Added gfx special effects to revenge creep strikes for better understanding what is going on.
+      - Hit damage and creep deploy take place only after shell lands. So moving player, car, tank and even spidertron can easily avoid creep counter attacks.
       - Fixed a few issues for creep strikes.
       - Fixed rails collision with creep. Now they can co-exist (and rails are affected by corrosion).
 ---------------------------------------------------------------------------------------------------

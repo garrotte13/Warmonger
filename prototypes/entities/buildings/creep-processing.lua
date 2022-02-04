@@ -85,7 +85,7 @@ data:extend(
 			  shift = {0.5, -0.325},
 			  scale=0.5, animation_speed=0.5, line_length = 4
 		},
-		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 0, },
+		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = 0.5 },
 		energy_usage = "600KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
