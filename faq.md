@@ -1,8 +1,6 @@
-<h1>Warmonger FAQ</h1>
-
 # Intro
 
-A short help with <b>Warmonger</b> and <b>Rampant</b> mods.
+A short help with __Warmonger__ and __Rampant__ mods.
 
 Warmonger adds some challenge in battles with Nauvis fauna and a few additional production chains.
 
@@ -24,14 +22,24 @@ As creep absorbs much more pollution than common terrain it is reasonable not to
 
 # Biomass
 
-Biomass is required for military science packs in ration 4 per 1 pack. Therefore some enemy bases must be purged before first technologies with military science can be researched. Amount of biomass available in game depends on few factors:
+Biomass is required for military science packs in ration 3.5 per 1 pack. Therefore some enemy bases must be purged before first technologies with military science can be researched. Amount of biomass available in game depends on few factors:
 
 - Enemy bases frequency and size (big size bases have more creep type-1 than creep type-2, while small bases have more of type-2)
 - Rampant mod active and its settings (AI states, difficulty). Biters settle near player base and bring creep - that's so cute!
 - Evolution. Creep areas grow in size with evolution considerably.
 - Distance from starting area. Usual thing in Factorio. I don't know how it goes with RSO mod.
-- Game difficulty. Double technologies costs require double amount of biomass.
-- Rampant new enemies and as a consequence - Rampant Arsenal items, some of them need biomass.
+- Game difficulty. Double technologies costs require double amount of biomass. 200% bases size map setting is highly recommended here.
+- Rampant new enemies and as a consequence - Rampant Arsenal mod items, some of them need biomass.
+
+# Creep revenge strikes
+
+It's not to kill game interest, but to grow it, add some when player is technologically winning all conflicts with natives.
+
+At midgame (starting ~40% evo) when enemy nest is killed by player from afar (distance is determined by evolution factor), other nests (only if there are any survivors nearby) try sometimes to revenge sending a creep seeding artillery shell in direction of death bringer. Upon landing it does some lethal damage (unlike corrosion hurts everything including player and vehicles/bots, and can kill) and deploying small area of creep type-2.
+
+This counter strike can be negated by healing tools/buildings and creep miner(s). Creep miner is automatically awaken when creep shell has landed nearby. Artillery should not stay in place (especially after nuclear attack) or should cease firing when damaged.
+
+Smaller counter strikes can occur when player fires rockets/capsule launcher ammo/cannons. It happens rarely, but maybe more often when using hit&run tactics.
 
 # Rampant
 
@@ -41,6 +49,7 @@ Rampant mod introduces several nice features:
 - Biters go into berserk when nearby their target and attack all player's creations including electric poles, walls in form of "dragon teeth" and "labyrinth of death", effectively making war part of the game not so stupid boring like it is in vanilla. But of course they still prefer turrets if can reach them.
 - Biters regularly change the path they go from their home to player's structures, therefore one can't install turrets in one place and be happy the rest of the game like in vanilla.
 - Enemy squads attacks and bases expansion are scaled with rising evolution factor (like in vanilla, but in more aspects therefore automated abundant ammo/energy provided defense lines are a must).
+- Pheromones pathfinding for biters. Player body attracts nearby biters and guides them (until they die or go into berserk)
 - Different states of AI state with different strategy. One can turn on announcement messages to learn about state change, but it spoils the game and with game experience state can be detected easily when seeing specific biters activites.
 - Siege AI attacks player base and tries to build new enemy bases close to player. Easy to detect new nests, but can be a pain in early game or in later game with incorrect defenses pattern
 - Raiding AI sends waves of units from very different sides of map.
