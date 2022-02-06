@@ -1,9 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.7
-Date: 2022-02-
+Date: 2022-02-06
   Changes:
       - Balance: Electric creep miner. Added small pollution (0.5 per minute).
       - Fixed creep friction abnormal coefficient: vehicles bog down when entering creep, then get +1000% speed until driving out creep area.
+      Considering other mod development to make Rampant Arsenal tanks stronger than armor mk3+shotgun vs high tier enemy bases.
+      BTW spidertrone (nuclear tank-mk3 with no fuel, no problems for acceleration/braking in creep areas, crazy roof jumper) is a complete cheat and a game spoiler,
+      fix is a must (via other mods)
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.6
 Date: 2022-02-03
