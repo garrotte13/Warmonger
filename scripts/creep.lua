@@ -335,6 +335,9 @@ function creep.landed_strike(effect_id, surface, target_position, target)
       if entity.prototype.type == "character" then
         hitpoints = hitpoints * (1 + entity.player.character_health_bonus) + 300
       end
+      if entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
+        hitpoints = hitpoints * 3
+      end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- big one time damage and can be lethal
       dmg = dmg * dmg_coeff
       local recieved_dmg1 = entity.damage(dmg/3, "enemy", "acid")
