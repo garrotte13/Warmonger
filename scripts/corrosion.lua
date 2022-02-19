@@ -14,7 +14,9 @@ function corrosion.init()
 end
 
 function corrosion.engaging (entity)
- if (not global.corrosion.enabled) or (not entity.destructible) or (not entity.is_entity_with_health) then return end
+ if (not global.corrosion.enabled) or (not entity.destructible) or (not entity.is_entity_with_health)
+  or entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character"
+   then return end
  local turret_area = entity.selection_box
  area.ceil(turret_area)
  local surface = entity.surface
@@ -88,7 +90,7 @@ function corrosion.affecting()
  for _, entity in pairs(global.corrosion.affected) do
   if entity.valid then
     local surface = entity.surface
-    local dmg = math.floor( entity.health * ( 0.04 + game.forces.enemy.evolution_factor/16 ) )  -- at least 5 health will be left for biters/worms to finish
+    local dmg = math.floor( entity.health * ( 0.045 + game.forces.enemy.evolution_factor/16 ) )  -- at least 5 health will be left for biters/worms to finish
     local recieved_dmg = entity.damage(dmg, "enemy", "acid")
     if recieved_dmg > 0 then
       surface.play_sound{path = "acid_burns", position = entity.position}

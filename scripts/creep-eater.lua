@@ -102,7 +102,7 @@ function creep_eater.process()
                 and global.creep_miners[id].entity.valid
          --       and global.creep_miners[id].entity.energy > constants.creep_mining_energy
         then
-            if global.creep_miners[id].ready_tiles > 0 or global.creep_miners[id].stage == 60 then
+            if global.creep_miners[id].stage > 0 or global.creep_miners[id].ready_tiles > 0 then
                 not_found_id = false
                 break
             else if id < global.creep_miners_last then id = id + 1 else id = 1 end end
@@ -336,6 +336,7 @@ function creep_eater.process()
             end
             i = i + 1
         end
+        i = #miner.cr_tiles
         if #tiles > 0 then
             surface.pollute(miner.entity.position, constants.pollution_miner * #tiles)
             surface.play_sound{path = "kr-collect-creep", position = miner.entity.position}
@@ -369,21 +370,31 @@ function creep_eater.process()
             miner.entity.active = false
             miner.deactivation_tick = game.ticks_played
             miner.stage = 51
-        elseif miner.corroded_help then
-            miner.stage = 45
-            for j=1,#tiles do
-                miner.cr_tiles[j]= {position = tiles[j].position}
-            end
         else
-            miner.stage = 0
-            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+            if #tiles == i then -- time to go into stage 50
+                miner.entity.active = false
+                miner.deactivation_tick = game.ticks_played
+            end
+            if miner.corroded_help then
+                miner.stage = 45
+                for j=1,#tiles do
+                    miner.cr_tiles[j]= {position = tiles[j].position}
+                end
+            else
+                if miner.entity.active then miner.stage = 0 else miner.stage = 50 end
+                if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+            end
         end
 
     elseif miner.stage == 45 then
 
         if miner.cr_tiles then corrosion.update_tiles(surface, miner.cr_tiles) end
-        miner.stage = 0
         miner.cr_tiles = {}
+        if miner.entity.active then
+            miner.stage = 0
+        else
+            miner.stage = 50
+        end
         if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
 
     elseif miner.stage == 50 then

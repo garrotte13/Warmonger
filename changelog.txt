@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.8
+Date: 2022-02-?
+  Changes:
+      - Creep miner goes to sleep immediately on last creep tile harvested.
+      - Corrosion marginal case fix
+      - +0.5% corrosion DoT
+---------------------------------------------------------------------------------------------------
 Version: 1.3.7
 Date: 2022-02-06
   Changes:
