@@ -1,3 +1,5 @@
+local brd_cost = settings.startup["wm-BiomassToBitersReseach"].value
+
 data:extend(
 {
 
@@ -26,7 +28,7 @@ data:extend(
 		ingredients =
 		{
 			{"stone-wall", 2},
-			{"biomass", 7}
+			{"biomass", brd_cost}
 		},
 		result = "biters-research-data",
 		result_count = 1
@@ -41,7 +43,7 @@ data:extend(
 		ingredients =
 		{
 			{type = "item", name = "stone-wall", amount = 20},
-			{type = "item", name = "biomass", amount = 8},
+			{type = "item", name = "biomass", amount = brd_cost + 1},
 			{type = "fluid", name = "sulfuric-acid", amount = 35 }
 		},
 		result = "biters-research-data",
@@ -62,7 +64,7 @@ data:extend(
 		{
 			{type = "item", name = "wm-bio-remains", amount = 20},
 			{type = "fluid", name = "steam", amount = 10, minimum_temperature = 400, maximum_temperature = 650},
-			{type = "fluid", name = "sulfuric-acid", amount = 10 }
+			{type = "fluid", name = "sulfuric-acid", amount = 7 }
 		},
 		results=
 		{

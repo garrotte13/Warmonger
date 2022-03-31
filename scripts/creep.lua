@@ -229,10 +229,10 @@ creep.remote_interface = {
 
 function creep.check_strike (killed_e, killer_e, killer_force)
   if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) or math.random(1,3) < 2 then return end
-  local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range+1)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
-  if range_ratio < 1.74 then return end
+  if range_ratio < 1.86 then return end
   local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 64, type = "unit-spawner", force = "enemy" }
   local punisher
   local revengers = {}
@@ -252,14 +252,14 @@ function creep.check_strike (killed_e, killer_e, killer_force)
     return
   end
     local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
-    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range+1)
 
   local attack_area_radius = 2
   local attack_inaccuracy = 2
   if range_ratio > 8.5 then
     attack_area_radius = 5
     attack_inaccuracy = 7
-  elseif range_ratio > 3.2 then
+  elseif range_ratio > 3.6 then
     attack_area_radius = 3
     attack_inaccuracy = 4
   end
@@ -334,11 +334,12 @@ function creep.landed_strike(effect_id, surface, target_position, target)
       local hitpoints = entity.prototype.max_health
       if entity.prototype.type == "character" then
         hitpoints = hitpoints * (1 + entity.player.character_health_bonus) + 300
+        -- hitpoints = hitpoints * (1 + entity.player.force.character_health_bonus)
       end
       if entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
         hitpoints = hitpoints * 3
       end
-      local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/4 ) ) -- big one time damage and can be lethal
+      local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
       dmg = dmg * dmg_coeff
       local recieved_dmg1 = entity.damage(dmg/3, "enemy", "acid")
       if entity.valid then

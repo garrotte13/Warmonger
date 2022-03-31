@@ -338,7 +338,7 @@ function creep_eater.process()
         end
         i = #miner.cr_tiles
         if #tiles > 0 then
-            surface.pollute(miner.entity.position, constants.pollution_miner * #tiles)
+            surface.pollute(miner.entity.position, settings.global["wm-CreepMiningPollution"].value * #tiles)
             surface.play_sound{path = "kr-collect-creep", position = miner.entity.position}
             miner.ready_tiles = miner.ready_tiles - #tiles
             if chest and chest.valid and bio > 0 then
@@ -514,7 +514,7 @@ function creep_eater.scanned (radar)
     --m = radar.position.x .. ":" .. radar.position.y
     --local id = global.creep_radars[m]
     if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. " has been lost") return end
-    global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + 7
+    global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + settings.global["wm-CreepMiningTilesPerCycle"].value
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
 end
 
