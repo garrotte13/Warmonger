@@ -7,6 +7,7 @@ data:extend({
         setting_type = "startup",
         default_value = 7,
         minimum_value = 2,
+        maximum_value = 18,
         --order = "a[modifier]-a[projectiles]",
 
     },
@@ -18,6 +19,7 @@ data:extend({
         setting_type = "runtime-global",
         default_value = 1.5,
         minimum_value = 0.1,
+        maximum_value = 30,
         order = "m[total]-c[ai]",
 
     },

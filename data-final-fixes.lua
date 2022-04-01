@@ -1,15 +1,21 @@
 local militaryrecipe = data.raw.recipe["military-science-pack"]
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
-table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="biomass", amount=1})
 table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})
 table.insert(data.raw.technology["electric-energy-distribution-2"].effects, { type = "unlock-recipe", recipe = "creep-miner1-radar"})
 
+local pcapsule = data.raw.recipe["poison-capsule"]
+pcapsule.result_count = 2
+pcapsule.energy_required = pcapsule.energy_required * 2
+for i=1, #pcapsule.ingredients do
+  if pcapsule.ingredients[i].amount then pcapsule.ingredients[i].amount = pcapsule.ingredients[i].amount * 2 else pcapsule.ingredients[i][2] = pcapsule.ingredients[i][2] * 2 end
+end
+table.insert(pcapsule.ingredients, {type="item", name="biomass", amount=1})
 
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
   table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=1} )
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=2} )
+  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=1} )
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2500} )
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3500} )
   table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=500} )
