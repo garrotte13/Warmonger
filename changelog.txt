@@ -1,8 +1,9 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.8
-Date: 2022-04-?
+Date: 2022-04-02
   Changes:
-      - Mod settings were added. Biters reseach data (BRD) recipe default is 7. Please use value 4 for double technology price or when playing less aggressive enemies worlds.
+      - Mod settings were added.
+      Biters reseach data (BRD) recipe biomass ingredient by default is 7. Use value 4 for double technology price or when playing less aggressive enemies worlds.
       To change BRD startup setting Factorio app restart is required. Old games will use it at next load of saved game.
       - CLI mod settings are removed. Loading old game imports them into mod settings UI.
       - Creep miner goes to sleep immediately on last creep tile harvested.
@@ -10,7 +11,7 @@ Date: 2022-04-?
       - +0.5% corrosion DoT.
       - Less painful corrosion strikes: less damage, less often.
       - Fixed circle rendering radius for creep miners.
-      - Poison capsule, repair capsule (RA mod) and advanced repair pack (RI mod) biomass costs were halved.
+      - Poison capsule, repair capsule (RA mod) and advanced repair pack (RI mod) biomass costs were halved - these recipes produce 2 resulting items now.
       - Biomass costs for some of RA and RI mods structures and equipment were decreased to be multiple of 15.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.7
