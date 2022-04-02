@@ -28,6 +28,14 @@ function migrations.generic(ChangedModsData)
     if old and (old:match("1%.0%.%d") ) then
       corrosion.init()
     end
+    if old and (old:match("1%.3%.%d") ) then
+      settings.global["wm-CounterStrike"] = {value = global.corrosion.strike_back}
+      settings.global["wm-CreepMinerHints"] = {value = global.corrosion.creepminer_hints}
+    end
+    if old and (old:match("1%.2%.%d") or old:match("1%.3%.%d")) then
+      settings.global["wm-CreepCorrosion"] = {value = global.corrosion.enabled}
+    end
+
   end
 end
 

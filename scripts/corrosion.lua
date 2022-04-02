@@ -5,11 +5,11 @@ local corrosion = {}
 
 function corrosion.init()
  global.corrosion = {
- enabled = true,
- strike_back = true,
+ enabled = settings.global["wm-CreepCorrosion"].value,
+ strike_back = settings.global["wm-CounterStrike"].value,
  affected = {},
  affected_num = 0,
- creepminer_hints = true
+ creepminer_hints = settings.global["wm-CreepMinerHints"].value
  }
 end
 

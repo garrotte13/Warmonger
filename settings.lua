@@ -8,7 +8,6 @@ data:extend({
         default_value = 7,
         minimum_value = 2,
         maximum_value = 18,
-        --order = "a[modifier]-a[projectiles]",
 
     },
 
@@ -20,7 +19,7 @@ data:extend({
         default_value = 1.5,
         minimum_value = 0.1,
         maximum_value = 30,
-        order = "m[total]-c[ai]",
+        order = "m[total]-d[ai]",
 
     },
 
@@ -32,7 +31,7 @@ data:extend({
         default_value = 7,
         minimum_value = 3,
         maximum_value = 20,
-        order = "m[total]-c[ai]",
+        order = "m[total]-d[ai]",
 
     },
 
@@ -53,6 +52,16 @@ data:extend({
         setting_type = "runtime-global",
         default_value = true,
         order = "m[total]-b[ai]",
+
+    },
+
+    {
+        type = "bool-setting",
+        name = "wm-CreepMinerHints",
+        description = "wm-CreepMinerHints",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "m[total]-c[ai]",
 
     },
 

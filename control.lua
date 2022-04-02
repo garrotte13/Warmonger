@@ -12,7 +12,7 @@ local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
 local util = require("scripts.util")
 
-util.add_commands(corrosion.commands)
+--util.add_commands(corrosion.commands)
 
 remote.add_interface("kr-creep", creep.remote_interface)
 
@@ -72,6 +72,12 @@ end)
 script.on_event(defines.events.on_player_cursor_stack_changed, function(e)
   local player = game.players[e.player_index]
   circle_rendering.cursor_changed(player)
+end)
+
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(e)
+  if e.setting == "wm-CreepCorrosion" then global.corrosion.enabled = settings.global["wm-CreepCorrosion"].value
+  elseif e.setting == "wm-CounterStrike" then global.corrosion.strike_back = settings.global["wm-CounterStrike"].value
+  elseif e.setting == "wm-CreepMinerHints" then global.corrosion.creepminer_hints = settings.global["wm-CreepMinerHints"].value end
 end)
 
 
