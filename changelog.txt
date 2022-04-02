@@ -9,7 +9,8 @@ Date: 2022-04-?
       - +0.5% corrosion DoT.
       - Less painful corrosion strikes: less damage, less often.
       - Fixed circle rendering radius for creep miners.
-      - Poison capsule biomass cost was halved.
+      - Poison capsule, repair capsule (RA mod) and advanced repair pack (RI mod) biomass costs were halved.
+      - Biomass costs for some of RA and RI mods structures and equipment were decreased to be multiple of 15.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.7
 Date: 2022-02-06
