@@ -14,19 +14,40 @@ table.insert(pcapsule.ingredients, {type="item", name="biomass", amount=1})
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=1} )
-  table.insert( data.raw.recipe["repair-capsule-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=1} )
-  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2500} )
-  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3500} )
-  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=500} )
-  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=800} )
+  pcapsule = data.raw.recipe["repair-capsule-rampant-arsenal"]
+  pcapsule.normal.result_count = 2
+  pcapsule.normal.energy_required = pcapsule.normal.energy_required * 2
+  pcapsule.expensive.result_count = 2
+  pcapsule.expensive.energy_required = pcapsule.expensive.energy_required * 2
+
+  for i=1, #pcapsule.normal.ingredients do
+    if pcapsule.normal.ingredients[i].amount then pcapsule.normal.ingredients[i].amount = pcapsule.normal.ingredients[i].amount * 2 else pcapsule.normal.ingredients[i][2] = pcapsule.normal.ingredients[i][2] * 2 end
+  end
+  for i=1, #pcapsule.expensive.ingredients do
+    if pcapsule.expensive.ingredients[i].amount then pcapsule.expensive.ingredients[i].amount = pcapsule.expensive.ingredients[i].amount * 2 else pcapsule.expensive.ingredients[i][2] = pcapsule.expensive.ingredients[i][2] * 2 end
+  end
+  table.insert( pcapsule.normal.ingredients, {type="item", name="biomass", amount=1} )
+  table.insert( pcapsule.expensive.ingredients, {type="item", name="biomass", amount=1} )
+
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2400} )
+  table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3300} )
+  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=450} )
+  table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=750} )
   --table.insert( data.raw.recipe[""].ingredients, {type="item", name="biomass", amount=3} )
  end
 
  if mods["RampantIndustry"] then
-  table.insert( data.raw.recipe["advanced-repair-pack-rampant-industry"].ingredients, {type="item", name="biomass", amount=1} )
-  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=250} )
-  table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=100} )
+
+  pcapsule = data.raw.recipe["advanced-repair-pack-rampant-industry"]
+  pcapsule.result_count = 2
+  pcapsule.energy_required = pcapsule.energy_required * 2
+  for i=1, #pcapsule.ingredients do
+    if pcapsule.ingredients[i].amount then pcapsule.ingredients[i].amount = pcapsule.ingredients[i].amount * 2 else pcapsule.ingredients[i][2] = pcapsule.ingredients[i][2] * 2 end
+  end
+  table.insert( pcapsule.ingredients, {type="item", name="biomass", amount=1} )
+
+  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=240} )
+  table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=90} )
  end
 
 if mods["IndustrialRevolution"] then
