@@ -4,7 +4,7 @@ local circle_rendering = {}
 local function miner_cursor(player)
   local pcs = player.cursor_stack
   local pcg = player.cursor_ghost
-  if pcs and pcs.valid_for_read and pcs.valid and (pcs.name:match("creep%-miner%d%-")) then
+  if pcs and pcs.valid_for_read and pcs.valid and (pcs.name:match("creep%-miner%d%-") or pcs.name == "kr-creep-collector") then
   --if pcs and pcs.valid_for_read and pcs.valid and (pcs.name=="creep-miner0-radar" or pcs.name=="creep-miner0-overlay" or pcs.name=="creep-miner0-chest") then
     return true
   elseif pcg and pcg.valid and (pcg.name:match("creep%-miner%d%-") ) then
