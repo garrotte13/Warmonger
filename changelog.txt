@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.9
+Date: 2022-04-?
+  Changes:
+      - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter renders creep miner ranges too.
+      
+---------------------------------------------------------------------------------------------------
 Version: 1.3.8
 Date: 2022-04-02
   Changes:
