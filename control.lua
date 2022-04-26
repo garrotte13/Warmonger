@@ -84,6 +84,8 @@ end)
 script.on_event(defines.events.on_built_entity, function(e)
   if e.created_entity.valid and (e.created_entity.name == "creep-miner1-radar" or e.created_entity.name == "creep-miner0-radar") then
     creep_eater.add (e.created_entity)
+  elseif e.created_entity.name == "entity-ghost" and (e.created_entity.ghost_name == "creep-miner1-radar" or e.created_entity.ghost_name == "creep-miner0-radar") then
+    circle_rendering.add_circle(e.created_entity, game.players[e.player_index])
   else corrosion.engaging(e.created_entity) end
 end)
 
@@ -119,15 +121,18 @@ script.on_event(defines.events.on_robot_built_entity, function(e)
 end)
 
 script.on_event(defines.events.script_raised_built, function(e)
-  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
+  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar" or
+  e.entity.name == "entity-ghost" and (e.entity.ghost_name == "creep-miner1-radar" or e.entity.ghost_name == "creep-miner0-radar")) then
     local last_user = game.players[e.player_index]
     circle_rendering.add_circle(e.entity, last_user)
   end
 end)
 
 script.on_event(defines.events.script_raised_destroy, function(e)
-  if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
-    circle_rendering.remove_circle(e.entity)
+  if e.entity.valid and
+    (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar" or
+      e.entity.name == "entity-ghost" and (e.entity.ghost_name == "creep-miner1-radar" or e.entity.ghost_name == "creep-miner0-radar")) then
+        circle_rendering.remove_circle(e.entity)
   end
 end)
 

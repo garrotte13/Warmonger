@@ -79,7 +79,8 @@ function circle_rendering.add_circle(miner, player)
   end
   if not found then
     local id
-    local miner_range = constants.miner_range(miner.name) + 0.6
+    local miner_range
+    if miner.name == "entity-ghost" then miner_range = constants.miner_range(miner.ghost_name) + 0.6 else miner_range = constants.miner_range(miner.name) + 0.6 end
     if player and miner_cursor(player) then
       id = rendering.draw_circle{color={r=0.05, g=0.10, b=0.10, a=0.05}, radius = miner_range, filled=true, target=miner, players={player}, surface = miner.surface, draw_on_ground=true, visible=true}
       --game.print("Drawn visible circle:".. id)

@@ -61,12 +61,3 @@ Rampant mod introduces several nice features:
 Keep trees options as is. Reducing its mass even to value 75% greatly decreases pollution absorption.
 
  Rampant biters often build new bases as a revenge for destroying their nests (they sometimes do it even under heavy weapon fire). In result evolution destroy factor is multiplied by 1.3-2 depending on your play style and bases frequency/size (e.g. for enemy bases 200%/200% difficulty it's better to set destroy factor 100 or less, while for 100%/100% the original value of 200 is Ok).
-
-# Other recommendations
-
-If playing on high difficulty and in single player it's better to use some early construction bots for two reasons (yes, it's some kind of a cheat, but that's less evil in this sutuation):
-
-- Factorio from game very beginning is focused on building automation (blueprinted ghosts are incovenient to apply and have issues, e.g. crazy wrong electric poles connections - Factorio developers don't treat it as a game issue);
-- Without automation from early-midgame phase (somewhere at the moment of _starting_ oil-petroleum things setup -> doubled energy consumption and pollution generation unless big solar panels fields are deployed) it's impossible to survive, because of intense enemies attacks (evolution is somewhere around 40% here, if less - you play too easy game, if over 50% - you're dead), extended walled territory to defend, and suddenly a lot of base building/expansion while vanilla construction bots are available only with sulphuric acid and lubricant production _already_ in place.
-
-I use nerfed Companion Drones as an example (those small spidertrones do require energy and can be easily nerfed. Thanks to Klonan for great work).
