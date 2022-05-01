@@ -340,6 +340,11 @@ function creep.landed_strike(effect_id, surface, target_position, target)
         hitpoints = hitpoints * 3
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
+      if hitpoints > 200 then
+        dmg = dmg * 0.6 + math.ceil( 70 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+      elseif hitpoints > 100 then
+        dmg = dmg * 0.8 + math.ceil( 30 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+      end
       dmg = dmg * dmg_coeff
       local recieved_dmg1 = entity.damage(dmg/3, "enemy", "acid")
       if entity.valid then

@@ -514,7 +514,10 @@ function creep_eater.scanned (radar)
     --m = radar.position.x .. ":" .. radar.position.y
     --local id = global.creep_radars[m]
     if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. " has been lost") return end
-    global.creep_miners[id].ready_tiles = global.creep_miners[id].ready_tiles + settings.global["wm-CreepMiningTilesPerCycle"].value
+    local r_tiles = global.creep_miners[id].ready_tiles
+    if r_tiles < 40 then
+        global.creep_miners[id].ready_tiles = r_tiles + settings.global["wm-CreepMiningTilesPerCycle"].value
+    end
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
 end
 

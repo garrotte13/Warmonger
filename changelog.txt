@@ -1,9 +1,10 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.9
-Date: 2022-04-?
+Date: 2022-05-?
   Changes:
-      - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter renders creep miner ranges too.
-      
+      - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter in hands unhides this rendering too.
+      - Creep miner has got a limit of tiles excavation queue in standby reserve.
+      - Updated counter-strike's one-time damage.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.8
 Date: 2022-04-02
