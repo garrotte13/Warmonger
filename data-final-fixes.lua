@@ -46,7 +46,7 @@ if mods["RampantArsenal"] then
   end
   table.insert( pcapsule.ingredients, {type="item", name="biomass", amount=1} )
 
-  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=240} )
+  table.insert( data.raw.recipe["air-filter-2-rampant-industry"].ingredients, {type="item", name="biomass", amount=150} )
   table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=90} )
  end
 

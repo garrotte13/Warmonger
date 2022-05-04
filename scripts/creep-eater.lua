@@ -190,14 +190,14 @@ function creep_eater.process()
 
         miner.enemies_found = surface.count_entities_filtered{
             position = miner.entity.position,
-            radius = 63,
-            type =  {"unit-spawner", "turret", "unit"},
+            radius = 49,
+            type =  {"unit-spawner", "turret"},
             force = "enemy"
         }
         if (not miner.fakecreep) and miner.enemies_found > 0 then -- all creep tiles are protected
             --game.print("All true creep is protected! While no fake creep is available. Miner index: ".. id)
             if global.corrosion.creepminer_hints then
-                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "Creep miner is blocked by enemies to collect biomass creep"}
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "Creep miner is blocked by enemies to collect BIOMASS creep only left"}
             end
             --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
             miner.entity.active = false
@@ -245,7 +245,7 @@ function creep_eater.process()
         elseif tiles_free == 0 then
             --game.print("All reachable creep is protected! Miner index: ".. id)
             if global.corrosion.creepminer_hints then
-                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All reachable creep is protected by enemies"}
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All reachable creep (even without biomass) is protected by enemies"}
             end
             --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
             miner.entity.active = false
