@@ -314,17 +314,19 @@ end
 
 function creep.landed_strike(effect_id, surface, target_position, target)
   local attack_pos
+  local attack_area_radius
+
+  if effect_id == "wm-strike-back-3" then attack_area_radius = 5
+  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 2.9
+  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 1.8
+  else return end
+
   if target_position then attack_pos = target_position
   elseif target and target.position then attack_pos = target.position
   else
     game.print("We have lost target on revenge strike landing!")
     return
   end
-  local attack_area_radius
-  if effect_id == "wm-strike-back-3" then attack_area_radius = 5
-  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 2.9
-  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 1.8
-  else return end
 
   surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 0.7, position = attack_pos}
   local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius+0.5,  force = "player" }
