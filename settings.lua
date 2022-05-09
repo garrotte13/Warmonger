@@ -13,9 +13,22 @@ data:extend({
 
     {
         type = "double-setting",
+        name = "wm-CreepMiningPollution_s",
+        description = "wm-CreepMiningPollution_s",
+        setting_type = "startup",
+        default_value = 1.2,
+        minimum_value = 0.3,
+        maximum_value = 3,
+        order = "m[total]-d[ai]",
+
+    },
+
+    {
+        type = "double-setting",
         name = "wm-CreepMiningPollution",
         description = "wm-CreepMiningPollution",
         setting_type = "runtime-global",
+        hidden = true,
         default_value = 1.5,
         minimum_value = 0.1,
         maximum_value = 30,
@@ -29,8 +42,9 @@ data:extend({
         description = "wm-CreepMiningTilesPerCycle",
         setting_type = "runtime-global",
         default_value = 7,
-        minimum_value = 3,
-        maximum_value = 20,
+        hidden = true,
+        minimum_value = 7,
+        maximum_value = 8,
         order = "m[total]-d[ai]",
 
     },

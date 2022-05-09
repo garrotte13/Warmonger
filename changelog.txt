@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.10
+Date: 2022-05-?
+  Changes:
+      - Creep miner pollution re-design. Emission takes place while miner is working, not at the moment of creep excavation.
+      Customized miner pollution coefficient setting value should be set Startup settings manually.
+---------------------------------------------------------------------------------------------------
 Version: 1.3.9
 Date: 2022-05-08
   Changes:

@@ -35,6 +35,11 @@ function migrations.generic(ChangedModsData)
     if old and (old:match("1%.2%.%d") or old:match("1%.3%.%d")) then
       settings.global["wm-CreepCorrosion"] = {value = global.corrosion.enabled}
     end
+    if old and (old=="1.3.9" or old=="1.3.8") then
+      if settings.global["wm-CreepMiningPollution"].value ~= settings.startup["wm-CreepMiningPollution_s"].value then
+        game.print("Miner pollution has been migrated to Startup mod settings. Please change it manually to your preferred value of: ".. settings.global["wm-CreepMiningPollution"].value)
+      end
+    end
 
   end
 end
