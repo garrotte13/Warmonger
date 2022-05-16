@@ -24,6 +24,7 @@ data:extend(
 		name = "biters-research-data",
 		energy_required = 5,
 		category = "advanced-crafting",
+		emissions_multiplier = 2,
 		enabled = false,
 		ingredients =
 		{
@@ -39,6 +40,7 @@ data:extend(
 		name = "kr-biomass-growing",
 		category = "bioprocessing",
 		energy_required = 60,
+		-- emissions_multiplier = 2.5,
 		enabled = false,
 		ingredients =
 		{
@@ -59,6 +61,7 @@ data:extend(
 		category = "bioprocessing",
 		subgroup = "fluid-recipes",
 		energy_required = 4,
+		emissions_multiplier = 1.5,
 		enabled = false,
 		ingredients =
 		{
