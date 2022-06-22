@@ -1,9 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.11
+Date: 2022-06-?
+  Changes:
+      - Creep miners acid defense reduced.
+---------------------------------------------------------------------------------------------------
 Version: 1.3.10
 Date: 2022-05-16
   Changes:
       - Creep miner pollution re-design. Emission takes place while miner is working, not at the moment of creep excavation.
-      Customized miner pollution coefficient setting value (recommended for DeathWorld games) can be done in Startup settings.
+      Customized miner pollution coefficient setting value (recommended for DeathWorld games) can be found in Startup settings.
       - Fixed false counter strikes triggered effects.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.9
