@@ -1,9 +1,8 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.11
-Date: 2022-06-?
+Date: 2022-07-24
   Changes:
-      - Creep miners acid defense reduced.
-      - Warfare expandables recipes switched from biomass to bio residue. RA shield MK3 too.
+      - Warfare expandables (capsules and other RA/RI mods staff) recipes switched from biomass to bio residue.
       - Fixed bio residue pictures.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.10
