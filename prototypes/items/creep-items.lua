@@ -129,7 +129,7 @@ data:extend(
 		order = "a[biomass]",
 		stack_size = 400
 	},
-	
+
   {
 		type = "item",
 		name = "wm-bio-remains",
@@ -138,28 +138,9 @@ data:extend(
 		--icon_mipmaps = 4,
 		pictures = {
       {
-        size = 64,
-        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass.png",
-        scale = 0.25,
-        mipmap_count = 4,
-      },
-      {
-        size = 64,
-        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-1.png",
-        scale = 0.25,
-        mipmap_count = 4,
-      },
-      {
-        size = 64,
-        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-2.png",
-        scale = 0.25,
-        mipmap_count = 4,
-      },
-      {
-        size = 64,
-        filename = "__Warmonger__/graphics/icons/items-with-variations/biomass/biomass-3.png",
-        scale = 0.25,
-        mipmap_count = 4,
+        size = 32,
+        filename = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
+        scale = 0.5,
       },
     },
 		fuel_category = "chemical",

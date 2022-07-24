@@ -37,7 +37,7 @@ end
 
 function creep.on_biter_base_built(entity)
   if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then return end
-  if (entity.type == "unit-spawner" or entity.type == "unit-spawner" == "turret") and global.creep.surfaces[entity.surface.index] then
+  if (entity.type == "unit-spawner" or entity.type == "turret") and global.creep.surfaces[entity.surface.index] then
     generate_creep({ entity })
   end
 end
