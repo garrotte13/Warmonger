@@ -71,11 +71,30 @@ if mods["IndustrialRevolution"] then
   end
   -- Bioprocessing recipe will be fixed later if anyone notices IR2 compatibility at all...
 else
-  for i, component in pairs(militaryrecipe.ingredients) do
-    for _, value in pairs(component) do
-      if value == "stone-wall" then
-        militaryrecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
-        break
+  if militaryrecipe.ingredients then
+    for i, component in pairs(militaryrecipe.ingredients) do
+      for _, value in pairs(component) do
+        if value == "stone-wall" then
+          militaryrecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
+          break
+        end
+      end
+    end
+  else
+    for i, component in pairs(militaryrecipe.normal.ingredients) do
+      for _, value in pairs(component) do
+        if value == "stone-wall" then
+          militaryrecipe.normal.ingredients[i] = {type="item", name="biters-research-data", amount=1}
+          break
+        end
+      end
+    end
+    for i, component in pairs(militaryrecipe.expensive.ingredients) do
+      for _, value in pairs(component) do
+        if value == "stone-wall" then
+          militaryrecipe.expensive.ingredients[i] = {type="item", name="biters-research-data", amount=1}
+          break
+        end
       end
     end
   end
