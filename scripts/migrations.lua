@@ -40,7 +40,7 @@ function migrations.generic(ChangedModsData)
         game.print("Miner pollution has been migrated to Startup mod settings. Please change it manually to your preferred value of: ".. settings.global["wm-CreepMiningPollution"].value)
       end
     end
-
+    global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value
   end
 end
 
@@ -56,15 +56,6 @@ migrations.versions = {
 
     creep.init()
 	  corrosion.init()
-    --creep_eater.init()
-
-    -- MIGRATE
---    local old_enabled = old_global.radioactivity_enabled
-    -- The old `global` didn't store the variable until it was needed
---    if old_enabled == nil then
- --     old_enabled = true
-    
- --   global.radioactivity.enabled = old_enabled
 	
 	global.corrosion.enabled = true
 

@@ -34,6 +34,9 @@ end
 local fuel_items
 
 function creep_eater.refuel(entity, chest_given)
+   if not global.creep_miner_refuel then
+        return false
+   end
    local chest
    if chest_given then chest = chest_given end
    if not fuel_items then
@@ -305,7 +308,7 @@ function creep_eater.process()
                 creep2_cap = creep2_cap - game.item_prototypes["wm-bio-remains"].stack_size
             end
         end
-       if miner.entity.burner and miner.entity.burner.valid then
+       if miner.entity.burner and miner.entity.burner.valid and global.creep_miner_refuel then
             local f_inv = miner.entity.get_inventory(defines.inventory.fuel)
             if f_inv and f_inv.valid and f_inv.get_insertable_count("wm-bio-remains") > 0 then
                 creep3_cap = 1000 + f_inv.get_insertable_count("wm-bio-remains")
@@ -531,6 +534,7 @@ function creep_eater.init()
     global.creep_miners_last = 1
     global.creep_miners_id = 1
     global.creep_radars = {}
+    global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value
 end
 
 return creep_eater

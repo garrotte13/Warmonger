@@ -51,11 +51,21 @@ data:extend({
 
     {
         type = "bool-setting",
+        name = "wm-CreepMinerFueling",
+        description = "wm-CreepMinerFueling",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "m[total]-a[ai]",
+
+    },
+
+    {
+        type = "bool-setting",
         name = "wm-CreepCorrosion",
         description = "wm-CreepCorrosion",
         setting_type = "runtime-global",
         default_value = true,
-        order = "m[total]-a[ai]",
+        order = "m[total]-b[ai]",
 
     },
 
@@ -65,7 +75,7 @@ data:extend({
         description = "wm-CounterStrike",
         setting_type = "runtime-global",
         default_value = true,
-        order = "m[total]-b[ai]",
+        order = "m[total]-c[ai]",
 
     },
 
@@ -75,7 +85,7 @@ data:extend({
         description = "wm-CreepMinerHints",
         setting_type = "runtime-global",
         default_value = true,
-        order = "m[total]-c[ai]",
+        order = "m[total]-d[ai]",
 
     },
 

@@ -77,7 +77,8 @@ end)
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(e)
   if e.setting == "wm-CreepCorrosion" then global.corrosion.enabled = settings.global["wm-CreepCorrosion"].value
   elseif e.setting == "wm-CounterStrike" then global.corrosion.strike_back = settings.global["wm-CounterStrike"].value
-  elseif e.setting == "wm-CreepMinerHints" then global.corrosion.creepminer_hints = settings.global["wm-CreepMinerHints"].value end
+  elseif e.setting == "wm-CreepMinerHints" then global.corrosion.creepminer_hints = settings.global["wm-CreepMinerHints"].value
+  elseif e.setting == "wm-CreepMinerFueling" then global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value end
 end)
 
 
