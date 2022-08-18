@@ -315,11 +315,20 @@ end
 function creep.landed_strike(effect_id, surface, target_position, target)
   local attack_pos
   local attack_area_radius
+  local attack_incomers
 
-  if effect_id == "wm-strike-back-3" then attack_area_radius = 5
-  elseif effect_id == "wm-strike-back-2" then attack_area_radius = 2.9
-  elseif effect_id == "wm-strike-back-1" then attack_area_radius = 1.8
+  if effect_id == "wm-strike-back-3" then
+    attack_area_radius = 5
+    attack_incomers = 3
+  elseif effect_id == "wm-strike-back-2" then
+    attack_area_radius = 2.9
+    attack_incomers = 2
+  elseif effect_id == "wm-strike-back-1" then
+    attack_area_radius = 1.8
+    attack_incomers = 1
   else return end
+  attack_incomers = attack_incomers + (math.random(1,4)-3)
+  if attack_incomers < 1 then attack_incomers = 1 end
 
   if target_position then attack_pos = target_position
   elseif target and target.position then attack_pos = target.position
@@ -328,7 +337,13 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     return
   end
 
+  local somewhere
+  local someone
   surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 0.7, position = attack_pos}
+  for i = 1, attack_incomers do
+    somewhere = surface.find_non_colliding_position("small-biter", attack_pos, attack_area_radius+2, 0.05, false )
+    if somewhere then someone = surface.create_entity{name = "small-biter", position = somewhere, force = "enemy"} end
+  end
   local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius+0.5,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
@@ -339,7 +354,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
         -- hitpoints = hitpoints * (1 + entity.player.force.character_health_bonus)
       end
       if entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
-        hitpoints = hitpoints * 3
+        hitpoints = hitpoints * 6
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
       if hitpoints > 200 then
@@ -357,6 +372,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
       end
     end
   end
+
   remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius+0.5)
 end
 
