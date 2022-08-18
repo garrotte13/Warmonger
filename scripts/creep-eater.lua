@@ -108,7 +108,9 @@ function creep_eater.process()
             if global.creep_miners[id].stage > 0 or global.creep_miners[id].ready_tiles > 0 then
                 not_found_id = false
                 break
-            else if id < global.creep_miners_last then id = id + 1 else id = 1 end end
+            else
+                if id < global.creep_miners_last then id = id + 1 else id = 1 end
+            end
 
         else
             if id < global.creep_miners_last then id = id + 1 else id = 1 end
@@ -126,9 +128,9 @@ function creep_eater.process()
          and miner.entity.get_inventory(defines.inventory.fuel)
           and (miner.entity.get_inventory(defines.inventory.fuel).is_empty()) then
             if not creep_eater.refuel(miner.entity, miner.chest) then
-                miner.stage = 60
-                miner.deactivation_tick = game.ticks_played
-                if not miner.entity.burner.remaining_burning_fuel or miner.entity.burner.remaining_burning_fuel == 0 then return end
+                --miner.stage = 60
+                --miner.deactivation_tick = game.ticks_played
+                --if not miner.entity.burner.remaining_burning_fuel or miner.entity.burner.remaining_burning_fuel == 0 then return end
             end
         end
         miner.cr_tiles = {}
@@ -423,7 +425,7 @@ function creep_eater.process()
         if miner.entity.burner and miner.entity.burner.valid and miner.entity.get_inventory(defines.inventory.fuel)
          and (miner.entity.get_inventory(defines.inventory.fuel).is_empty()) then
             if (game.ticks_played - miner.deactivation_tick) > 600 then
-                if not creep_eater.refuel(miner.entity, miner.chest) then
+                if ( not creep_eater.refuel(miner.entity, miner.chest) ) and global.creep_miner_refuel then
                     miner.deactivation_tick = game.ticks_played
                     if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
                 else miner.stage = 0 end
