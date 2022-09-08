@@ -154,62 +154,31 @@ function creep_eater.process()
     elseif miner.stage == 1 then --Fill sorting array
 
         miner.corroded_help = false
-        local true_cr_found = false
-        local fake_cr_found = false
         miner.sort_tiles = {}
         for i = 1,#miner.cr_tiles do
-                local dx = miner.entity.position.x - miner.cr_tiles[i].position.x
-                local dy = miner.entity.position.y - miner.cr_tiles[i].position.y
-                table.insert(miner.sort_tiles, {
-                    distance = 3000 + (dx * dx) + (dy * dy),
-                    oid = i,
-                    protected = false
-                })
-                if miner.cr_tiles[i].name == "kr-creep" then true_cr_found = true else fake_cr_found = true end
+            local dx = miner.entity.position.x - miner.cr_tiles[i].position.x
+            local dy = miner.entity.position.y - miner.cr_tiles[i].position.y
+            table.insert(miner.sort_tiles, {
+                distance = 3000 + (dx * dx) + (dy * dy),
+                oid = i,
+                protected = false
+            })
         end
-        miner.truecreep = true_cr_found
-        miner.fakecreep = fake_cr_found
-        if fake_cr_found then
-             miner.stage = 2
-        else
-            miner.stage = 3
-        end
+        miner.stage = 2
 
-    elseif miner.stage == 2 then -- We have fake creep tiles to collect
+    elseif miner.stage == 2 then -- We have creep tiles to collect
 
         miner.enemies = surface.find_entities_filtered{
          position = miner.entity.position,
-         radius = miner_range + constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*20),
+         radius = miner_range + 2 + constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*30),
          type = {"unit-spawner", "turret"},
          force = "enemy"
         }
+        miner.stage = 5
 
-        if miner.truecreep then
-            if miner.enemies and miner.enemies[1] then
-                miner.stage = 5
-                miner.enemies_found = 1
-            else miner.stage = 3 end
-        else miner.stage = 5 end
+    elseif miner.stage == 3 then -- Old section
 
-    elseif miner.stage == 3 then -- We have true creep tiles to collect
-
-        miner.enemies_found = surface.count_entities_filtered{
-            position = miner.entity.position,
-            radius = 49,
-            type =  {"unit-spawner", "turret"},
-            force = "enemy"
-        }
-        if (not miner.fakecreep) and miner.enemies_found > 0 then -- all creep tiles are protected
-            --game.print("All true creep is protected! While no fake creep is available. Miner index: ".. id)
-            if global.corrosion.creepminer_hints then
-                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "Creep miner is blocked by enemies to collect BIOMASS creep only left"}
-            end
-            --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
-            miner.entity.active = false
-            miner.deactivation_tick = game.ticks_played
-            miner.stage = 51
-            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
-        else miner.stage = 5 end
+        miner.stage = 5
 
     elseif miner.stage == 40 then
         if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
@@ -219,13 +188,12 @@ function creep_eater.process()
     elseif miner.stage == 5 then -- Filtering out protected tiles
 
         local tiles_free = #miner.cr_tiles
-        if miner.fakecreep then
-            local distance_protect = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*20)
-            distance_protect = distance_protect ^ 2
-            for k=1,#miner.enemies do
-              if miner.enemies[k] and miner.enemies[k].valid then
+        local distance_protect = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*20)
+        distance_protect = distance_protect ^ 2
+        for k=1,#miner.enemies do
+            if miner.enemies[k] and miner.enemies[k].valid then
                 for i=1,#miner.cr_tiles do
-                    if miner.cr_tiles[i].name == "fk-creep" and (not miner.sort_tiles[i].protected) then
+                    if (not miner.sort_tiles[i].protected) then
                         if (((miner.enemies[k].position.x - miner.cr_tiles[i].position.x)^2) + ((miner.enemies[k].position.y - miner.cr_tiles[i].position.y)^2)) <= distance_protect then
                             miner.sort_tiles[i].protected = true
                             if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
@@ -233,24 +201,14 @@ function creep_eater.process()
                         end
                     end
                 end
-              end
-            end
-            
-        end
-        if miner.truecreep and miner.enemies_found > 0 then
-            for i=1,#miner.cr_tiles do
-                if miner.cr_tiles[i].name == "kr-creep" then
-                    miner.sort_tiles[i].protected = true
-                    if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
-                    tiles_free = tiles_free - 1
-                end
             end
         end
+
         if tiles_free < 0 then game.print("WTF! Free tiles number is negative (".. tiles_free.. ") for miner Index: ".. id)
         elseif tiles_free == 0 then
             --game.print("All reachable creep is protected! Miner index: ".. id)
             if global.corrosion.creepminer_hints then
-                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All reachable creep (even without biomass) is protected by enemies"}
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All reachable creep is protected by enemies"}
             end
             --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
             miner.entity.active = false
@@ -331,6 +289,12 @@ function creep_eater.process()
                     bio = bio + 1
                     creep1_cap = creep1_cap - 1
                     table.insert(tiles, {name = miner.cr_tiles[k].hidden_tile or "landfill", position = miner.cr_tiles[k].position})
+                    if #miner.enemies > 0 and math.random(1,6) > 1 then -- creep excavation touches enemy building
+                        k = math.random(1, #miner.enemies)
+                        if miner.enemies[k] and miner.enemies[k].valid then
+                            local applied_test_dmg = miner.enemies[k].damage(0.5, "player", "fire", miner.entity) -- teasing enemies
+                        end
+                    end
                 elseif miner.cr_tiles[k].name == "fk-creep" then
                     if math.random(1,10) < 5 and (creep2_cap > 0 or creep3_cap > 1000) then
                         bio2 = bio2 + 1
@@ -362,9 +326,6 @@ function creep_eater.process()
         end
         miner.cr_tiles = {}
         miner.enemies = nil
-        miner.enemies_found = 0
-        miner.fakecreep = false
-        miner.truecreep = false
         miner.sort_tiles = {}
         if #tiles == 0 then
             --game.print("There are creep tiles, but we can't collect them (nowhere to store biomass or all creep type-2 is protected)! Miner index: ".. id)

@@ -35,7 +35,6 @@ function corrosion.engaging (entity)
 end
 
 function corrosion.engaging_fast (entity)
-  -- check for moving object needed
   if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character" then return end
   local e_area = entity.selection_box
   area.ceil(e_area)
