@@ -133,22 +133,27 @@ function creep.process_creep_queue()
             end
           end
         end
-        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
-        for _, entity in pairs(entities) do
-          if entity.valid and entity.destructible and entity.is_entity_with_health then
-            corrosion.engaging_fast(entity)
-          end
-        end
-      else
+--        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
+--        for _, entity in pairs(entities) do
+--          if entity.valid and entity.destructible and entity.is_entity_with_health then
+--            corrosion.engaging_fast(entity)
+--         end
+--        end
+      end
           for _, tile in pairs(creep_pack.creep_tiles) do
-            local entities = creep_pack.surface.find_entities_filtered{ position = tile.position, force = "player" }
+            local entities = creep_pack.surface.find_entities_filtered{
+              area = {
+                left_top = { x = tile.position.x, y = tile.position.y },
+                right_bottom = { x = tile.position.x + 1, y = tile.position.y + 1 },
+              },
+              force = "player"}
             for _, entity in pairs(entities) do
               if entity.valid and entity.destructible and entity.is_entity_with_health then
                 corrosion.engaging_fast(entity)
               end
             end
           end
-      end
+      --end
       global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
       global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
     end
@@ -344,7 +349,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     somewhere = surface.find_non_colliding_position("small-biter", attack_pos, attack_area_radius+2, 0.05, false )
     if somewhere then someone = surface.create_entity{name = "small-biter", position = somewhere, force = "enemy"} end
   end
-  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius+0.5,  force = "player" }
+  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius + 0.6,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
     if entity.valid and entity.destructible and entity.is_entity_with_health then
@@ -373,7 +378,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     end
   end
 
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius+0.5)
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius + 0.6)
 end
 
 return creep
