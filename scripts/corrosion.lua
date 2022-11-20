@@ -27,6 +27,14 @@ function corrosion.engaging (entity)
  name = {"kr-creep", "fk-creep"}
  }
  -- game.print("How many creep tiles are under this building: " .. creep_amount)
+ local second_area = entity.secondary_selection_box
+ if second_area and ( creep_amount == 0 ) then
+  area.ceil(second_area)
+  creep_amount = surface.count_tiles_filtered{
+    area = second_area,
+    name = {"kr-creep", "fk-creep"}
+    }
+ end
  if creep_amount > 0 then
   global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = entity
   global.corrosion.affected_num = global.corrosion.affected_num + 1
@@ -107,10 +115,18 @@ function corrosion.update_tiles(surface, tiles)
     i = i + 1
     if entity.valid and entity.surface == surface then
       local obj_area = entity.selection_box
+      local sec_area = entity.secondary_selection_box
       area.ceil(obj_area)
+      if sec_area then
+        area.ceil(sec_area)
+      end
       local touched = false
       for k=1,#tiles do
         if area.contains_position(obj_area, tiles[k].position) then
+          touched = true
+          break
+        end
+        if sec_area and ( area.contains_position(sec_area, tiles[k].position) ) then
           touched = true
           break
         end
@@ -121,6 +137,12 @@ function corrosion.update_tiles(surface, tiles)
           area = obj_area,
           name = {"kr-creep", "fk-creep"}
         }
+        if sec_area and ( creep_amount == 0 ) then
+          creep_amount = surface.count_tiles_filtered{
+            area = sec_area,
+            name = {"kr-creep", "fk-creep"}
+          }
+        end
         if creep_amount == 0 then
           global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil
           global.corrosion.affected_num = global.corrosion.affected_num - 1
@@ -133,7 +155,7 @@ function corrosion.update_tiles(surface, tiles)
  -- game.print("Objects tortured processed:" .. i)
 end
 
-function corrosion.update_surface(surface)
+function corrosion.update_surface(surface) -- OBSOLETE for obsolete creep_collector tool
   if not global.corrosion.enabled then return end
   local i = 0
   for _, entity in pairs(global.corrosion.affected) do

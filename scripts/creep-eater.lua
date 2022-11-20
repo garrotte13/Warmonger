@@ -228,8 +228,14 @@ function creep_eater.process()
             if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x))^2+((corroded.position.y - miner.entity.position.y))^2 <= (d+0.5)  ) then
                 local building_area = corroded.selection_box
                 area.ceil(building_area)
+                local building_sec_area = corroded.secondary_selection_box
+                if building_sec_area then
+                    area.ceil(building_sec_area)
+                end
                 for i=1,#miner.cr_tiles do
-                    if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 2999 and area.contains_position(building_area,miner.cr_tiles[i].position) then
+                    if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 2999
+                     and ( area.contains_position(building_area,miner.cr_tiles[i].position)
+                      or building_sec_area and ( area.contains_position(building_sec_area,miner.cr_tiles[i].position) ) ) then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 3000
                         if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
                         miner.corroded_help = true
