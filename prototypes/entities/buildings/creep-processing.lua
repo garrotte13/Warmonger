@@ -85,12 +85,12 @@ data:extend(
 			  shift = {0.5, -0.325},
 			  scale=0.5, animation_speed=0.5, line_length = 4
 		},
-		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = ( 140 * settings.startup["wm-CreepMiningPollution_s"].value ), drain = "12KW"},
-		energy_usage = "600KW",
+		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = ( 130 * settings.startup["wm-CreepMiningPollution_s"].value ), drain = "12KW"},
+		energy_usage = "800KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
-		energy_per_sector = "1800KJ",
-		energy_per_nearby_scan = "1200KJ",
+		energy_per_sector = "2400KJ",
+		energy_per_nearby_scan = "1600KJ",
 		working_sound =
     {
       sound =
