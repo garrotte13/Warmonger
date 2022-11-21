@@ -1,120 +1,133 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.15
+Date: 2022-11-20
+  Minor Features:
+    - Curved rails corrosion support added.
+    - Reformatting entire changelog to let you read it in-game.
+  Balancing:
+    - Electric creep miner emissions reduced, energy consumption increased.
+---------------------------------------------------------------------------------------------------
 Version: 1.3.14
 Date: 2022-09-08
-  Changes:
-      - Corrosion DoT reduced.
-      - Creep type-1 collecting limitations are re-made to be more flexible and funny:
-      The same blocking protection is applied now as for creep type-2, but excavating it near enemy buildings can provoke defensive attacks.
-  Bugfixes:
-      - Counter strike corrosion is now engaging player's buildings via creep collision instead of landed strike explosion radius
+  Minor Features:
+    - Creep type-1 collecting limitations are re-made to be more flexible and funny: The same blocking protection is applied now as for creep type-2, but excavating it near enemy buildings can provoke defensive attacks.
+    - Counter strike corrosion is now engaging player's buildings via creep collision instead of landed strike explosion radius
+  Balancing:
+    - Corrosion DoT reduced.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.13
 Date: 2022-08-18
-  Changes:
-      - Burner creep miner auto refuelling is optional now (turn it off in mod map options to have better controlled creep excavation)
-      - Counter strikes got some more live action (why not?). Rampant Arsenal medics still require some fixes.
+  Minor Features:
+    - Burner creep miner auto refuelling is optional now (turn it off in mod map options to have better controlled creep excavation)
+    - Counter strikes got some more live action (why not?). Rampant Arsenal medics still require some fixes.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.12
 Date: 2022-08-08
-  Changes:
-      - Support for normal/expensive military science pack recipe.
+  Modding:
+    - Support for normal/expensive military science pack recipe. I don't recommend mods which do it - technologies cost is changed other way in Factorio.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.11
 Date: 2022-07-25
-  Changes:
-      - Warfare expandables (capsules and other RA/RI mods staff) recipes switched from biomass to bio residue.
-      - A small buff to bio residue income from creep type-2.
-      - Fixed bio residue pictures (previously was shown as biomass on belts).
-      - Minor fixes.
+  Balancing:
+    - Warfare expandables (capsules and other RA/RI mods staff) recipes switched from biomass to bio residue.
+    - A small buff to bio residue income from creep type-2.
+  Bugfixes:
+    - Fixed bio residue pictures (previously was shown as biomass on belts).
+    - Minor fixes.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.10
 Date: 2022-05-16
-  Changes:
-      - Creep miner pollution re-design. Emission takes place while miner is working, not at the moment of creep excavation.
-      Customized miner pollution coefficient setting value (recommended for DeathWorld games) can be found in Startup settings.
-      - Fixed false counter strikes triggered effects.
+  Balancing:
+    - Creep miner pollution re-design. Emission takes place while miner is working, not at the moment of creep excavation. Customized miner pollution coefficient setting value (recommended for DeathWorld games) can be found in Startup settings.
+  Bugfixes:
+    - Fixed false counter strikes triggered effects.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.9
 Date: 2022-05-08
-  Changes:
-      - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter in hands unhides this rendering too.
-      - Creep miner has got a limit of tiles excavation queue in standby reserve.
-      - Creep miner balance. Reduced enemies protection for biomass creep (biters don't protect it anymore, miner blocking range is 1.5 chunk)
-      - Updated counter-strike's one-time damage.
-      - Decreased DoT corrosion damage for less damaged buildings.
+  Minor Features:
+    - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter in hands unhides this rendering too.
+    - Creep miner has got a limit of tiles excavation queue in standby reserve.
+  Balancing:
+    - Creep miner balance. Reduced enemies protection for biomass creep (biters don't protect it anymore, miner blocking range is 1.5 chunk)
+    - Updated counter-strike's one-time damage.
+    - Decreased DoT corrosion damage for less damaged buildings.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.8
 Date: 2022-04-02
-  Changes:
-      - Mod settings were added.
-      Biters reseach data (BRD) recipe biomass ingredient by default is 7. Use value 4 for double technology price or when playing less aggressive enemies worlds.
-      To change BRD startup setting Factorio app restart is required. Old games will use it at next load of saved game.
-      - CLI mod settings are removed. Loading old game imports them into mod settings UI.
-      - Creep miner goes to sleep immediately on last creep tile harvested.
-      - Corrosion marginal case fix.
-      - +0.5% corrosion DoT.
-      - Less painful corrosion strikes: less damage, less often.
-      - Fixed circle rendering radius for creep miners.
-      - Poison capsule, repair capsule (RA mod) and advanced repair pack (RI mod) biomass costs were halved - these recipes produce 2 resulting items now.
-      - Biomass costs for some of RA and RI mods structures and equipment were decreased to be multiple of 15.
+  Major Features:
+    - Mod settings were added. Biters reseach data (BRD) recipe biomass ingredient by default is 7. Use value 4 for double technology price or when playing less aggressive enemies worlds. To change BRD startup setting Factorio app restart is required. Old games will use it at next load of saved game.
+  Minor Features:
+    - CLI mod settings are removed. Loading old game imports them into mod settings UI.
+    - Creep miner goes to sleep immediately on last creep tile harvested.
+  Bugfixes:
+    - Corrosion marginal case fix.
+    - Fixed circle rendering radius for creep miners.
+  Balancing:
+    - +0.5% corrosion DoT.
+    - Less painful corrosion strikes: less damage, less often.
+    - Poison capsule, repair capsule (RA mod) and advanced repair pack (RI mod) biomass costs were halved - these recipes produce 2 resulting items now.
+    - Biomass costs for some of RA and RI mods structures and equipment were decreased to be multiple of 15.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.7
 Date: 2022-02-06
-  Changes:
-      - Balance: Electric creep miner. Added small pollution (0.5 per minute).
-      - Fixed creep friction abnormal coefficient: vehicles bog down when entering creep, then get +1000% speed until driving out creep area.
-      Considering other mod development to make Rampant Arsenal tanks stronger than armor mk3+shotgun vs high tier enemy bases.
-      BTW spidertrone (nuclear tank-mk3 with no fuel, no problems for acceleration/braking in creep areas, crazy roof jumper) is a complete cheat and a game spoiler,
-      fix is a must (via other mods)
+  Balancing:
+    - Electric creep miner. Added small pollution (0.5 per minute).
+  Bugfixes:
+    - Fixed creep friction abnormal coefficient: vehicles bog down when entering creep, then get +1000% speed until driving out creep area. Considering other mod development to make Rampant Arsenal tanks stronger than armor mk3+shotgun vs high tier enemy bases.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.6
 Date: 2022-02-03
-  Changes:
-      - Added gfx special effects to revenge creep strikes for better understanding what is going on.
-      - Hit damage and creep deploy take place only after shell lands. So moving player, car, tank and even spidertron can easily avoid creep counter attacks.
-      - Fixed a few issues for creep strikes.
-      - Fixed rails collision with creep. Now they can co-exist (and rails are affected by corrosion).
+  Minor Features:
+    - Added gfx special effects to revenge creep strikes for better understanding what is going on.
+    - Hit damage and creep deploy take place only after shell lands. So moving player, car, tank and even spidertron can easily avoid creep counter attacks.
+  Bugfixes:
+    - Fixed a few issues for creep strikes.
+    - Fixed rails collision with creep. Now they can co-exist (and non-curved rails are affected by corrosion).
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.5
 Date: 2022-02-01
-  Changes:
-      - Balance: Electric creep miner. Increased energy consumption. Added electric furnace in recipe.
-      - Balance: Reduced corrosion DoT. Increased acid resistance for creep miners.
-      - Balance: Doubled creep type-1 pollution absorption.
-      - Balance: Reduced Rampant Arsenal repair capsule biomass cost 3->1 (4->2 expensive mode), reduced biomass amount in recipe for power shield MK-3 and other RA/RI items.
-      - Balance: Reduced creep type-1 generation to average between 1.3.0 and 1.3.4.
+  Balancing:
+    - Electric creep miner. Increased energy consumption. Added electric furnace in recipe.
+    - Reduced corrosion DoT. Increased acid resistance for creep miners.
+    - Doubled creep type-1 pollution absorption.
+    - Reduced Rampant Arsenal repair capsule biomass cost 3->1 (4->2 expensive mode), reduced biomass amount in recipe for power shield MK-3 and other RA/RI items.
+    - Reduced creep type-1 generation to average between 1.3.0 and 1.3.4.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.4
 Date: 2022-01-28
-  Changes:
-      - Balance. 240% emissions multiplier for bio residue.
-      - Balance. Increased acid resistance for creep miners.
-      - Balance. Reduced biters science pack cost from 8 to 7 biomass and increased creep type-1 generation for low evolution (early game), because Rampant 2.2.0 changed enemy buildings density.
-      - Fixed crash on new game.
+  Balancing:
+    - 240% emissions multiplier for bio residue.
+    - Increased acid resistance for creep miners.
+    - Reduced biters science pack cost from 8 to 7 biomass and increased creep type-1 generation for low evolution (early game), because Rampant 2.2.0 changed enemy buildings density.
+  Bugfixes:
+    - Fixed crash on new game.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.3
 Date: 2022-01-25
-  Changes:
-      - Loading fresh game save crash issue fix (occasionally added with old gamesaves support).
-      - Residue bio processing recipe balance fix.
-      - Electric burner energy consumption reduced.
+  Bugfixes:
+    - Loading fresh game save crash issue fix (issue was added with old gamesaves support).
+  Balancing:
+    - Residue bio processing recipe balance fix.
+    - Electric burner energy consumption reduced.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.2
 Date: 2022-01-24
-  Changes:
-      - Reduced burner creep miner energy consumption by 20% to make 1 residue item energy enough for one remove creep iteration.
-      - Burner creep miner will gather all collected residue (if any!) in current iteration into its fuel slots when no fuel is left and nowhere to take.
-      - Fixed issue: Burner creep miner searched for fuel too often when it is already out of energy. Now will do it only once per 20 seconds.
-      - Balance. Halved pollution created by creep excavation. Slightly increased burner creep miner building recipe cost.
-      - Old gamesaves support added. For games started with Warmonger prior to 1.2.4 and especially older than 1.2.2 a new game (new map generation) is recommended to fix creep balance.
-      - Minor fixes.
+  Balancing:
+    - Reduced burner creep miner energy consumption by 20% to make 1 residue item energy enough for one remove creep iteration.
+    - Burner creep miner will gather all collected residue (if any!) in current iteration into its fuel slots when no fuel is left and nowhere to take.
+    - Halved pollution created by creep excavation. Slightly increased burner creep miner building recipe cost.
+  Minor Features:
+    - Old gamesaves support added. For games started with Warmonger prior to 1.2.4 and especially older than 1.2.2 a new game (new map generation) is recommended to fix creep balance.
+  Bugfixes:
+    - Burner creep miner searched for fuel too often when it is already out of energy. Now will do it only once per 20 seconds.
+    - Minor fixes.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.1
 Date: 2022-01-21
-  Changes:
-      - Bio residue (bio-remains) item introduced. Has 30% chance to be gathered from biter creep type-2. Has fuel value of 1MJ and high emissions rate.
+  Major Features:
+    - Bio residue (bio-remains) item introduced. Has 30% chance to be gathered from biter creep type-2. Has fuel value of 1MJ and high emissions rate.
       Later can be bio-processed into sulphuric acid in complex recipe (Bio-lab is required) - can incorporate it into recipes of other mods if needed.
-      - Creep miner buildings were completely re-designed. Removed all complex entities.
+    - Creep miner buildings were completely re-designed. Removed all complex entities.
       I had to kill ItemCollector mod idea inside me to give chest configuration freedom and avoid all limitations&inconveniences.
       Any existing chest in nearby radius (4 tiles vertical/horizontal range from building center, 3 tiles diagonal range) will be found on-the-fly and automatically used.
       Player has enough time for installing it even while in battle (How? See below).
@@ -122,66 +135,70 @@ Date: 2022-01-21
       Nearest one of better logistics type ("provider") is preferred. One chest can be used by many creep miners. 
       Miners without chest remove only creep type-2 (wasting all obtained bio-remains). Burner miner tries to store bio-remains in its burner slots to ease early game.
       Burner miner searches for chemical fuel in that chest (not in other nearby chests!) before searching for player and steal from his inventory in nearby range.
-      - Burner miner select to take fuel with less emission when stealing from chest/player to avoid natives attention whenever possible.
-      - Flying text hints are added to give a clue why miner paused removing creep in its range. Can be turned off with /disable-creepminer-hints command.
-      - Not sure about old 1.2.* game saves support.
+    - Not sure about old 1.2.* game saves support.
+    - Burner miner select to take fuel with less emission when stealing from chest/player to avoid natives attention whenever possible.
+  Minor Features:
+    - Flying text hints are added to give a clue why miner paused removing creep in its range. Can be turned off with /disable-creepminer-hints command.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.0
 Date: 2022-01-19
-  Changes:
-      - Creep miner buildings introduced. Chemical fuel energy based and Electric energy based. Graphics for them was taken from Amator Phasma Coal&Steam and Yuoki Industries mods.
+  Major Features:
+    - Creep miner buildings introduced. Chemical fuel energy based and Electric energy based. Graphics for them was taken from Amator Phasma Coal&Steam and Yuoki Industries mods.
       First one is portable and self re-fueling from player inventory. Second one has bigger reach area, more power-hungry and produce pollution only on creep excavation.
       They work slower than Krastorio cheat-shovel, consume energy permanently, produce pollution per each creep tile removed. But can sometimes remove fake creep where shovel can't (in early game).
       Most important - should give factorio automation gameplay, help vs coming-soon Warmonger painful feature and vs Creeper. They do sleep to keep base energy consumption and UPS down.
       Veden's Rampant Industry airfilter (low UPS consumption goes here!) and ItemCollector mods ideas and code used.
-      - Creep generation balance. One more attempt to avoid too much biomass for 200%+ enemy bases density.
-      - Creep pollution absorption increased from 5 to 10 dead trees per tile for Deathworld mode and Creeper mod balance.
-      - Creep retaliation strikes feature introduced in raw version. Turn on/off with command (look for it in readme).
+    - Not sure about old 1.2.* game saves support.
+    - Creep retaliation strikes feature introduced in raw version. Turn on/off with command (look for it in readme).
       Description: Biters counter attack with creep-2 deploying shells for big-range attacks on their bases (three levels depending on distance) after evolution exceeds 35%.
       Everything (including player and vehicles) in target area receives some acid+physical damage (grows with evo) and creep stays on the ground to be collected.
       Area size and target accuracy depend on attacking object distance from enemy base.
-      - Halved evo progression of creep corrosion DoT, because creep miners are not so fast with removing creep if it's artillery autofire and buildings loose too much hitpoints sometimes.
+  Balancing:
+    - Creep generation balance. One more attempt to avoid too much biomass for 200%+ enemy bases density.
+    - Creep pollution absorption increased from 5 to 10 dead trees per tile for Deathworld mode and Creeper mod balance.
+    - Halved evo progression of creep corrosion DoT, because creep miners are not so fast with removing creep if it's artillery autofire and buildings loose too much hitpoints sometimes.
       Also it will make turret creep easier in early-mid game for not big fans of RTS games :-) .
-      - Not sure about old 1.2.* game saves support.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.5
 Date: 2022-01-11
-  Changes:
+  Bugfixes:
     - Changed icon for fake creep for shovel and deconstruction.
+    - Biters research pack crafting fix (Thanks to DimmuR). Pyanodons mods compatibility verified.
+  Balancing:
     - 8 biomass to 1 biters research.
     - Creep generation optimizations and balancing for casual and new enemies games.
-    - Biters research pack crafting fix (Thanks to DimmuR). Pyanodons mods compatibility verified.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.4
 Date: 2021-12-19
-  Changes:
+  Bugfixes:
     - Fixed creep collection restriction issue when selecting areas with several creep footprints. Now true creep only from one patch a time will be collected.
+  Balancing:
     - Creep generation optimizations and balance. 2-3 times less biomass compared to enemies bases generated by version 1.1.1 (replaced by fake creep till the same total amount).
     - More biomass from bases of the same nests/worms count with evolution growth. Generated creep patch area increasing with evolution growth is doubled.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.3
 Date: 2021-12-16
-  Changes:
+  Bugfixes:
     - Footprint generation (more optimizations, less biomass in big late game areas).
     - Fix for fake creep deconstruction (bots will bring back some unexpected ingredients, because they are forced by Wube to bring you something...).
+  Balancing:
     - Complete logics change for creep collecting restrictions. Simple large protection range for Rampant new enemies mode is replaced with some smart restrictions for everyone.
     - Fake creep has only basic restriction. Should work fine with Creeper2 and future Warmonger late game specials.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.2
 Date: 2021-12-13
-  Changes:
+  Bugfixes:
     - Improved creep footprint generation (optimized and higher diversity in distal tiles).
     - All creep generation changes and features (changes 1.1.2-1.2.2) became available in games with no Rampant mod or with disabled its New Enemies mode.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.1
 Date: 2021-12-12
-  Changes:
+  Bugfixes:
     - Fixed a common problem (not only for Creeper2) - Gathering creep failed when no true creep was selected.
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 2021-12-12
-  Changes:
+  Major Features:
     - Introducing another creep type ("fake creep") with no biomass derivatives, but the same creep in everything else. We need it to support Creeper mod fork and another planned Warmonger feature. And to turn off demotivating random collecting (see below).
     - Changed creep deployment footprint: it's not a perfect circle anymore, but has some random elements in distal tiles - fake creep or no creep at all.
     - Creep collector doesn't loose biomass anymore (was spoiling random ~10% biomass in 1.1.3 and ~50% in original Krastorio2). Should be a balance vs fake creep elements.
@@ -190,28 +207,32 @@ Date: 2021-12-12
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 2021-12-08
-  Changes:
+  Balancing:
     - Rampant Arsenal repair capsule now requires 2 biomass => reactive mending walls and medic repair capsule will need biomass.
     - Rampant Arsenal MK3 shield and armor also require some biomass.
     - Rampant Industry air filter buildings and advanced repair pack now require biomass.
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.2
 Date: 2021-12-06
-  Changes:
+  Minor Features:
     - API-triggered creep generation changed to work slower in queue. Thanks a lot to Veden! That should be a performance fix for late game with 1k+ Rampant nests/worms on map.
     - Added distinctive sound for creep collecting blocked by natives nearby.
     - Added experimental sound for corrosion. Unintentionally was synced with Factorio vanilla animation :-)
     - Removed chunk alignment for Rampant new enemies mode creep protection. 2 chunks radius.
-    - Balance. 7 biomass units for every 2 military science packs. I gather up to 1200 biomass from one biters base (~11 nests, ~12 worms) - quite a lot even for double tech cost difficulty.
     - Industrial Revolution 2 compatibility added. Not sure that I got mod idea properly (military science is available only in midgame, not many tech&items depend on it). Who plays with IR2, pls give feedback.
+  Balancing:
+    - 7 biomass units for every 2 military science packs. I gather up to 1200 biomass from one biters base (~11 nests, ~12 worms) - quite a lot even for double tech cost difficulty.
+
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.1
 Date: 2021-12-05
-  Changes:
+  Balancing:
     - Poison capsule now additionally requires 1 biomass. A small change for vanilla, but a crucial one for Rampant Arsenal.
     - Balance. Reducing to 5 biomass units for every 2 military science packs.
     - Balance. Creep footprint grows a little faster with evo.
+  Minor Features:
     - Fixed Warmonger world map creep-collector abuse, because it can happen unintentionally unlike replacing with path tiles.
+  Bugfixes:
     - Fixed crash on robot placing building ( Thanks to illiander42 )
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.0
@@ -224,13 +245,14 @@ Date: 2021-12-05
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2021-12-02
-  Changes:
+  Balancing:
     - Balance fixes (1 biomass unit => 1 military science pack, and 90% chance to collect) and smaller creep areas generated, because Rampant1.* enemies are sieging a lot providing tons of creep.
+  Major Features:
     - Creep can't be collected near nests and worms anymore (other abuses are sill possible, e.g. replace with path tiles).
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2021-11-30
-  Features:
+  Info:
     - Alpha version
     - Creep pollution absorption per tile is set as 5 dead trees (100 times less than in K2)
     - Biters research output set to make 4 science packs per biomass unit and 40 via bio-lab.
