@@ -28,7 +28,13 @@ if mods["RampantArsenal"] then
   end ]]
   table.insert( pcapsule.normal.ingredients, {type="item", name="wm-bio-remains", amount=2} )
   table.insert( pcapsule.expensive.ingredients, {type="item", name="wm-bio-remains", amount=3} )
-  
+  pcapsule = data.raw.recipe["healing-capsule-rampant-arsenal"]
+  table.insert( pcapsule.normal.ingredients, {type="item", name="wm-bio-remains", amount=2} )
+  table.insert( pcapsule.expensive.ingredients, {type="item", name="wm-bio-remains", amount=3} )
+  pcapsule = data.raw.recipe["speed-capsule-rampant-arsenal"]
+  table.insert( pcapsule.normal.ingredients, {type="item", name="wm-bio-remains", amount=2} )
+  table.insert( pcapsule.expensive.ingredients, {type="item", name="wm-bio-remains", amount=3} )
+
 
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].normal.ingredients, {type="item", name="biomass", amount=2400} )
   table.insert( data.raw.recipe["power-armor-mk3-armor-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=3300} )

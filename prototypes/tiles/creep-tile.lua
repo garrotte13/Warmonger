@@ -271,7 +271,7 @@ data:extend(
 		needs_correction = false,
 		can_be_part_of_blueprint = true,
 		--collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
-    collision_mask = { "ghost-layer", "ground-tile", "not-colliding-with-itself" },
+    collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
 		minable = {mining_time = 10, result = "wm-bio-remains", probability = 0, amount = 1},
 		walking_speed_modifier = 0.35,
 		layer = 201,
