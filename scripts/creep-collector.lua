@@ -2,6 +2,7 @@ local area = require("__flib__.area")
 local math = require("__flib__.math")
 local misc = require("__flib__.misc")
 local corrosion = require("scripts.corrosion")
+local circle_rendering = require("scripts.miner-circle-rendering")
 
 local constants = require("scripts.constants")
 local util = require("scripts.util")
@@ -114,6 +115,34 @@ function creep_collector.collect(player, surface, tiles, sel_area)
     position = area.center(sel_area),
     text = {"message.kr-amount-in-selection", cr_true, {"item-name.kr-creep"}, cr_fake, {"item-name.fk-creep"}}
   })
+end
+
+function creep_collector.priority_box(player, surface, tiles, sel_area)
+
+  --TO DO Destroy old render
+  circle_rendering.del_prio_rect(player, surface)
+  if tiles and tiles[1] then
+    area.ceil(sel_area)
+    local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
+    local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
+    local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}
+    local add_to_rad = ( h_height * h_height ) + ( h_width * h_width )
+    for i=1, global.creep_miners_last do
+      if global.creep_miners[i] and global.creep_miners[i].entity and global.creep_miners[i].entity.valid then
+        if ((global.creep_miners[i].x - area_centre.x)^2 + (global.creep_miners[i].y - area_centre.y)^2) <= ( (constants.miner_range(global.creep_miners[i].entity.name) + 1)^2 + add_to_rad ) then
+          global.creep_miners[i].prio_box = 1
+        else
+          global.creep_miners[i].prio_box = 2
+        end
+      end
+    end
+    global.prio_creep_mine = sel_area
+    --TO DO Create new render
+    circle_rendering.add_prio_rect(sel_area, player, surface)
+  else
+    global.prio_creep_mine = nil
+  end
+
 end
 
 return creep_collector

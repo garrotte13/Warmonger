@@ -151,14 +151,24 @@ end, {{filter="name", name="creep-miner1-radar"}, {filter="name", name="creep-mi
 
 
 event.register({
-  defines.events.on_player_selected_area,
-  defines.events.on_player_alt_selected_area,
+  defines.events.on_player_selected_area
+  --defines.events.on_player_alt_selected_area,
 }, function(e)
   local player = game.get_player(e.player_index)
   if (e.item == "kr-creep-collector") and (player.render_mode == defines.render_mode.game) then
     creep_collector.collect(player, e.surface, e.tiles, e.area)
   end
 end)
+
+event.register({
+  defines.events.on_player_alt_selected_area
+}, function(e)
+  local player = game.get_player(e.player_index)
+  if (e.item == "kr-creep-collector") then
+    creep_collector.priority_box(player, e.surface, e.tiles, e.area)
+  end
+end)
+
 
 event.on_chunk_generated(function(e)
   creep.on_chunk_generated(e.area, e.surface)

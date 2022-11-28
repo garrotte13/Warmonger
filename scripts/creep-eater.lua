@@ -246,7 +246,35 @@ function creep_eater.process()
         miner.stage = 11
 
     elseif miner.stage == 11 then -- Sorting not protected tiles
-
+        
+      local sel_area = global.prio_creep_mine
+      if sel_area then
+        if not miner.prio_box then
+            local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
+            local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
+            local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}
+            local add_to_rad = ( h_height * h_height ) + ( h_width * h_width )
+            if ((miner.x - area_centre.x)^2 + (miner.y - area_centre.y)^2) <= ( (miner_range)^2 + add_to_rad ) then
+                miner.prio_box = 1
+            else
+                miner.prio_box = 2
+            end
+        end
+        if miner.prio_box == 1 then
+            local found_box = false
+            for i=1,#miner.cr_tiles do
+                if area.contains_position(sel_area,miner.cr_tiles[i].position) then
+                    found_box = true
+                    if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 999 then
+                        miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 1000
+                    end
+                end
+            end
+            if not found_box then
+                miner.prio_box = 2
+            end
+        end
+      end
         table.sort(miner.sort_tiles, function (i1, i2) return i1.distance < i2.distance end )
         miner.stage = 30
 
@@ -443,7 +471,8 @@ function creep_eater.add (entity)
     enemies_found = 0,
     truecreep = false,
     fakecreep = false,
-    corroded_help = false
+    corroded_help = false,
+    prio_box = nil
     }
     circle_rendering.add_circle(entity, last_user)
     if entity.name == "creep-miner0-radar" then
@@ -499,6 +528,7 @@ end
 
 function creep_eater.init()
     global.creep_miners = {}
+    global.prio_creep_mine = nil
     global.creep_miners_count = 0
     global.creep_miners_last = 1
     global.creep_miners_id = 1

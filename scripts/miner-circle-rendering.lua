@@ -233,4 +233,12 @@ function circle_rendering.SwapItemStack(player)
 
 end
 
+function circle_rendering.add_prio_rect(area, player, surface)
+
+end
+
+function circle_rendering.del_prio_rect(player, surface)
+
+end
+
 return circle_rendering

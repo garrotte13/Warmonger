@@ -167,7 +167,7 @@ data:extend(
     subgroup = "terrain",
     order = "z-[collector-tools]-b[creep-collector]",
     selection_color = { r = 0.50, g = 0, b = 0.35 },
-    alt_selection_color = { r = 0.55, g = 0, b = 0.40 },
+    alt_selection_color = { r = 0.55, g = 0.35, b = 0.40 },
     selection_mode = {
       "any-tile",
     },
