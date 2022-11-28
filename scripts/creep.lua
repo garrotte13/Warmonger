@@ -1,6 +1,6 @@
-local table = require("__flib__.table")
+--local table = require("__flib__.table")
 local misc = require("__flib__.misc")
-local area = require("__flib__.area")
+--local area = require("__flib__.area")
 local constants = require("scripts.constants")
 local corrosion = require("scripts.corrosion")
 
@@ -97,7 +97,7 @@ function creep.process_creep_queue()
           elseif creep_pack.fake then
             r = 3
           else
-            local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)
+            local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- TO REVISE
             if (d > 4) and ( (creep_pack.radius - d) < 4) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
             elseif (d > (2 + math.floor(ne_coef * game.forces.enemy.evolution_factor)) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
@@ -140,7 +140,7 @@ function creep.process_creep_queue()
 --         end
 --        end
       end
-          for _, tile in pairs(creep_pack.creep_tiles) do
+          for _, tile in pairs(creep_pack.creep_tiles) do   -- TO REVISE
             local entities = creep_pack.surface.find_entities_filtered{
               area = {
                 left_top = { x = tile.position.x, y = tile.position.y },
@@ -378,7 +378,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     end
   end
 
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, true, attack_area_radius + 0.6)
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius + 0.6)
 end
 
 return creep

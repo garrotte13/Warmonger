@@ -1,4 +1,4 @@
-local math = require("__flib__.math")
+--local math = require("__flib__.math")
 local util = require("scripts.util")
 local area = require("__flib__.area")
 local corrosion = {}
@@ -17,8 +17,7 @@ function corrosion.engaging (entity)
  if (not global.corrosion.enabled) or (not entity.destructible) or (not entity.is_entity_with_health)
   or entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character"
    then return end
- local turret_area = entity.selection_box
- area.ceil(turret_area)
+ local turret_area = util.box_ceiling(entity.selection_box)
  local surface = entity.surface
  -- game.print("Installed building of name: " .. entity.name .. " located at top left x:" .. turret_area.left_top.x .. " y:" .. turret_area.left_top.y .. ", bottom right x:" .. turret_area.right_bottom.x .. " y:" .. turret_area.right_bottom.y)
  local creep_amount = 0
@@ -29,7 +28,7 @@ function corrosion.engaging (entity)
  -- game.print("How many creep tiles are under this building: " .. creep_amount)
  local second_area = entity.secondary_selection_box
  if second_area and ( creep_amount == 0 ) then
-  area.ceil(second_area)
+  second_area = util.box_ceiling(second_area)
   creep_amount = surface.count_tiles_filtered{
     area = second_area,
     name = {"kr-creep", "fk-creep"}
@@ -44,8 +43,7 @@ end
 
 function corrosion.engaging_fast (entity)
   if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character" then return end
-  local e_area = entity.selection_box
-  area.ceil(e_area)
+  local e_area = util.box_ceiling(entity.selection_box)
   if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
     global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = entity
     global.corrosion.affected_num = global.corrosion.affected_num + 1
@@ -54,8 +52,7 @@ end
 
 function corrosion.disengaging (entity)
  if (not global.corrosion.enabled) or (entity.force.name~="player") then return end
- local turret_area = entity.selection_box
- area.ceil(turret_area)
+ local turret_area = util.box_ceiling(entity.selection_box)
  -- game.print("Disappeared object of name: " .. entity.name)
   if global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
     global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = nil
@@ -114,11 +111,10 @@ function corrosion.update_tiles(surface, tiles)
   for _, entity in pairs(global.corrosion.affected) do
     i = i + 1
     if entity.valid and entity.surface == surface then
-      local obj_area = entity.selection_box
+      local obj_area = util.box_ceiling(entity.selection_box)
       local sec_area = entity.secondary_selection_box
-      area.ceil(obj_area)
       if sec_area then
-        area.ceil(sec_area)
+        sec_area= util.box_ceiling(sec_area)
       end
       local touched = false
       for k=1,#tiles do
@@ -161,8 +157,7 @@ function corrosion.update_surface(surface) -- OBSOLETE for obsolete creep_collec
   for _, entity in pairs(global.corrosion.affected) do
     i = i + 1
     if entity.valid and entity.surface == surface then
-      local obj_area = entity.selection_box
-      area.ceil(obj_area)
+      local obj_area = util.box_ceiling(entity.selection_box)
       local creep_amount = 0
       creep_amount = surface.count_tiles_filtered{
         area = obj_area,

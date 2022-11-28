@@ -1,5 +1,18 @@
 local util = {}
 
+function util.box_ceiling(area)
+
+  return {
+    left_top = {
+      x = math.floor(area.left_top.x),
+      y = math.floor(area.left_top.y),
+    },
+    right_bottom = {
+      x = math.ceil(area.right_bottom.x) - 0.03125,
+      y = math.ceil(area.right_bottom.y) - 0.03125,
+    }
+  }
+end
 
 function util.flying_text_with_sound(player, text, options)
   options = options or {}

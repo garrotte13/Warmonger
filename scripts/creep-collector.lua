@@ -1,6 +1,6 @@
 local area = require("__flib__.area")
-local math = require("__flib__.math")
-local misc = require("__flib__.misc")
+--local math = require("__flib__.math")
+--local misc = require("__flib__.misc")
 local corrosion = require("scripts.corrosion")
 local circle_rendering = require("scripts.miner-circle-rendering")
 
@@ -30,7 +30,7 @@ function NoEnemiesFound (check_surface, tiles_array)
   return true
 end
 
-function creep_collector.collect_obsolete(player, surface, tiles, sel_area)
+function creep_collector.collect_obsolete(player, surface, tiles, sel_area) -- broken implementation
   local i = 0
   local j = 0
   local enemies_found = 0
@@ -41,10 +41,10 @@ function creep_collector.collect_obsolete(player, surface, tiles, sel_area)
   local prot_area = sel_area
   local search_enemy_tiles = nil
   local s = 0 -- for debug
-  area.ceil(prot_area)
+  --area.ceil(prot_area)
 
   --   area.expand (prot_area, 32 + math.floor(game.forces.enemy.evolution_factor*85) ) -- checking 1 chunk + evolution
-  area.expand (prot_area, max_cr_range)
+  --area.expand (prot_area, max_cr_range)
 
   enemies_found = enemies_found + surface.count_entities_filtered{
 	    area = prot_area,
@@ -54,7 +54,7 @@ function creep_collector.collect_obsolete(player, surface, tiles, sel_area)
 
   if enemies_found == 0 then
    for _, tile in pairs(tiles) do
-    if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then --filtering out all tiles exceeding shovel reach
+   --if misc.get_distance(tile.position, player_pos) <= constants.creep_max_reach then --filtering out all tiles exceeding shovel reach
       j = j + 1
       if tile.name == "kr-creep" then
         if search_enemy_tiles then
@@ -72,7 +72,7 @@ function creep_collector.collect_obsolete(player, surface, tiles, sel_area)
       else
        tiles_to_set[j] = { name = tile.hidden_tile or "landfill", position = tile.position }
       end
-    end
+    --end
    end
   end
   -- if s > 0 then game.print("How many foreign true creep tiles you wrongly selected: " .. s) end -- number of tiles selected from another footprint (not the one with enemy check done)
@@ -121,7 +121,7 @@ function creep_collector.priority_box(player, surface, tiles, sel_area)
   if not global.prio_creep_mine then global.prio_creep_mine = {} end
   if global.prio_creep_mine[player.index] then circle_rendering.del_prio_rect(global.prio_creep_mine[player.index], player) end
   if tiles and tiles[1] then
-    area.ceil(sel_area)
+    sel_area = util.box_ceiling(sel_area)
     local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
     local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
     local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}

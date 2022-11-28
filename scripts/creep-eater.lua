@@ -1,10 +1,10 @@
 local area = require("__flib__.area")
-local math = require("__flib__.math")
+local util = require("scripts.util")
+--local math = require("__flib__.math")
 local circle_rendering = require("scripts.miner-circle-rendering")
 local corrosion = require("scripts.corrosion")
 
 local constants = require("scripts.constants")
---local util = require("scripts.util")
 
 local creep_eater = {}
 
@@ -226,11 +226,10 @@ function creep_eater.process()
         local d = miner_range * miner_range
         for _, corroded in pairs(global.corrosion.affected) do
             if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x))^2+((corroded.position.y - miner.entity.position.y))^2 <= (d+0.5)  ) then
-                local building_area = corroded.selection_box
-                area.ceil(building_area)
+                local building_area = util.box_ceiling(corroded.selection_box)
                 local building_sec_area = corroded.secondary_selection_box
                 if building_sec_area then
-                    area.ceil(building_sec_area)
+                    building_sec_area = util.box_ceiling(building_sec_area)
                 end
                 for i=1,#miner.cr_tiles do
                     if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 2999
