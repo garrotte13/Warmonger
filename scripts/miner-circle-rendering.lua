@@ -128,7 +128,7 @@ function circle_rendering.hide_all_circles(player)
   local match
   local players
   for _, id in pairs(renders) do
-    if rendering.is_valid(id) and rendering.get_type(id):match("circle") then
+    if rendering.is_valid(id) and ( rendering.get_type(id):match("circle") or rendering.get_forces(id)[1] == player.force ) then
       if rendering.get_visible(id) then
         match, players = match_players(rendering.get_players(id), player, true)
         if match then
@@ -144,13 +144,14 @@ end
 
 function circle_rendering.show_all_circles(player)
   local renders = rendering.get_all_ids("Warmonger")
-  local target
+--  local target
   local match
   local players
   for _, id in pairs(renders) do
-    if rendering.is_valid(id) and rendering.get_type(id):match("circle") then
-      target = rendering.get_target(id)
-      if target.entity.force == player.force then
+    if rendering.is_valid(id) and ( ( rendering.get_type(id):match("circle") and rendering.get_target(id).entity.force == player.force )
+     or rendering.get_forces(id)[1] == player.force ) then
+--      target = rendering.get_target(id)
+--      if target.entity.force == player.force then
         if rendering.get_visible(id) then
           match, players = match_players(rendering.get_players(id), player, false)
           players = rendering.get_players(id)
@@ -163,7 +164,7 @@ function circle_rendering.show_all_circles(player)
           rendering.set_players(id, {player})
           rendering.set_visible(id, true)
         end
-      end
+--      end
     end
   end
 end
@@ -234,11 +235,30 @@ function circle_rendering.SwapItemStack(player)
 end
 
 function circle_rendering.add_prio_rect(area, player, surface)
-
+  local id
+  if player and miner_cursor(player) then
+    id = rendering.draw_rectangle{color={r=0.35, g=0.35, b=0.0, a=0.05}, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={player}, forces = {player.force}, surface = surface, draw_on_ground=true, visible=true}
+    --game.print("Drawn visible rect:".. id)
+  else
+    id = rendering.draw_rectangle{color={r=0.35, g=0.35, b=0.0, a=0.05}, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={}, forces = {player.force}, surface = surface, visible=false, draw_on_ground=true}
+    --game.print("Drawn invisible rect:".. id)
+  end
 end
 
-function circle_rendering.del_prio_rect(player, surface)
+function circle_rendering.del_prio_rect(area, player)
 
+  local renders = rendering.get_all_ids("Warmonger")
+  local pos
+  for _, id in pairs(renders) do
+    if rendering.is_valid(id) and rendering.get_type(id):match("rectangle") then
+      pos = rendering.get_left_top(id)
+      if pos and pos.position and rendering.get_forces(id)[1] == player.force and pos.position.x == area.left_top.x and pos.position.y == area.left_top.y then
+        --game.print("Destroyed circle:".. id)
+        rendering.destroy(id)
+        return
+      end
+    end
+  end
 end
 
 return circle_rendering

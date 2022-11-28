@@ -118,9 +118,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
 end
 
 function creep_collector.priority_box(player, surface, tiles, sel_area)
-
-  --TO DO Destroy old render
-  circle_rendering.del_prio_rect(player, surface)
+  if global.prio_creep_mine then circle_rendering.del_prio_rect(global.prio_creep_mine, player) end
   if tiles and tiles[1] then
     area.ceil(sel_area)
     local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
