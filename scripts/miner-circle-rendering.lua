@@ -233,14 +233,14 @@ function circle_rendering.SwapItemStack(player)
   
 
 end
-
+-- {r=0.35, g=0.35, b=0.0, a=0.05}
 function circle_rendering.add_prio_rect(area, player, surface)
   local id
   if player and miner_cursor(player) then
-    id = rendering.draw_rectangle{color={r=0.35, g=0.35, b=0.0, a=0.05}, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={player}, forces = {player.force}, surface = surface, draw_on_ground=true, visible=true}
+    id = rendering.draw_rectangle{color = player.color, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={player}, forces = {player.force}, surface = surface, draw_on_ground=true, visible=true}
     --game.print("Drawn visible rect:".. id)
   else
-    id = rendering.draw_rectangle{color={r=0.35, g=0.35, b=0.0, a=0.05}, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={}, forces = {player.force}, surface = surface, visible=false, draw_on_ground=true}
+    id = rendering.draw_rectangle{color = player.color, left_top = area.left_top, right_bottom = area.right_bottom, filled=true, players={}, forces = {player.force}, surface = surface, visible=false, draw_on_ground=true}
     --game.print("Drawn invisible rect:".. id)
   end
 end

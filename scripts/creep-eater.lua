@@ -246,35 +246,42 @@ function creep_eater.process()
         miner.stage = 11
 
     elseif miner.stage == 11 then -- Sorting not protected tiles
-        
-      local sel_area = global.prio_creep_mine
+     if not global.prio_creep_mine then global.prio_creep_mine = {} end
+     if not miner.prio_box then miner.prio_box = {} end
+     for _, player in pairs(miner.entity.force.players) do
+
+      local sel_area = global.prio_creep_mine[player.index]
       if sel_area then
-        if not miner.prio_box then
+        if not miner.prio_box[player.index] then
             local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
             local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
             local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}
             local add_to_rad = ( h_height * h_height ) + ( h_width * h_width )
             if ((miner.x - area_centre.x)^2 + (miner.y - area_centre.y)^2) <= ( (miner_range)^2 + add_to_rad ) then
-                miner.prio_box = 1
+                miner.prio_box[player.index] = 1
             else
-                miner.prio_box = 2
+                miner.prio_box[player.index] = 2
             end
         end
-        if miner.prio_box == 1 then
+        if miner.prio_box[player.index] == 1 then
             local found_box = false
+           -- local s = 0
             for i=1,#miner.cr_tiles do
                 if area.contains_position(sel_area,miner.cr_tiles[i].position) then
                     found_box = true
-                    if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 999 then
+                    if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 1999 then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 1000
+                        --s = s + 1
                     end
                 end
             end
+            --if s > 0 then game.print("Number of prioritized tiles selected: ".. s) end
             if not found_box then
-                miner.prio_box = 2
+                miner.prio_box[player.index] = 2
             end
         end
       end
+     end
         table.sort(miner.sort_tiles, function (i1, i2) return i1.distance < i2.distance end )
         miner.stage = 30
 
@@ -340,6 +347,7 @@ function creep_eater.process()
             i = i + 1
         end
         i = #miner.cr_tiles
+        --game.print("Tiles collected: ".. #tiles .. ". Tiles in range: " .. #miner.cr_tiles .. ". Sorted tiles: ".. #miner.sort_tiles .. ". Biomass tiles: ".. bio)
         if #tiles > 0 then
             --surface.pollute(miner.entity.position, constants.pollution_miner * #tiles)
             surface.play_sound{path = "kr-collect-creep", position = miner.entity.position}
@@ -472,7 +480,7 @@ function creep_eater.add (entity)
     truecreep = false,
     fakecreep = false,
     corroded_help = false,
-    prio_box = nil
+    prio_box = {}
     }
     circle_rendering.add_circle(entity, last_user)
     if entity.name == "creep-miner0-radar" then
@@ -528,7 +536,7 @@ end
 
 function creep_eater.init()
     global.creep_miners = {}
-    global.prio_creep_mine = nil
+    global.prio_creep_mine = {}
     global.creep_miners_count = 0
     global.creep_miners_last = 1
     global.creep_miners_id = 1
