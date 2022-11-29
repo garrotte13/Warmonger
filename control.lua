@@ -169,6 +169,9 @@ event.register({
   end
 end)
 
+script.on_event(defines.events.on_pre_player_removed, function(e)
+  if global.prio_creep_mine then creep_collector.player_removed(e.player_index) end
+end)
 
 event.on_chunk_generated(function(e)
   creep.on_chunk_generated(e.area, e.surface)

@@ -117,6 +117,11 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   })
 end
 
+function creep_collector.player_removed(player_index)
+  if global.prio_creep_mine[player_index] then circle_rendering.del_prio_rect(global.prio_creep_mine[player_index], game.get_player(player_index)) end
+  global.prio_creep_mine[player_index] = nil
+end
+
 function creep_collector.priority_box(player, surface, tiles, sel_area)
   if not global.prio_creep_mine then global.prio_creep_mine = {} end
   if global.prio_creep_mine[player.index] then circle_rendering.del_prio_rect(global.prio_creep_mine[player.index], player) end
