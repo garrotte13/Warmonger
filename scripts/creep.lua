@@ -144,7 +144,7 @@ function creep.process_creep_queue()
             local entities = creep_pack.surface.find_entities_filtered{
               area = {
                 left_top = { x = tile.position.x, y = tile.position.y },
-                right_bottom = { x = tile.position.x + 1, y = tile.position.y + 1 },
+                right_bottom = { x = tile.position.x + 0.96875, y = tile.position.y + 0.96875 },
               },
               force = "player"}
             for _, entity in pairs(entities) do
