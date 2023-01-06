@@ -336,7 +336,7 @@ function creep_eater.process()
                         end
                     end
                 elseif miner.cr_tiles[k].name == "fk-creep" then
-                    if math.random(1,10) < 5 and (creep2_cap > 0 or creep3_cap > 1000) then
+                    if math.random(1,10) < 4 and (creep2_cap > 0 or creep3_cap > 1000) then
                         bio2 = bio2 + 1
                         if creep2_cap > 0 then creep2_cap = creep2_cap - 1 else creep3_cap = creep3_cap - 1 end
                     end
