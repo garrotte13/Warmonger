@@ -1,7 +1,4 @@
 local event = require("__flib__.event")
-local gui = require("__flib__.gui")
---local migration = require("__flib__.migration")
---local on_tick_n = require("__flib__.on-tick-n")
 
 local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
@@ -10,8 +7,8 @@ local circle_rendering = require("scripts.miner-circle-rendering")
 local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
-local util = require("scripts.util")
 
+--local util = require("scripts.util")
 --util.add_commands(corrosion.commands)
 
 remote.add_interface("kr-creep", creep.remote_interface)
@@ -137,10 +134,6 @@ script.on_event(defines.events.script_raised_destroy, function(e)
   end
 end)
 
-event.on_biter_base_built(function(e)
-  creep.on_biter_base_built(e.entity)
-end)
-
 script.on_event(defines.events.on_tick, function()
   creep.process_creep_queue()
 end)
@@ -173,6 +166,14 @@ script.on_event(defines.events.on_pre_player_removed, function(e)
   if global.prio_creep_mine then creep_collector.player_removed(e.player_index) end
 end)
 
-event.on_chunk_generated(function(e)
-  creep.on_chunk_generated(e.area, e.surface)
-end)
+if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+
+  event.on_chunk_generated(function(e)
+    creep.on_chunk_generated(e.area, e.surface)
+  end)
+
+  event.on_biter_base_built(function(e)
+    creep.on_biter_base_built(e.entity)
+  end)
+
+end

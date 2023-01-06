@@ -1,20 +1,21 @@
 --local table = require("__flib__.table")
-local misc = require("__flib__.misc")
+--local misc = require("__flib__.misc")
 --local area = require("__flib__.area")
 local constants = require("scripts.constants")
 local corrosion = require("scripts.corrosion")
 
 local creep = {}
 
--- We can safely assume that all of the entities will be on the same surface
 local function generate_creep(entities)
   local surface = entities[1].surface
   if not global.creep.surfaces[surface.index] then
     return
   end
+  local min_r = 2
   for _, entity in pairs(entities) do
+    if entity.type == "unit-spawner" then min_r = 1 else min_r = 0 end
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-      radius = math.random(4, constants.creep_max_range) + math.floor(game.forces.enemy.evolution_factor*20),
+      radius = math.random(2, constants.creep_max_range - 1) + min_r + math.floor(game.forces.enemy.evolution_factor*11),
       position = entity.position,
       stage = 0,
       surface = surface,
@@ -36,14 +37,13 @@ function creep.init()
 end
 
 function creep.on_biter_base_built(entity)
-  if settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value then return end
   if (entity.type == "unit-spawner" or entity.type == "turret") and global.creep.surfaces[entity.surface.index] then
     generate_creep({ entity })
   end
 end
 
 function creep.on_chunk_generated(chunk_area, surface)
-  if (not global.creep.surfaces[surface.index]) or (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+  if not global.creep.surfaces[surface.index] then
     return
   end
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, area = chunk_area, force = "enemy" })
@@ -80,11 +80,11 @@ function creep.process_creep_queue()
     elseif creep_pack.stage == 1 then
         creep_pack.creep_tiles = {}
         local n = 1
-        local ne_coef = 2
-        local ne_prob = 19
+        local ne_coef = math.floor(2 * game.forces.enemy.evolution_factor)
+        local ne_prob = math.ceil(20 * game.forces.enemy.evolution_factor)
         if (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-          ne_coef = 3.7
-          ne_prob = 9.7
+          ne_coef = math.floor(3 * game.forces.enemy.evolution_factor)
+          ne_prob = math.ceil(10 * game.forces.enemy.evolution_factor)
         end
         for i=1,#creep_pack.tiles do
           local r = 1 -- by default it will be biomass creep
@@ -97,11 +97,12 @@ function creep.process_creep_queue()
           elseif creep_pack.fake then
             r = 3
           else
-            local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- TO REVISE
-            if (d > 4) and ( (creep_pack.radius - d) < 4) then   -- no biomass on distal rings
+            -- local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- old flib tiles-wrong calculation again
+            local d = math.sqrt(((creep_pack.tiles[i].position.x + 0.5) - creep_pack.position.x) ^ 2 + ((creep_pack.tiles[i].position.y + 0.5) - creep_pack.position.y) ^ 2)
+            if (d > 3.8) and ( (creep_pack.radius - d) < 4.3) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
-            elseif (d > (2 + math.floor(ne_coef * game.forces.enemy.evolution_factor)) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
-              if math.random(1,(3 + math.ceil(ne_prob * game.forces.enemy.evolution_factor))) > 1 then r = 3 end -- less biomass with every ~9% or 6% evo increase
+            elseif (d > (2 + ne_coef) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
+              if math.random(1,(3 + ne_prob)) > 1 then r = 3 end -- less biomass with every 10% or 5% evo increase
             end
           end
             if r < 3 then
@@ -186,15 +187,13 @@ creep.remote_interface = {
       error("The surface or the position are invalid.")
     end
     -- The code here is duplicated from `generate_creep()` because that function is specifically optimized for multiple
-    -- if not global.creep then return end
     -- entities, while this function only needs to do it once.
-    -- if not global.creep then return end
     if not global.creep.surfaces[surface.index] and not override then
       return
     end
 
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*20),
+        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*15),
         position = position,
         stage = 0,
         surface = surface,
