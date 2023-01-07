@@ -162,7 +162,7 @@ data:extend(
     pictures = {
       { size = 64, filename = "__Warmonger__/graphics/icons/items/creep-collector.png", scale = 0.25, mipmap_count = 4 },
     },
-    flags = { "not-stackable", "spawnable", "only-in-cursor" },
+    flags = { "not-stackable", "spawnable", "only-in-cursor", "hidden" },
     stack_size = 1,
     subgroup = "terrain",
     order = "z-[collector-tools]-b[creep-collector]",
