@@ -170,7 +170,7 @@ function creep_eater.process()
 
         miner.enemies = surface.find_entities_filtered{
          position = miner.entity.position,
-         radius = miner_range + 2 + constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*30),
+         radius = miner_range + 3 + constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*30),
          type = {"unit-spawner", "turret"},
          force = "enemy"
         }
