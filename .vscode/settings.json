@@ -15,6 +15,7 @@
         "defines",
         "remote",
         "tile_variations_template",
-        "rendering"
+        "rendering",
+        "global"
     ]
 }

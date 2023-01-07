@@ -35,9 +35,7 @@ end)
 end)
 
 event.on_configuration_changed(function(ChangedModData)
--- game.print("Mod Warmonger version or config changed.")
---  corrosion.init()
---  creep_eater.init()
+
     migrations.generic(ChangedModData)
   
 end)

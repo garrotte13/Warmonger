@@ -205,8 +205,6 @@ creep.remote_interface = {
     local building_tier
     if building_name then
       local type_name
-      -- weapon_type, weapon_tier, weapon_ammo = string.match(weapon.name, "turret%-pod%-(.+)%-t(%d)%-(.+)%-equipment")
-      -- faction_type, type_name, variation, building_tier = string.match(building_name, "(.+)%-(.+)%-v(%d)%-t(%d)%-rampant")
       type_name, building_tier = string.match(building_name, ".+%-(.+)%-v%d+%-t(%d+)%-rampant")
       -- faction.type.."-hive-v"..v.."-t"..factionSize.."-rampant"
       -- faction.type.."-spitter-spawner-v"..v.."-t"..factionSize.."-rampant"

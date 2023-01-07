@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.17
+Date: 2023-01-07
+  Major Features:
+    - Extended creep generation interface for Rampant New Enemies to make worms, nests and hives generate creep differently. Newer Rampant is required.
+    - Smarter creep generation for no New Enemies games. With or w/o Rampant. Makes worms and nests generate creep differently.
+  Balancing:
+    - Creep generation changed. Now should be balanced for any enemy bases difficulty. Worms give less biomass. Hives provide biomass abundance even with evolution growth.
+    - Creep miners pollution decreased approx by 35% (via both - reduced setting value and diminished miners emissions values).
+  Bugfixes:
+    - Fixed incorrect tiles positions for creep generation mechanics in some cases.
+---------------------------------------------------------------------------------------------------
 Version: 1.3.16
 Date: 2022-11-29
   Major Features:
@@ -58,7 +69,7 @@ Date: 2022-05-08
     - Creep miners range circle render improved: miners ghosts ranges are shown, creep meter in hands unhides this rendering too.
     - Creep miner has got a limit of tiles excavation queue in standby reserve.
   Balancing:
-    - Creep miner balance. Reduced enemies protection for biomass creep (biters don't protect it anymore, miner blocking range is 1.5 chunk)
+    - Creep miner. Reduced enemies protection for biomass creep (biters don't protect it anymore, miner blocking range is 1.5 chunk)
     - Updated counter-strike's one-time damage.
     - Decreased DoT corrosion damage for less damaged buildings.
 ---------------------------------------------------------------------------------------------------
@@ -164,7 +175,7 @@ Date: 2022-01-19
       Everything (including player and vehicles) in target area receives some acid+physical damage (grows with evo) and creep stays on the ground to be collected.
       Area size and target accuracy depend on attacking object distance from enemy base.
   Balancing:
-    - Creep generation balance. One more attempt to avoid too much biomass for 200%+ enemy bases density.
+    - Creep generation. One more attempt to avoid too much biomass for 200%+ enemy bases density.
     - Creep pollution absorption increased from 5 to 10 dead trees per tile for Deathworld mode and Creeper mod balance.
     - Halved evo progression of creep corrosion DoT, because creep miners are not so fast with removing creep if it's artillery autofire and buildings loose too much hitpoints sometimes.
       Also it will make turret creep easier in early-mid game for not big fans of RTS games :-) .
@@ -238,8 +249,8 @@ Version: 1.1.1
 Date: 2021-12-05
   Balancing:
     - Poison capsule now additionally requires 1 biomass. A small change for vanilla, but a crucial one for Rampant Arsenal.
-    - Balance. Reducing to 5 biomass units for every 2 military science packs.
-    - Balance. Creep footprint grows a little faster with evo.
+    - Reducing to 5 biomass units for every 2 military science packs.
+    - Creep footprint grows a little faster with evo.
   Minor Features:
     - Fixed Warmonger world map creep-collector abuse, because it can happen unintentionally unlike replacing with path tiles.
   Bugfixes:
