@@ -15,11 +15,13 @@ local function generate_creep(entities)
   for _, entity in pairs(entities) do
     if entity.type == "unit-spawner" then min_r = 1 else min_r = 0 end
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-      radius = math.random(2, constants.creep_max_range - 1) + min_r + math.floor(game.forces.enemy.evolution_factor*11),
+      radius = math.random(2, (constants.creep_max_range + min_r - 1)) + min_r + math.floor(game.forces.enemy.evolution_factor*4.5*(min_r+1)),
       position = entity.position,
       stage = 0,
       surface = surface,
-      fake = false
+      fake = false,
+      type = min_r + 1,
+      tier = 1 + math.floor(game.forces.enemy.evolution_factor * 9.8)
     }
     global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end
@@ -80,11 +82,17 @@ function creep.process_creep_queue()
     elseif creep_pack.stage == 1 then
         creep_pack.creep_tiles = {}
         local n = 1
-        local ne_coef = math.floor(2 * game.forces.enemy.evolution_factor)
-        local ne_prob = math.ceil(20 * game.forces.enemy.evolution_factor)
-        if (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-          ne_coef = math.floor(3 * game.forces.enemy.evolution_factor)
-          ne_prob = math.ceil(10 * game.forces.enemy.evolution_factor)
+        local ne_coef
+        local ne_prob
+        if creep_pack.tier then
+          ne_coef = ( (creep_pack.type or 2) * 1.2 ) + ( creep_pack.tier / 16 )
+          ne_prob = 3 + ( creep_pack.tier * 4 ) - (creep_pack.type or 2)
+        elseif (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+          ne_coef = 2 + math.floor(3 * game.forces.enemy.evolution_factor)
+          ne_prob = 4 + math.ceil(12 * game.forces.enemy.evolution_factor)
+        else
+          ne_coef = 2 + math.floor(2 * game.forces.enemy.evolution_factor)
+          ne_prob = 4 + math.ceil(20 * game.forces.enemy.evolution_factor)
         end
         for i=1,#creep_pack.tiles do
           local r = 1 -- by default it will be biomass creep
@@ -99,10 +107,10 @@ function creep.process_creep_queue()
           else
             -- local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- old flib tiles-wrong calculation again
             local d = math.sqrt(((creep_pack.tiles[i].position.x + 0.5) - creep_pack.position.x) ^ 2 + ((creep_pack.tiles[i].position.y + 0.5) - creep_pack.position.y) ^ 2)
-            if (d > 3.8) and ( (creep_pack.radius - d) < 4.3) then   -- no biomass on distal rings
+            if (d > 3.8) and ( (creep_pack.radius - d) < 4.9) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
-            elseif (d > (2 + ne_coef) ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
-              if math.random(1,(3 + ne_prob)) > 1 then r = 3 end -- less biomass with every 10% or 5% evo increase
+            elseif (d > ne_coef ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
+              if math.random(1,ne_prob) > 2 then r = 3 end -- less biomass with every 10% or 5% evo increase
             end
           end
             if r < 3 then
@@ -179,7 +187,7 @@ creep.remote_interface = {
     end
     global.creep.on_biter_base_built = value
   end,
-  spawn_creep_at_position = function(surface, position, override)
+  spawn_creep_at_position = function(surface, position, override, building_name)
     if not global.creep then
       return
     end
@@ -192,12 +200,43 @@ creep.remote_interface = {
       return
     end
 
+    local rad
+    local building_type
+    local building_tier
+    if building_name then
+      local type_name
+      -- weapon_type, weapon_tier, weapon_ammo = string.match(weapon.name, "turret%-pod%-(.+)%-t(%d)%-(.+)%-equipment")
+      -- faction_type, type_name, variation, building_tier = string.match(building_name, "(.+)%-(.+)%-v(%d)%-t(%d)%-rampant")
+      type_name, building_tier = string.match(building_name, ".+%-(.+)%-v%d+%-t(%d+)%-rampant")
+      -- faction.type.."-hive-v"..v.."-t"..factionSize.."-rampant"
+      -- faction.type.."-spitter-spawner-v"..v.."-t"..factionSize.."-rampant"
+      -- faction.type.."-biter-spawner-v"..v.."-t"..factionSize.."-rampant"
+      -- faction.type.."-worm-v"..v.."-t"..factionSize.."-rampant", factionSize
+      local buildings_tbl = {
+        ["hive"] = 3,
+        ["spitter-spawner"] = 2,
+        ["biter-spawner"] = 2,
+        ["spawner"] = 2,
+        ["worm"] = 1
+      }
+      building_type = buildings_tbl[type_name]
+      --local gg = building_tier or 0
+      --local nname = type_name or "FUCKED"
+      --local btype = building_type or 0
+      --game.print("Creep for: ".. building_name .. " And name of type is: " .. nname .. " Tier is: " .. gg .. " Type #".. btype)
+      rad = math.random(3, (constants.creep_max_range + building_type)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+    else
+      rad = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*9)
+    end
+
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-        radius = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*15),
+        radius = rad,
         position = position,
         stage = 0,
         surface = surface,
-        fake = false
+        fake = false,
+        type = building_type,
+        tier = building_tier
     }
     global.creep.creep_id_counter = global.creep.creep_id_counter + 1
   end,
