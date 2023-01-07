@@ -85,7 +85,7 @@ data:extend(
 			  shift = {0.5, -0.325},
 			  scale=0.5, animation_speed=0.5, line_length = 4
 		},
-		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = ( 130 * settings.startup["wm-CreepMiningPollution_s"].value ), drain = "12KW"},
+		energy_source = {type = "electric", input_priority = "secondary", usage_priority = "secondary-input", emissions_per_minute = ( 120 * settings.startup["wm-CreepMiningPollution_s"].value ), drain = "12KW"},
 		energy_usage = "800KW",
 		max_distance_of_nearby_sector_revealed = 1,
 		max_distance_of_sector_revealed = 0,
@@ -195,7 +195,7 @@ data:extend(
 		  fuel_category = "chemical",
 		  effectivity = 1,
 		  fuel_inventory_size = 3,
-		  emissions_per_minute = 5 + ( 105 * settings.startup["wm-CreepMiningPollution_s"].value ),
+		  emissions_per_minute = 5 + ( 86 * settings.startup["wm-CreepMiningPollution_s"].value ),
 		  smoke =
 		  {
 			{

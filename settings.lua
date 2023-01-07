@@ -16,8 +16,8 @@ data:extend({
         name = "wm-CreepMiningPollution_s",
         description = "wm-CreepMiningPollution_s",
         setting_type = "startup",
-        default_value = 1.2,
-        minimum_value = 0.3,
+        default_value = 1,
+        minimum_value = 0.2,
         maximum_value = 3,
         order = "m[total]-d[ai]",
 
