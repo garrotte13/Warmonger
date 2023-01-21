@@ -95,7 +95,9 @@ function corrosion.affecting()
   if entity.valid then
     local surface = entity.surface
     local h_ratio = entity.get_health_ratio() / 2
-    local dmg = math.floor( entity.health * ( 0.035 + game.forces.enemy.evolution_factor/18 ) * ( 1 - h_ratio ) )  -- at least 5 health will be left for biters/worms to finish
+    local rnd_coeff = (math.random() / 2) + 0.5
+    local dmg = math.floor( rnd_coeff * entity.health * ( 0.05 + game.forces.enemy.evolution_factor/12 ) * ( 1 - h_ratio ) )
+    -- at least 5 health will be left for biters/worms to finish
     local recieved_dmg = entity.damage(dmg, "enemy", "acid")
     if recieved_dmg > 0 then
       surface.play_sound{path = "acid_burns", position = entity.position}
