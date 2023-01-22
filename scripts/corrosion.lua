@@ -1,6 +1,4 @@
---local math = require("__flib__.math")
 local util = require("scripts.util")
-local area = require("__flib__.area")
 local corrosion = {}
 
 function corrosion.init()
@@ -120,11 +118,11 @@ function corrosion.update_tiles(surface, tiles)
       end
       local touched = false
       for k=1,#tiles do
-        if area.contains_position(obj_area, tiles[k].position) then
+        if util.contains_point(obj_area, tiles[k].position) then
           touched = true
           break
         end
-        if sec_area and ( area.contains_position(sec_area, tiles[k].position) ) then
+        if sec_area and ( util.contains_point(sec_area, tiles[k].position) ) then
           touched = true
           break
         end

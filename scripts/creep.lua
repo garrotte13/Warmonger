@@ -1,6 +1,3 @@
---local table = require("__flib__.table")
---local misc = require("__flib__.misc")
---local area = require("__flib__.area")
 local constants = require("scripts.constants")
 local corrosion = require("scripts.corrosion")
 

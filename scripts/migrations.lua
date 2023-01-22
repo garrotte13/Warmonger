@@ -1,10 +1,8 @@
-local on_tick_n = require("__flib__.on-tick-n")
-
 local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
 local creep_eater = require("scripts.creep-eater")
 
-local util = require("scripts.util")
+--local util = require("scripts.util")
 
 local migrations = {}
 

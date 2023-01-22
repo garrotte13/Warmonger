@@ -1,6 +1,3 @@
-local area = require("__flib__.area")
---local math = require("__flib__.math")
---local misc = require("__flib__.misc")
 local corrosion = require("scripts.corrosion")
 local circle_rendering = require("scripts.miner-circle-rendering")
 
@@ -15,6 +12,8 @@ function IsTileInArray (tile_position, tiles_array)
   end
   return false
 end
+
+
 
 function NoEnemiesFound (check_surface, tiles_array)
   for a=1, #tiles_array do
@@ -84,20 +83,20 @@ function creep_collector.collect_obsolete(player, surface, tiles, sel_area) -- b
     if i>0 and inventory.can_insert({ name = "biomass", count = collected_amount }) then
       inventory.insert({ name = "biomass", count = collected_amount })
      elseif i>0 then
-      util.flying_text_with_sound(player, { "message.kr-inventory-is-full" }, { position = area.center(sel_area) })
+      util.flying_text_with_sound(player, { "message.kr-inventory-is-full" }, { position = util.get_centre(sel_area) })
       return creep_collector
     end
       util.flying_text_with_sound(player, { "message.kr-collected-amount", collected_amount, { "item-name.biomass" } }, {
-      position = area.center(sel_area),
+      position = util.get_centre(sel_area),
       sound = { path = "kr-collect-creep", volume_modifier = 1 },
     })
       surface.set_tiles(tiles_to_set)
       corrosion.update_surface(surface)
   else
    if enemies_found == 0 then
-      util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = area.center(sel_area) })
+      util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = util.get_centree(sel_area) })
    else
-    util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = area.center(sel_area),
+    util.flying_text_with_sound(player, { "message.wm-protected-creep-in-selection" }, { position = util.get_centre(sel_area),
      sound = { path = "creep-access-denied", volume_modifier = 1 },
     })
    end
@@ -112,7 +111,7 @@ function creep_collector.collect(player, surface, tiles, sel_area)
   end
   player.create_local_flying_text({
     -- create_at_cursor = not options.position,
-    position = area.center(sel_area),
+    position = util.get_centre(sel_area),
     text = {"message.kr-amount-in-selection", cr_true, {"item-name.kr-creep"}, cr_fake, {"item-name.fk-creep"}}
   })
 end

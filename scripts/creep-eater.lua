@@ -1,6 +1,5 @@
-local area = require("__flib__.area")
 local util = require("scripts.util")
---local math = require("__flib__.math")
+
 local circle_rendering = require("scripts.miner-circle-rendering")
 local corrosion = require("scripts.corrosion")
 
@@ -233,8 +232,8 @@ function creep_eater.process()
                 end
                 for i=1,#miner.cr_tiles do
                     if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 2999
-                     and ( area.contains_position(building_area,miner.cr_tiles[i].position)
-                      or building_sec_area and ( area.contains_position(building_sec_area,miner.cr_tiles[i].position) ) ) then
+                     and ( util.contains_point(building_area,miner.cr_tiles[i].position)
+                      or building_sec_area and ( util.contains_point(building_sec_area,miner.cr_tiles[i].position) ) ) then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 3000
                         if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
                         miner.corroded_help = true
@@ -266,7 +265,7 @@ function creep_eater.process()
             local found_box = false
            -- local s = 0
             for i=1,#miner.cr_tiles do
-                if area.contains_position(sel_area,miner.cr_tiles[i].position) then
+                if util.contains_point(sel_area,miner.cr_tiles[i].position) then
                     found_box = true
                     if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 1999 then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 1000
