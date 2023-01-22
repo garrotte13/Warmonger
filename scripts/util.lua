@@ -63,10 +63,13 @@ function util.get_centre(box)
   return {x = x, y = y}
 end
 
-function util.contains_point(box, point)
+function util.contains_point(box, point, tile)
   box = util.ensure_box_xy(box)
   point = util.ensure_pos_xy(point)
-
+  if tile then -- redundant when box is rounded up
+    point.x = point.x + 0.5
+    point.y = point.y + 0.5
+  end
   return box.left_top.x <= point.x and box.right_bottom.x >= point.x and
          box.left_top.y <= point.y and box.right_bottom.y >= point.y
 end

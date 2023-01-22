@@ -118,11 +118,11 @@ function corrosion.update_tiles(surface, tiles)
       end
       local touched = false
       for k=1,#tiles do
-        if util.contains_point(obj_area, tiles[k].position) then
+        if util.contains_point(obj_area, tiles[k].position, false) then
           touched = true
           break
         end
-        if sec_area and ( util.contains_point(sec_area, tiles[k].position) ) then
+        if sec_area and ( util.contains_point(sec_area, tiles[k].position, false) ) then
           touched = true
           break
         end
