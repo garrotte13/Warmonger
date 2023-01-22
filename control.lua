@@ -1,5 +1,3 @@
-local event = require("__flib__.event")
-
 --local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
 local creep_eater = require("scripts.creep-eater")
@@ -13,33 +11,36 @@ local migrations = require("scripts.migrations")
 
 remote.add_interface("kr-creep", creep.remote_interface)
 
-event.on_init(function()
-  -- Initialize libraries
-  --on_tick_n.init()
+script.on_init(function()
 
   creep.init()
   corrosion.init()
   creep_eater.init()
-
+  global.dissention = {}
 
 end)
 
-event.on_nth_tick(60, function(e)
+script.on_load(function(e)
+
+end)
+
+script.on_nth_tick(60, function(e)
  corrosion.affecting()
 end)
 
- event.on_nth_tick(3, function(e)
+script.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
 
-event.on_configuration_changed(function(ChangedModData)
+script.on_event(defines.events.on_tick, function(event)
+  creep.process_creep_queue()
+
+end)
+
+script.on_configuration_changed(function(ChangedModData)
 
     migrations.generic(ChangedModData)
   
-end)
-
-event.on_load(function()
-
 end)
 
 --[[
@@ -130,28 +131,19 @@ script.on_event(defines.events.script_raised_destroy, function(e)
   end
 end)
 
-script.on_event(defines.events.on_tick, function()
-  creep.process_creep_queue()
-end)
-
 script.on_event(defines.events.on_sector_scanned, function(e)
   creep_eater.scanned(e.radar)
 end, {{filter="name", name="creep-miner1-radar"}, {filter="name", name="creep-miner0-radar"}} )
 
 
-event.register({
-  defines.events.on_player_selected_area
-  --defines.events.on_player_alt_selected_area,
-}, function(e)
+script.on_event(defines.events.on_player_selected_area, function(e)
   local player = game.get_player(e.player_index)
   if (e.item == "kr-creep-collector") and (player.render_mode == defines.render_mode.game) then
     creep_collector.collect(player, e.surface, e.tiles, e.area)
   end
 end)
 
-event.register({
-  defines.events.on_player_alt_selected_area
-}, function(e)
+script.on_event(defines.events.on_player_alt_selected_area, function(e)
   local player = game.get_player(e.player_index)
   if (e.item == "kr-creep-collector") then
     creep_collector.priority_box(player, e.surface, e.tiles, e.area)
@@ -164,11 +156,11 @@ end)
 
 if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
 
-  event.on_chunk_generated(function(e)
+  script.on_event(defines.events.on_chunk_generated, function(e)
     creep.on_chunk_generated(e.area, e.surface)
   end)
 
-  event.on_biter_base_built(function(e)
+  script.on_event(defines.events.on_biter_base_built, function(e)
     creep.on_biter_base_built(e.entity)
   end)
 
