@@ -269,12 +269,14 @@ creep.remote_interface = {
 }
 
 function creep.check_strike (killed_e, killer_e, killer_force)
-  if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) or math.random(1,3) < 2 then return end
+  if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) then return end
+  local ch = math.random(1,10)
+  if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range+1)
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
-  if range_ratio < 1.86 then return end
-  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 64, type = "unit-spawner", force = "enemy" }
+  if range_ratio < 1.6 then return end
+  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy" }
   local punisher
   local revengers = {}
   if revengers_raw and revengers_raw[1] then
@@ -293,14 +295,14 @@ function creep.check_strike (killed_e, killer_e, killer_force)
     return
   end
     local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
-    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range+1)
+    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
 
   local attack_area_radius = 2
   local attack_inaccuracy = 2
   if range_ratio > 8.5 then
     attack_area_radius = 5
     attack_inaccuracy = 7
-  elseif range_ratio > 3.6 then
+  elseif range_ratio > 4.6 then
     attack_area_radius = 3
     attack_inaccuracy = 4
   end
@@ -385,7 +387,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     somewhere = surface.find_non_colliding_position("small-biter", attack_pos, attack_area_radius+2, 0.05, false )
     if somewhere then someone = surface.create_entity{name = "small-biter", position = somewhere, force = "enemy"} end
   end
-  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius + 0.6,  force = "player" }
+  local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius + 0.4,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
     if entity.valid and entity.destructible and entity.is_entity_with_health then
@@ -404,9 +406,9 @@ function creep.landed_strike(effect_id, surface, target_position, target)
         dmg = dmg * 0.8 + math.ceil( 30 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
       end
       dmg = dmg * dmg_coeff
-      local recieved_dmg1 = entity.damage(dmg/3, "enemy", "acid")
+      local recieved_dmg1 = entity.damage(dmg/2, "enemy", "poison")
       if entity.valid then
-        local recieved_dmg2 = entity.damage((2*dmg)/3, "enemy", "impact")
+        local recieved_dmg2 = entity.damage(dmg/2, "enemy", "impact")
         --if entity.valid then
           --game.print("Natives strike back with lethal corrosion on your: " .. entity.name .. ". Damage received: " .. recieved_dmg1+recieved_dmg2)
         --end
@@ -414,7 +416,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     end
   end
 
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius + 0.6)
+  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
 end
 
 return creep

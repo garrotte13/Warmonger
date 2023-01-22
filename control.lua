@@ -1,6 +1,6 @@
 local event = require("__flib__.event")
 
-local constants = require("scripts.constants")
+--local constants = require("scripts.constants")
 local creep_collector = require("scripts.creep-collector")
 local creep_eater = require("scripts.creep-eater")
 local circle_rendering = require("scripts.miner-circle-rendering")
@@ -12,8 +12,6 @@ local migrations = require("scripts.migrations")
 --util.add_commands(corrosion.commands)
 
 remote.add_interface("kr-creep", creep.remote_interface)
-
--- BOOTSTRAP
 
 event.on_init(function()
   -- Initialize libraries
@@ -97,7 +95,7 @@ script.on_event(defines.events.on_entity_died, function(e)
   if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, true)
   elseif global.corrosion.enabled and global.corrosion.strike_back
-   and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner")
+   and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
     and game.forces.enemy.evolution_factor > 0.38 then
      creep.check_strike(e.entity, e.cause, e.force)
   end
