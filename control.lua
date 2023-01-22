@@ -6,6 +6,8 @@ local creep = require("scripts.creep")
 local corrosion = require("scripts.corrosion")
 local migrations = require("scripts.migrations")
 
+local action_ticks
+
 --local util = require("scripts.util")
 --util.add_commands(corrosion.commands)
 
@@ -17,24 +19,53 @@ script.on_init(function()
   corrosion.init()
   creep_eater.init()
   global.dissention = {}
+  action_ticks = global.dissention
 
 end)
 
 script.on_load(function(e)
-
+  action_ticks = global.dissention
 end)
 
-script.on_nth_tick(60, function(e)
+--[[script.on_nth_tick(60, function(e)
  corrosion.affecting()
-end)
+end) --]]
 
 script.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-  creep.process_creep_queue()
+  local t = event.tick
+  creep.process_creep_queue(t)
+  local act_now = action_ticks[t]
+  if act_now then   -- we have something to do today
+    if global.corrosion.enabled and act_now.corrosion_affected then -- we do have something to corrode today
+      for _, pos in pairs(act_now.corrosion_affected) do
+        local entity = global.corrosion.affected[pos.x .. ":" .. pos.y].e
+        if entity.valid then
+          corrosion.affect(entity)
 
+          if action_ticks[t+30] then
+            if action_ticks[t+30].corrosion_affected then
+              table.insert(action_ticks[t+30].corrosion_affected, {x = pos.x, y = pos.y})
+            else
+              action_ticks[t+30].corrosion_affected = {{x = pos.x, y = pos.y}}
+            end
+          else
+            action_ticks[t+30] = { corrosion_affected = {{x = pos.x, y = pos.y}} }
+          end
+          global.corrosion.affected[pos.x .. ":" .. pos.y].next_tick = t+30
+
+        else
+          global.corrosion.affected_num = global.corrosion.affected_num - 1
+          global.corrosion.affected[pos.x .. ":" .. pos.y] = nil
+        end
+      end
+    end
+
+    act_now[t] = nil
+  end
 end)
 
 script.on_configuration_changed(function(ChangedModData)
@@ -78,10 +109,10 @@ end)
 
 script.on_event(defines.events.on_built_entity, function(e)
   if e.created_entity.valid and (e.created_entity.name == "creep-miner1-radar" or e.created_entity.name == "creep-miner0-radar") then
-    creep_eater.add (e.created_entity)
+    creep_eater.add (e.created_entity, e.tick)
   elseif e.created_entity.name == "entity-ghost" and (e.created_entity.ghost_name == "creep-miner1-radar" or e.created_entity.ghost_name == "creep-miner0-radar") then
     circle_rendering.add_circle(e.created_entity, game.players[e.player_index])
-  else corrosion.engaging(e.created_entity) end
+  else corrosion.engaging(e.created_entity, e.tick) end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
@@ -111,8 +142,8 @@ end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e)
   if e.created_entity.valid and (e.created_entity.name == "creep-miner1-radar" or e.created_entity.name == "creep-miner0-radar") then
-    creep_eater.add (e.created_entity)
-  else corrosion.engaging(e.created_entity) end
+    creep_eater.add (e.created_entity, e.tick)
+  else corrosion.engaging(e.created_entity, e.tick) end
 end)
 
 script.on_event(defines.events.script_raised_built, function(e)

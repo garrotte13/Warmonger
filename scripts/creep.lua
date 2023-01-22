@@ -63,7 +63,7 @@ function creep.update()
     end
 end
 
-function creep.process_creep_queue()
+function creep.process_creep_queue(t)
     if global.creep.creep_id_counter == global.creep.last_creep_id_counter then
         return
     end
@@ -155,7 +155,7 @@ function creep.process_creep_queue()
               force = "player"}
             for _, entity in pairs(entities) do
               if entity.valid and entity.destructible and entity.is_entity_with_health then
-                corrosion.engaging_fast(entity)
+                corrosion.engaging_fast(entity, t)
               end
             end
           end

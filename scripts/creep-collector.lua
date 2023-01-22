@@ -91,7 +91,7 @@ function creep_collector.collect_obsolete(player, surface, tiles, sel_area) -- b
       sound = { path = "kr-collect-creep", volume_modifier = 1 },
     })
       surface.set_tiles(tiles_to_set)
-      corrosion.update_surface(surface)
+      corrosion.update_surface(surface) -- broken! shouldn't be run
   else
    if enemies_found == 0 then
       util.flying_text_with_sound(player, { "message.kr-no-creep-in-selection" }, { position = util.get_centree(sel_area) })

@@ -11,16 +11,16 @@ function corrosion.init()
  }
 end
 
-function corrosion.engaging (entity)
+function corrosion.engaging (entity, t)
  if (not global.corrosion.enabled) or (not entity.destructible) or (not entity.is_entity_with_health)
   or entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character"
    then return end
- local turret_area = util.box_ceiling(entity.selection_box)
+ local e_area = util.box_ceiling(entity.selection_box)
  local surface = entity.surface
- -- game.print("Installed building of name: " .. entity.name .. " located at top left x:" .. turret_area.left_top.x .. " y:" .. turret_area.left_top.y .. ", bottom right x:" .. turret_area.right_bottom.x .. " y:" .. turret_area.right_bottom.y)
+ -- game.print("Installed building of name: " .. entity.name .. " located at top left x:" .. e_area.left_top.x .. " y:" .. e_area.left_top.y .. ", bottom right x:" .. e_area.right_bottom.x .. " y:" .. e_area.right_bottom.y)
  local creep_amount = 0
  creep_amount = surface.count_tiles_filtered{
- area = turret_area,
+ area = e_area,
  name = {"kr-creep", "fk-creep"}
  }
  -- game.print("How many creep tiles are under this building: " .. creep_amount)
@@ -33,30 +33,67 @@ function corrosion.engaging (entity)
     }
  end
  if creep_amount > 0 then
-  global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = entity
+  global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t+30}
   global.corrosion.affected_num = global.corrosion.affected_num + 1
+  if global.dissention[t+30] then
+    if global.dissention[t+30].corrosion_affected then
+      table.insert(global.dissention[t+30].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
+    else
+      global.dissention[t+30].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
+    end
+  else
+    global.dissention[t+30] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
+  end
  end
 
 end
 
-function corrosion.engaging_fast (entity)
+function corrosion.engaging_fast (entity, t)
   if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character" then return end
   local e_area = util.box_ceiling(entity.selection_box)
   if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
-    global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = entity
+    global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t+30}
     global.corrosion.affected_num = global.corrosion.affected_num + 1
+  if global.dissention[t+30] then
+    if global.dissention[t+30].corrosion_affected then
+      table.insert(global.dissention[t+30].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
+    else
+      global.dissention[t+30].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
+    end
+  else
+    global.dissention[t+30] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
+  end
+  end
+  
+
+end
+
+local function disengage_it (posX, posY)
+  if global.corrosion.affected[posX .. ":" .. posY] then
+    local t = global.corrosion.affected[posX .. ":" .. posY].next_tick
+    local to_keep = {}
+    local i = 0
+    if t and global.dissention[t] then
+      for _, pos in pairs(global.dissention[t].corrosion_affected) do
+        if pos.x ~= posX or posY ~= pos.y then
+          table.insert(to_keep, pos)
+        else i = i + 1
+        end
+      end
+    end
+    if i > 0 then global.dissention[t].corrosion_affected = to_keep else game.print("Shit happened!") end
+    global.corrosion.affected[posX .. ":" .. posY] = nil
+    global.corrosion.affected_num = global.corrosion.affected_num - 1
+    -- game.print("Creep was underneath. Objects tortured left:" .. global.corrosion.affected_num)
   end
 end
+  
 
 function corrosion.disengaging (entity)
  if (not global.corrosion.enabled) or (entity.force.name~="player") then return end
  local turret_area = util.box_ceiling(entity.selection_box)
  -- game.print("Disappeared object of name: " .. entity.name)
-  if global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] then
-    global.corrosion.affected[turret_area.left_top.x .. ":" .. turret_area.left_top.y] = nil
-    global.corrosion.affected_num = global.corrosion.affected_num - 1
-    -- game.print("Creep was underneath. Objects tortured left:" .. global.corrosion.affected_num)
-  end
+ disengage_it (turret_area.left_top.x, turret_area.left_top.y)
 end
 
 corrosion.commands = {
@@ -87,7 +124,7 @@ corrosion.commands = {
 }
 
 
-function corrosion.affecting()
+function corrosion.affecting()  -- legacy
  if not global.corrosion.enabled then return end
  for _, entity in pairs(global.corrosion.affected) do
   if entity.valid then
@@ -104,13 +141,30 @@ function corrosion.affecting()
  end
 end
 
+function corrosion.affect(entity)
+   if entity.valid then
+     local surface = entity.surface
+     local h_ratio = entity.get_health_ratio() / 2
+     local rnd_coeff = (math.random() / 4) + 0.25
+     local dmg = math.floor( rnd_coeff * entity.health * ( 0.05 + game.forces.enemy.evolution_factor/12 ) * ( 1 - h_ratio ) )
+     -- at least 5 health will be left for biters/worms to finish
+     local recieved_dmg = entity.damage(dmg, "enemy", "acid")
+     if recieved_dmg > 0 then
+       surface.play_sound{path = "acid_burns", position = entity.position}
+     end
+
+   end
+
+ end
 
 function corrosion.update_tiles(surface, tiles)
   if not global.corrosion.enabled then return end
   local i = 0
-  for _, entity in pairs(global.corrosion.affected) do
+  local entity
+  for _, aff in pairs(global.corrosion.affected) do
     i = i + 1
-    if entity.valid and entity.surface == surface then
+    entity = aff.e
+    if entity and entity.valid and entity.surface == surface then
       local obj_area = util.box_ceiling(entity.selection_box)
       local sec_area = entity.secondary_selection_box
       if sec_area then
@@ -140,9 +194,8 @@ function corrosion.update_tiles(surface, tiles)
           }
         end
         if creep_amount == 0 then
-          global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil
-          global.corrosion.affected_num = global.corrosion.affected_num - 1
-          -- game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)        
+          disengage_it (obj_area.left_top.x, obj_area.left_top.y)
+          -- game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)
         end
       end
     end

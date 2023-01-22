@@ -440,20 +440,20 @@ function creep_eater.process()
     end
 end
 
-function creep_eater.add (entity)
+function creep_eater.add (entity, t)
     local surface = entity.surface
     local x = entity.position.x
     local y = entity.position.y
     local health_ = entity.health
     local position = entity.position
     local force = entity.force
-    local last_user= entity.last_user
+    local last_user = entity.last_user
     if not last_user then
         game.print("We have a problem! Radar was built by no player!")
     end
 
         entity.backer_name = ""
-        corrosion.engaging(entity)
+        corrosion.engaging(entity, t)
 
     local r = 0
     for ids_num = 1, global.creep_miners_last do
