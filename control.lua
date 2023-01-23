@@ -71,7 +71,7 @@ end)
 script.on_configuration_changed(function(ChangedModData)
 
     migrations.generic(ChangedModData)
-  
+    action_ticks = global.dissention
 end)
 
 --[[

@@ -146,7 +146,7 @@ function corrosion.affect(entity)
      local surface = entity.surface
      local h_ratio = entity.get_health_ratio() / 2
      local rnd_coeff = (math.random() / 4) + 0.25
-     local dmg = math.floor( rnd_coeff * entity.health * ( 0.09 + game.forces.enemy.evolution_factor/8 ) * ( 1 - h_ratio ) )
+     local dmg = math.floor( rnd_coeff * entity.health * ( 0.09 + game.forces.enemy.evolution_factor/9 ) * ( 1 - h_ratio ) )
      -- at least 5 health will be left for biters/worms to finish
      local recieved_dmg = entity.damage(dmg, "enemy", "acid")
      if recieved_dmg > 0 then
