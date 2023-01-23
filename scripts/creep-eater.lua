@@ -7,6 +7,17 @@ local constants = require("scripts.constants")
 
 local creep_eater = {}
 
+function creep_eater.add_action_tick (action_ticks, minerId, next_tick)
+    while action_ticks[next_tick] and action_ticks[next_tick].active_miner do
+        next_tick = next_tick + 1
+    end
+    if action_ticks[next_tick] then action_ticks[next_tick].active_miner = minerId
+    else
+        action_ticks[next_tick] = { active_miner = minerId }
+    end
+    global.creep_miners[minerId].next_tick = next_tick
+end
+
 function creep_eater.find_chest(miner)
     local chests = miner.entity.surface.find_entities_filtered{
         position = miner.entity.position,
@@ -88,7 +99,8 @@ function creep_eater.refuel(entity, chest_given)
        return false
 end
 
-function creep_eater.process()
+function creep_eater.process(action_ticks, id, t)
+    --[[
     if global.creep_miners_count == 0 then return end
     local id = global.creep_miners_id
     local not_found_id = true
@@ -117,11 +129,21 @@ function creep_eater.process()
     end
     if not_found_id then return end
     global.creep_miners_id = id
+    ]]
+
     local miner = global.creep_miners[id]
+    if not miner then return end
+    if not miner.entity or not miner.entity.valid then -- miner is dead
+        global.creep_miners[id] = nil
+        global.creep_miners_count = global.creep_miners_count - 1
+        return
+    end
     local surface = miner.entity.surface
     local miner_range = constants.miner_range(miner.entity.name)+1
-
     if miner.stage == 0 then -- building creep tiles array
+        if miner.ready_tiles == 0 then
+            game.print("False start! Miner isn't ready to excavate creep. Let it consume energy and prepare!")
+        end
 
         if miner.entity.burner and miner.entity.burner.valid
          and miner.entity.get_inventory(defines.inventory.fuel)
@@ -132,6 +154,7 @@ function creep_eater.process()
                 --if not miner.entity.burner.remaining_burning_fuel or miner.entity.burner.remaining_burning_fuel == 0 then return end
             end
         end
+        miner.entity.active = true
         miner.cr_tiles = {}
         miner.cr_tiles = surface.find_tiles_filtered({ -- Tiles array
             position = miner.entity.position,
@@ -139,15 +162,16 @@ function creep_eater.process()
             name = {"fk-creep", "kr-creep"}
             -- collision_mask={"ground-tile"}
         })
-        if miner.cr_tiles and miner.cr_tiles[1] then miner.stage = 1
+        if miner.cr_tiles and miner.cr_tiles[1] then
+            miner.stage = 1
+            creep_eater.add_action_tick(action_ticks, id, t + 1)
         else
             --game.print("Creep miner with Id: " .. id .. " has no creep in radius. Turning off...")
             miner.entity.active = false
-            miner.deactivation_tick = game.ticks_played
-            miner.stage = 50
-            -- if miner.ready_tiles > 5 then miner.ready_tiles = 5 end
-            -- miner.ready_tiles = 0
-            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+            --miner.deactivation_tick = game.ticks_played
+            --miner.stage = 50
+            miner.stage = 0
+            creep_eater.add_action_tick(action_ticks, id, t + 7201)
         end
 
     elseif miner.stage == 1 then --Fill sorting array
@@ -164,6 +188,7 @@ function creep_eater.process()
             })
         end
         miner.stage = 2
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 2 then -- We have creep tiles to collect
 
@@ -174,15 +199,17 @@ function creep_eater.process()
          force = "enemy"
         }
         miner.stage = 5
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 3 then -- Old section
 
         miner.stage = 5
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 40 then
         if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
         miner.stage = 0
-        if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 5 then -- Filtering out protected tiles
 
@@ -211,14 +238,21 @@ function creep_eater.process()
             end
             --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
             miner.entity.active = false
-            miner.deactivation_tick = game.ticks_played
-            miner.stage = 51
+            --miner.deactivation_tick = game.ticks_played
+            miner.stage = 0
+            creep_eater.add_action_tick(action_ticks, id, t + 181)
 
-            if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         elseif tiles_free <= miner.ready_tiles then -- No need to sort or prioritize anything
             if global.corrosion.enabled then miner.corroded_help = true end
             miner.stage = 30
-        elseif global.corrosion.enabled then miner.stage = 10 else miner.stage = 11 end
+            creep_eater.add_action_tick(action_ticks, id, t + 1)
+        elseif global.corrosion.enabled then
+            miner.stage = 10
+            creep_eater.add_action_tick(action_ticks, id, t + 1)
+        else
+            miner.stage = 11
+            creep_eater.add_action_tick(action_ticks, id, t + 1)
+        end
 
     elseif miner.stage == 10 then -- Priority for corroding free tiles
 
@@ -244,6 +278,7 @@ function creep_eater.process()
             end
         end
         miner.stage = 11
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 11 then -- Sorting not protected tiles
      if not global.prio_creep_mine then global.prio_creep_mine = {} end
@@ -284,6 +319,7 @@ function creep_eater.process()
      end
         table.sort(miner.sort_tiles, function (i1, i2) return i1.distance < i2.distance end )
         miner.stage = 30
+        creep_eater.add_action_tick(action_ticks, id, t + 1)
 
     elseif miner.stage == 30 then -- Removing creep
 
@@ -377,9 +413,10 @@ function creep_eater.process()
             --miner.ready_tiles = math.floor((miner.ready_tiles) / 2)
             miner.entity.active = false
             miner.deactivation_tick = game.ticks_played
-            miner.stage = 51
+            miner.stage = 0
+            creep_eater.add_action_tick(action_ticks, id, t + 181)
         else
-            if #tiles == i then -- time to go into stage 50
+            if #tiles == i then -- time to go into stage 50, because we gathered all creep available
                 miner.entity.active = false
                 miner.deactivation_tick = game.ticks_played
             end
@@ -388,9 +425,14 @@ function creep_eater.process()
                 for j=1,#tiles do
                     miner.cr_tiles[j]= {position = tiles[j].position}
                 end
+                creep_eater.add_action_tick(action_ticks, id, t + 1)
             else
-                if miner.entity.active then miner.stage = 0 else miner.stage = 50 end
-                if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+                if miner.entity.active then
+                    if miner.ready_tiles > 0 then creep_eater.add_action_tick(action_ticks, id, t + 1) else miner.next_tick = 0 end
+                else
+                    creep_eater.add_action_tick(action_ticks, id, t + 7201)
+                end
+                miner.stage = 0
             end
         end
 
@@ -399,13 +441,13 @@ function creep_eater.process()
         if miner.cr_tiles then corrosion.update_tiles(surface, miner.cr_tiles) end
         miner.cr_tiles = {}
         if miner.entity.active then
-            miner.stage = 0
+            if miner.ready_tiles > 0 then creep_eater.add_action_tick(action_ticks, id, t + 1) else miner.next_tick = 0 end
         else
-            miner.stage = 50
+            creep_eater.add_action_tick(action_ticks, id, t + 7201)
         end
-        if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+        miner.stage = 0
 
-    elseif miner.stage == 50 then
+    elseif miner.stage == 50 then -- LEGACY
 
         if (game.ticks_played - miner.deactivation_tick) > 7200 then --checking once per 2 minutes for new creep in case new enemy bases are built or Creeper comes up
             miner.entity.active = true
@@ -414,7 +456,7 @@ function creep_eater.process()
             if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
         end
 
-    elseif miner.stage == 51 then
+    elseif miner.stage == 51 then -- LEGACY
 
         if (game.ticks_played - miner.deactivation_tick) > 180 then
             miner.entity.active = true
@@ -427,16 +469,22 @@ function creep_eater.process()
 
         if miner.entity.burner and miner.entity.burner.valid and miner.entity.get_inventory(defines.inventory.fuel)
          and (miner.entity.get_inventory(defines.inventory.fuel).is_empty()) then
-            if (game.ticks_played - miner.deactivation_tick) > 600 then
+            --if (game.ticks_played - miner.deactivation_tick) > 600 then
                 if ( not creep_eater.refuel(miner.entity, miner.chest) ) and global.creep_miner_refuel then
                     miner.deactivation_tick = game.ticks_played
-                    if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
-                else miner.stage = 0 end
-            else
-                if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
-            end
+                    creep_eater.add_action_tick(action_ticks, id, t + 601)
+                    --if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+                else
+                -- auto-refuelling turned off or we re-fuelled successfully. If auto-refuelling will be turned on later, player must feed miner manually once
+                    miner.stage = 0
+                    miner.next_tick = 0
+                end
+            --else
+              --  if id < global.creep_miners_last then global.creep_miners_id = id + 1 else global.creep_miners_id = 1 end
+            --end
         else
             miner.stage = 0
+            miner.next_tick = 0
         end
 
     end
@@ -480,11 +528,13 @@ function creep_eater.add (entity, t)
     truecreep = false,
     fakecreep = false,
     corroded_help = false,
-    prio_box = {}
+    prio_box = {},
+    next_tick = 0
     }
     circle_rendering.add_circle(entity, last_user)
     if entity.name == "creep-miner0-radar" then
         global.creep_miners[r].stage = 60
+        creep_eater.add_action_tick(global.dissention, r, t + 1)
     end
     global.creep_radars[entity.position.x .. ":" .. entity.position.y] = r
     if r == global.creep_miners_last then global.creep_miners_last = global.creep_miners_last + 1 end
@@ -509,7 +559,9 @@ function creep_eater.remove (entit, died)
         --game.print("Delete pending creep miner with Id: " .. r .. " located at x:" .. entit.position.x .. " y:" .. entit.position.y)
         global.creep_radars[entit.position.x .. ":" .. entit.position.y] = nil
         circle_rendering.remove_circle(entit)
-        global.creep_miners[r].killed = true
+        local nex_t = global.creep_miners[r].next_tick
+        if nex_t and nex_t > 0 then global.dissention[nex_t].active_miner = nil end
+        global.creep_miners[r] = nil
 
     else
         game.print("WTF?! No creep miner found for destroying!")
@@ -518,16 +570,21 @@ function creep_eater.remove (entit, died)
 
 end
 
-function creep_eater.scanned (radar)
+function creep_eater.scanned (radar, t)
     local id = 0
     -- game.print(" Hello! A sector has been scanned. Lets check what we got here...")
     if radar.valid then id = global.creep_radars[radar.position.x .. ":" .. radar.position.y]  else return end
-    --m = radar.position.x .. ":" .. radar.position.y
-    --local id = global.creep_radars[m]
     if not id then game.print ("Creep miner located at ".. radar.position.x .. ":" .. radar.position.y .. " has been lost") return end
     local r_tiles = global.creep_miners[id].ready_tiles
     if r_tiles < 40 then
         global.creep_miners[id].ready_tiles = r_tiles + 7
+    end
+    if global.creep_miners[id].stage == 60 then -- I stop waiting for fuel and go to work, freeing next refuel tick
+        global.dissention[global.creep_miners[id].next_tick].active_miner = nil
+        creep_eater.add_action_tick(global.dissention, id, t + 1)
+        global.creep_miners[id].stage = 0
+    elseif global.creep_miners[id].next_tick == 0 then
+        creep_eater.add_action_tick(global.dissention, id, t + 1)
     end
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
 end

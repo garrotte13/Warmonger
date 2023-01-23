@@ -32,23 +32,26 @@ end)
 
 --[[script.on_nth_tick(60, function(e)
  corrosion.affecting()
-end) --]]
+end) 
 
 script.on_nth_tick(3, function(e)
   creep_eater.process()
 end)
+--]]
 
 script.on_event(defines.events.on_tick, function(event)
   local t = event.tick
   creep.process_creep_queue(t)
   local act_now = action_ticks[t]
   if act_now then   -- we have something to do today
+    if act_now.active_miner then -- we do have some working creep miner today
+      creep_eater.process(action_ticks, act_now.active_miner , t)
+    end
     if corrosion.enabled and act_now.corrosion_affected then -- we do have something to corrode today
       for _, pos in pairs(act_now.corrosion_affected) do
         local entity = corrosion.affected[pos.x .. ":" .. pos.y].e
         if entity.valid then
           corrosionF.affect(entity)
-
           if action_ticks[t+30] then
             if action_ticks[t+30].corrosion_affected then
               table.insert(action_ticks[t+30].corrosion_affected, {x = pos.x, y = pos.y})
@@ -167,7 +170,7 @@ script.on_event(defines.events.script_raised_destroy, function(e)
 end)
 
 script.on_event(defines.events.on_sector_scanned, function(e)
-  creep_eater.scanned(e.radar)
+  creep_eater.scanned(e.radar, e.tick)
 end, {{filter="name", name="creep-miner1-radar"}, {filter="name", name="creep-miner0-radar"}} )
 
 
