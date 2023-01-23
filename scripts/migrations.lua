@@ -53,9 +53,9 @@ function migrations.generic(ChangedModsData)
     global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value
     if (minor > 0 and minor < 3) or ( minor == 3 and build_ver < 18) then
       global.dissention = {}
+      local t = game.tick
       if global.corrosion.affected_num > 0 then
         local new_wave = {}
-        local t = game.tick
         local my_tick
         for pos_Str, entity in pairs(global.corrosion.affected) do
           local e_area = util.box_ceiling(entity.selection_box)
@@ -72,8 +72,45 @@ function migrations.generic(ChangedModsData)
           end
         end
         global.corrosion.affected = new_wave
-        
       end
+
+      if global.creep_miners_count > 0 then
+        local gt = game.ticks_played
+        local my_tick
+        local miner
+        for i = 1, global.creep_miners_last do
+          if global.creep_miners[i] then
+            if global.creep_miners[i].entity and global.creep_miners[i].entity.valid then
+              miner = global.creep_miners[i]
+              if miner.stage == 0 and miner.ready_tiles > 0 then
+                creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 30))
+              elseif miner.stage == 0 then
+                miner.next_tick = 0
+              elseif miner.stage == 60 then
+                my_tick = (gt - miner.deactivation_tick) - 600
+                if my_tick < 5 then my_tick = 5 end
+                creep_eater.add_action_tick(global.dissention, i, t + my_tick + math.random(1, 70))
+              elseif miner.stage == 51 then
+                my_tick = (gt - miner.deactivation_tick) - 180
+                if my_tick < 1 then my_tick = 1 end
+                creep_eater.add_action_tick(global.dissention, i, t + my_tick + math.random(1, 50))
+                miner.stage = 0
+              elseif miner.stage == 50 then
+                my_tick = (gt - miner.deactivation_tick) - 7200
+                if my_tick < 10 then my_tick = 10 end
+                creep_eater.add_action_tick(global.dissention, i, t + my_tick + math.random(1, 150))
+                miner.stage = 0
+              else
+                creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 15))
+              end
+            else
+              global.creep_miners[i] = nil
+              global.creep_miners_count = global.creep_miners_count - 1
+            end
+          end
+        end
+      end
+
     end
   end
 end

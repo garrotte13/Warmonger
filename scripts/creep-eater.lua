@@ -206,7 +206,7 @@ function creep_eater.process(action_ticks, id, t)
         miner.stage = 5
         creep_eater.add_action_tick(action_ticks, id, t + 1)
 
-    elseif miner.stage == 40 then
+    elseif miner.stage == 40 then -- LEGACY
         if miner.ready_tiles > 5 then miner.ready_tiles = 5 + math.floor((miner.ready_tiles - 5) / 2) end
         miner.stage = 0
         creep_eater.add_action_tick(action_ticks, id, t + 1)
