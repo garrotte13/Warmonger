@@ -2,12 +2,13 @@
 Version: 1.3.18
 Date: 2023-01-?
   Major Features:
-    - New mechanism for corrosion event. Now all player's buildings will corrode individually with smaller damage, but more often. And less game resource consumed.
+    - New mechanism for corrosion event. Now all player's buildings will corrode in a more realistic manner - individually with smaller damage, but more often.
+      Less peak game resource consumption in case of many structures corrosion taking place.
   Balancing:
-    - Counter-strikes makes smaller creep areas
-    - Counter-strikes are less often, but can happen for killing worms and "remote kill" distance is reduced.
+    - Counter-strikes make smaller creep areas.
+    - Counter-strikes are less often, but can happen for killing worms and provoking "remote kill" distance is reduced.
   Info:
-    - Removed redunant utility mod dependency
+    - Removed redunant utility mod dependency.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.17
 Date: 2023-01-07
