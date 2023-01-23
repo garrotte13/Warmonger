@@ -8,6 +8,7 @@ local migrations = require("scripts.migrations")
 
 local action_ticks
 local corrosion
+local miner_queue
 
 --local util = require("scripts.util")
 --util.add_commands(corrosion.commands)
@@ -22,12 +23,13 @@ script.on_init(function()
   creep_eater.init()
   global.dissention = {}
   action_ticks = global.dissention
-
+  miner_queue = global.creep_miners_queue
 end)
 
 script.on_load(function(e)
   action_ticks = global.dissention
   corrosion = global.corrosion
+  miner_queue = global.creep_miners_queue
 end)
 
 --[[script.on_nth_tick(60, function(e)
@@ -44,8 +46,13 @@ script.on_event(defines.events.on_tick, function(event)
   creep.process_creep_queue(t)
   local act_now = action_ticks[t]
   if act_now then   -- we have something to do today
-    if act_now.active_miner then -- we do have some working creep miner today
-      creep_eater.process(action_ticks, act_now.active_miner , t)
+    if act_now.active_miner then -- we do have some troubling creep miner today
+      if global.creep_miners[act_now.active_miner].stage == 0 then
+        global.creep_miners_lastq = global.creep_miners_lastq + 1
+        global.creep_miners_queue[global.creep_miners_lastq] = act_now.active_miner
+      else
+        creep_eater.process(action_ticks, act_now.active_miner, t)
+      end
     end
     if corrosion.enabled and act_now.corrosion_affected then -- we do have something to corrode today
       for _, pos in pairs(act_now.corrosion_affected) do
@@ -69,8 +76,16 @@ script.on_event(defines.events.on_tick, function(event)
         end
       end
     end
-
     act_now[t] = nil
+  end
+  if global.creep_miners_queue[1] and creep_eater.process(action_ticks, global.creep_miners_queue[global.creep_miners_id], t) then
+    global.creep_miners_id = global.creep_miners_id + 1
+    if global.creep_miners_id > global.creep_miners_lastq then
+      global.creep_miners_queue = {}
+      global.creep_miners_id = 1
+      global.creep_miners_lastq = 0
+      --game.print("No more miners to process tiles.")
+    end
   end
 end)
 
@@ -79,6 +94,7 @@ script.on_configuration_changed(function(ChangedModData)
     migrations.generic(ChangedModData)
     action_ticks = global.dissention
     corrosion = global.corrosion
+    miner_queue = global.creep_miners_queue
 end)
 
 --[[

@@ -4,6 +4,7 @@ Date: 2023-01-?
   Major Features:
     - New mechanism for corrosion event. Now all player's buildings will corrode in a more realistic manner - individually with smaller damage, but more often.
       Less peak game resource consumption in case of many structures corrosion taking place.
+    - New mechanism for creep miners processing, making active ones more responsive, while reducing CPU time consumption by passive miners.
   Balancing:
     - Counter-strikes make smaller creep areas.
     - Counter-strikes are less often, but can happen for killing worms and provoking "remote kill" distance is reduced.

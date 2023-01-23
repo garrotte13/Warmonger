@@ -1,5 +1,6 @@
 local constants = require("scripts.constants")
 local corrosion = require("scripts.corrosion")
+local creep_eater = require("scripts.creep-eater")
 
 local creep = {}
 
@@ -130,12 +131,12 @@ function creep.process_creep_queue(t)
     elseif creep_pack.stage == 3 then
       if creep_pack.fake and creep_pack.position then
         for i=1, global.creep_miners_last do
-          if global.creep_miners[i] and global.creep_miners[i].stage == 50
-           and global.creep_miners[i].entity and global.creep_miners[i].entity.valid then
+          if global.creep_miners[i] and global.creep_miners[i].stage == 0
+           and global.creep_miners[i].entity and global.creep_miners[i].entity.valid and (not global.creep_miners[i].entity.active) then
             local d = (constants.miner_range(global.creep_miners[i].entity.name) + creep_pack.radius)^2
             if ((global.creep_miners[i].x - creep_pack.position.x)^2 + (global.creep_miners[i].y - creep_pack.position.y)^2) <= d then
-              global.creep_miners[i].entity.active = true
-              global.creep_miners[i].stage = 0
+              global.dissention[global.creep_miners[i].next_tick].active_miner = nil
+              creep_eater.add_action_tick(global.dissention, i, t + 1)
             end
           end
         end

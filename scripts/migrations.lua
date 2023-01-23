@@ -73,7 +73,9 @@ function migrations.generic(ChangedModsData)
         end
         global.corrosion.affected = new_wave
       end
-
+      global.creep_miners_queue = {}
+      global.creep_miners_id = 1
+      global.creep_miners_lastq = 0
       if global.creep_miners_count > 0 then
         local gt = game.ticks_played
         local my_tick
@@ -86,6 +88,9 @@ function migrations.generic(ChangedModsData)
                 creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 30))
               elseif miner.stage == 0 then
                 miner.next_tick = 0
+              elseif miner.stage == 40 then
+                  creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 20))
+                  miner.stage = 0
               elseif miner.stage == 60 then
                 my_tick = (gt - miner.deactivation_tick) - 600
                 if my_tick < 5 then my_tick = 5 end
@@ -100,8 +105,11 @@ function migrations.generic(ChangedModsData)
                 if my_tick < 10 then my_tick = 10 end
                 creep_eater.add_action_tick(global.dissention, i, t + my_tick + math.random(1, 150))
                 miner.stage = 0
-              else
-                creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 15))
+              else -- currently processed miner
+                global.creep_miners_queue[1] = i
+                global.creep_miners_lastq = 1
+                if miner.stage == 3 then miner.stage = 5 end
+                --creep_eater.add_action_tick(global.dissention, i, t + math.random(1, 15))
               end
             else
               global.creep_miners[i] = nil
