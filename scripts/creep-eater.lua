@@ -223,7 +223,9 @@ function creep_eater.process()
     elseif miner.stage == 10 then -- Priority for corroding free tiles
 
         local d = miner_range * miner_range
-        for _, corroded in pairs(global.corrosion.affected) do
+        local corroded
+        for _, corrodedM in pairs(global.corrosion.affected) do
+            corroded = corrodedM.e
             if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x))^2+((corroded.position.y - miner.entity.position.y))^2 <= (d+0.5)  ) then
                 local building_area = util.box_ceiling(corroded.selection_box)
                 local building_sec_area = corroded.secondary_selection_box
