@@ -22,6 +22,7 @@ script.on_init(function()
   corrosion = global.corrosion
   creep_eater.init()
   global.dissention = {}
+  global.dissention[0] = {active_miner = nil}
   action_ticks = global.dissention
   miner_queue = global.creep_miners_queue
 end)
@@ -47,13 +48,16 @@ script.on_event(defines.events.on_tick, function(event)
   local act_now = action_ticks[t]
   if act_now then   -- we have something to do today
     if act_now.active_miner then -- we do have some troubling creep miner today
-      if global.creep_miners[act_now.active_miner].stage == 0 then
-        global.creep_miners_lastq = global.creep_miners_lastq + 1
-        global.creep_miners_queue[global.creep_miners_lastq] = act_now.active_miner
-      else
-        creep_eater.process(action_ticks, act_now.active_miner, t)
+      if global.creep_miners[act_now.active_miner] then
+        global.creep_miners[act_now.active_miner].next_tick = 0
+        if global.creep_miners[act_now.active_miner].stage == 0 and global.creep_miners[act_now.active_miner].ready_tiles > 0 then
+          global.creep_miners_lastq = global.creep_miners_lastq + 1
+          global.creep_miners_queue[global.creep_miners_lastq] = act_now.active_miner
+        elseif global.creep_miners[act_now.active_miner].stage == 60 then
+          creep_eater.process(action_ticks, act_now.active_miner, t)
+        end
       end
-    end
+  end
     if corrosion.enabled and act_now.corrosion_affected then -- we do have something to corrode today
       for _, pos in pairs(act_now.corrosion_affected) do
         local entity = corrosion.affected[pos.x .. ":" .. pos.y].e

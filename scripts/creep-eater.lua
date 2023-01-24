@@ -536,7 +536,8 @@ function creep_eater.scanned (radar, t)
         global.dissention[global.creep_miners[id].next_tick].active_miner = nil
         creep_eater.add_action_tick(global.dissention, id, t + 1)
         global.creep_miners[id].stage = 0
-    elseif global.creep_miners[id].next_tick == 0 and global.creep_miners[id].stage == 0 then
+    elseif global.creep_miners[id].stage == 0 then
+        global.dissention[global.creep_miners[id].next_tick].active_miner = nil
         creep_eater.add_action_tick(global.dissention, id, t + 1)
     end
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)

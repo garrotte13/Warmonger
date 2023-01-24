@@ -53,6 +53,7 @@ function migrations.generic(ChangedModsData)
     global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value
     if (minor > 0 and minor < 3) or ( minor == 3 and build_ver < 18) then
       global.dissention = {}
+      global.dissention[0] = {active_miner = nil}
       local t = game.tick
       if global.corrosion.affected_num > 0 then
         local new_wave = {}

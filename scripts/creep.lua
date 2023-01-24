@@ -136,6 +136,7 @@ function creep.process_creep_queue(t)
             local d = (constants.miner_range(global.creep_miners[i].entity.name) + creep_pack.radius)^2
             if ((global.creep_miners[i].x - creep_pack.position.x)^2 + (global.creep_miners[i].y - creep_pack.position.y)^2) <= d then
               global.dissention[global.creep_miners[i].next_tick].active_miner = nil
+              global.creep_miners[i].entity.active = true
               creep_eater.add_action_tick(global.dissention, i, t + 1)
             end
           end
