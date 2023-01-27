@@ -301,7 +301,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   if range_ratio > 8.5 then
     attack_area_radius = 5
     attack_inaccuracy = 7
-  elseif range_ratio > 4.6 then
+  elseif range_ratio > 3.3 then
     attack_area_radius = 3
     attack_inaccuracy = 4
   end
