@@ -15,6 +15,20 @@ local miner_queue
 
 remote.add_interface("kr-creep", creep.remote_interface)
 
+local function add_hooks()
+  if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+
+    script.on_event(defines.events.on_chunk_generated, function(e)
+      creep.on_chunk_generated(e.area, e.surface)
+    end)
+
+    script.on_event(defines.events.on_biter_base_built, function(e)
+      creep.on_biter_base_built(e.entity)
+    end)
+  end
+
+end
+
 script.on_init(function()
 
   creep.init()
@@ -25,12 +39,14 @@ script.on_init(function()
   global.dissention[0] = {active_miner = nil}
   action_ticks = global.dissention
   miner_queue = global.creep_miners_queue
+  add_hooks()
 end)
 
 script.on_load(function(e)
   action_ticks = global.dissention
   corrosion = global.corrosion
   miner_queue = global.creep_miners_queue
+  add_hooks()
 end)
 
 --[[script.on_nth_tick(60, function(e)
@@ -211,15 +227,3 @@ end)
 script.on_event(defines.events.on_pre_player_removed, function(e)
   if global.prio_creep_mine then creep_collector.player_removed(e.player_index) end
 end)
-
-if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-
-  script.on_event(defines.events.on_chunk_generated, function(e)
-    creep.on_chunk_generated(e.area, e.surface)
-  end)
-
-  script.on_event(defines.events.on_biter_base_built, function(e)
-    creep.on_biter_base_built(e.entity)
-  end)
-
-end
