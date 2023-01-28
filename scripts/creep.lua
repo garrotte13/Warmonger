@@ -276,13 +276,13 @@ creep.remote_interface = {
 
 function creep.check_strike (killed_e, killer_e, killer_force)
   if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) then return end
-  local ch = math.random(1,10)
-  if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
+  local ch = killed_e.type == "unit-spawner" and 4 or 8
+  -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
   local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
   if range_ratio < 1.6 then return end
-  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 11 }
+  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 15 }
   local punisher
   local revengers = {}
   if revengers_raw and revengers_raw[1] then
@@ -294,7 +294,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       end
     end
   else return end
-  if revengers[1] then
+  if revengers[1] and math.random(1,ch+#revengers) > ch then
     punisher = revengers[math.random(1,#revengers)]
   else
     --game.print("There is no one left nearby to revenge!")
@@ -403,13 +403,13 @@ function creep.landed_strike(effect_id, surface, target_position, target)
         -- hitpoints = hitpoints * (1 + entity.player.force.character_health_bonus)
       end
       if entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
-        hitpoints = hitpoints * 6
+        hitpoints = hitpoints * 7
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
-      if hitpoints > 200 then
-        dmg = dmg * 0.6 + math.ceil( 70 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
-      elseif hitpoints > 100 then
-        dmg = dmg * 0.8 + math.ceil( 30 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+      if hitpoints > 600 then
+        dmg = dmg * 0.6 + math.ceil( 95 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+      elseif hitpoints > 150 then
+        dmg = dmg * 0.7 + math.ceil( 40 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
       end
       dmg = dmg * dmg_coeff
       local recieved_dmg1 = entity.damage(dmg/2, "enemy", "poison")
