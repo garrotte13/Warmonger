@@ -1,20 +1,20 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.18
-Date: 2023-01-?
+Date: 2023-01-28
   Major Features:
-    - New mechanism for corrosion event. Now all player's buildings will corrode in a more realistic manner - individually with flat damage.
-      Less peak game resource consumption in case of many structures corrosion taking place.
-    - New mechanism for creep miners processing, making active ones more responsive, while eliminating CPU time consumption by idling miners.
+    - New mechanism for corrosion event. Now all buildings will corrode in a more realistic manner - individually with flat damage.
+      Less peak game CPU consumption when many structures are corroding in parallel.
+    - New mechanism for creep miners processing making active ones more responsive, while eliminating CPU time consumption by idling miners.
     - Optimization for creep extraction to free up entire buildings first instead of proximity priority, also reduced CPU time for intense cases.
       Priority zones of multiple players are not considered by the miner equally in terms of proximity anymore to reduce CPU time. Zone after zone now.
-      Priority zone contents is processed not by proximity to the miner criterion anymore (Was it important?).
-    - Faster creep deployment.
+      Priority zone contents is processed not by proximity to the miner criterion anymore, but via standard factorio line-by-line.
+    - Faster creep deployment for biters expansions and revenge counter-strikes.
   Balancing:
     - Counter-strikes make smaller, rounded creep thumbprints.
     - Counter-strikes are less often, but can happen for killing worms. Provoking "remote kill" distance is reduced.
-    - Counter-strike chance grows with enemy base size (spawners count).
+    - Counter-strike chance grows with enemy base size (nearby spawners count).
   Info:
-    - Removed redunant utility mod dependency.
+    - Removed redundant utility mod dependency.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.17
 Date: 2023-01-07
