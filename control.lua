@@ -77,7 +77,8 @@ script.on_event(defines.events.on_tick, function(event)
     if corrosion.enabled and act_now.corrosion_affected then -- we do have something to corrode today
       for _, pos in pairs(act_now.corrosion_affected) do
         local entity = corrosion.affected[pos.x .. ":" .. pos.y].e
-        if entity.valid then
+        if entity.valid and ( corrosion.affected[pos.x .. ":" .. pos.y].no_check or corrosionF.is_still_affected(entity) ) then
+          corrosion.affected[pos.x .. ":" .. pos.y].no_check = true
           corrosionF.affect(entity)
           if action_ticks[t+30] then
             if action_ticks[t+30].corrosion_affected then

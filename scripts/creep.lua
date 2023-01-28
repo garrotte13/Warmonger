@@ -129,7 +129,7 @@ function creep.process_creep_queue(t)
           global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
         end
     elseif creep_pack.stage == 3 then
-      if creep_pack.fake and creep_pack.position then
+      if creep_pack.fake and creep_pack.position then -- mine creepers are awoken only by revenge strikes, not by RampantSiegeAI or Creeper2
         for i=1, global.creep_miners_last do
           if global.creep_miners[i] and global.creep_miners[i].stage == 0
            and global.creep_miners[i].entity and global.creep_miners[i].entity.valid and (not global.creep_miners[i].entity.active) then
@@ -141,14 +141,21 @@ function creep.process_creep_queue(t)
             end
           end
         end
---        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
---        for _, entity in pairs(entities) do
---          if entity.valid and entity.destructible and entity.is_entity_with_health then
---            corrosion.engaging_fast(entity)
---         end
---        end
+
       end
-          for _, tile in pairs(creep_pack.creep_tiles) do   -- TO REVISE
+      if creep_pack.position then -- let's quickly engage all player's entities found to be timely checked
+        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
+        --local i = 0
+        for _, entity in pairs(entities) do
+          if entity.valid and entity.destructible and entity.is_entity_with_health then
+            corrosion.engaging_fast(entity, t, false)
+            --i = i + 1
+         end
+        end
+        --if i > 0 then game.print("Strike sends ".. i .. " entities for check.") end
+      elseif creep_pack.fake then -- creeper2 will slow down game as before
+      
+          for _, tile in pairs(creep_pack.creep_tiles) do   -- that is creeper2 check
             local entities = creep_pack.surface.find_entities_filtered{
               area = {
                 left_top = { x = tile.position.x, y = tile.position.y },
@@ -157,11 +164,11 @@ function creep.process_creep_queue(t)
               force = "player"}
             for _, entity in pairs(entities) do
               if entity.valid and entity.destructible and entity.is_entity_with_health then
-                corrosion.engaging_fast(entity, t)
+                corrosion.engaging_fast(entity, t, true)
               end
             end
           end
-      --end
+      end
       global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
       global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
     end
@@ -275,7 +282,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
   if range_ratio < 1.6 then return end
-  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy" }
+  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 11 }
   local punisher
   local revengers = {}
   if revengers_raw and revengers_raw[1] then

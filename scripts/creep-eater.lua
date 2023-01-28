@@ -222,10 +222,12 @@ function creep_eater.process(action_ticks, id, t)
     elseif miner.stage == 10 then -- Priority for corroding free tiles
 
         local d = miner_range * miner_range
+        local k = miner.ready_tiles
         local corroded
         for _, corrodedM in pairs(global.corrosion.affected) do
             corroded = corrodedM.e
-            if corroded.valid and corroded.surface == surface and ( ((corroded.position.x - miner.entity.position.x))^2+((corroded.position.y - miner.entity.position.y))^2 <= (d+0.5)  ) then
+            if corroded.valid and k > 0 and corroded.surface == surface
+             and (corroded.position.x - miner.entity.position.x)^2 + (corroded.position.y - miner.entity.position.y)^2 <= (d+0.5) then
                 local building_area = util.box_ceiling(corroded.selection_box)
                 local building_sec_area = corroded.secondary_selection_box
                 if building_sec_area then
@@ -236,8 +238,10 @@ function creep_eater.process(action_ticks, id, t)
                      and ( util.contains_point(building_area,miner.cr_tiles[i].position, false)
                       or building_sec_area and ( util.contains_point(building_sec_area,miner.cr_tiles[i].position, false) ) ) then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 3000
-                        if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
+                        k = k - 1
+                        --if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
                         miner.corroded_help = true
+                        if k == 0 then break end
                     end
                 end
             end
@@ -249,10 +253,12 @@ function creep_eater.process(action_ticks, id, t)
     elseif miner.stage == 11 then -- Sorting not protected tiles
      if not global.prio_creep_mine then global.prio_creep_mine = {} end
      if not miner.prio_box then miner.prio_box = {} end
-     for _, player in pairs(miner.entity.force.players) do
+     if not miner.corroded_help then
+        local k = miner.ready_tiles
+      for _, player in pairs(miner.entity.force.players) do
 
-      local sel_area = global.prio_creep_mine[player.index]
-      if sel_area then
+       local sel_area = global.prio_creep_mine[player.index]
+       if sel_area and k>0 then
         if not miner.prio_box[player.index] then
             local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
             local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
@@ -273,6 +279,8 @@ function creep_eater.process(action_ticks, id, t)
                     if (not miner.sort_tiles[i].protected) and miner.sort_tiles[i].distance > 1999 then
                         miner.sort_tiles[i].distance = miner.sort_tiles[i].distance - 1000
                         --s = s + 1
+                        k = k - 1
+                        if k == 0 then break end
                     end
                 end
             end
@@ -281,6 +289,7 @@ function creep_eater.process(action_ticks, id, t)
                 miner.prio_box[player.index] = 2
             end
         end
+       end
       end
      end
         table.sort(miner.sort_tiles, function (i1, i2) return i1.distance < i2.distance end )

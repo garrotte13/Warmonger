@@ -61,7 +61,7 @@ function migrations.generic(ChangedModsData)
         for pos_Str, entity in pairs(global.corrosion.affected) do
           local e_area = util.box_ceiling(entity.selection_box)
           my_tick = t + 17 + math.random(1, 15)
-          new_wave[pos_Str] = {e = entity, next_tick = my_tick}
+          new_wave[pos_Str] = {e = entity, next_tick = my_tick, no_check = false} -- will re-check every corrosion affected building
           if global.dissention[my_tick] then
             if global.dissention[my_tick].corrosion_affected then
               table.insert(global.dissention[my_tick].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
