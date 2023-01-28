@@ -144,7 +144,7 @@ function creep.process_creep_queue(t)
 
       end
       if creep_pack.position then -- let's quickly engage all player's entities found to be timely checked
-        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius+0.97,  force = "player" }
+        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius+1.5,  force = "player" }
         --local i = 0
         for _, entity in pairs(entities) do
           if entity.valid and entity.destructible and entity.is_entity_with_health then
@@ -390,8 +390,9 @@ function creep.landed_strike(effect_id, surface, target_position, target)
   local someone
   surface.play_sound{path = "creep-counter-attack-explosion", volume_modifier = 0.7, position = attack_pos}
   for i = 1, attack_incomers do
-    somewhere = surface.find_non_colliding_position("small-biter", attack_pos, attack_area_radius+2, 0.05, false )
-    if somewhere then someone = surface.create_entity{name = "small-biter", position = somewhere, force = "enemy"} end
+    somewhere = surface.find_non_colliding_position("small-biter", attack_pos, attack_area_radius+3, 0.05, false )
+    if not somewhere then somewhere = attack_pos end
+    someone = surface.create_entity{name = "small-biter", position = somewhere, force = "enemy", move_stuck_players = true}
   end
   local entities = surface.find_entities_filtered{ position = attack_pos, radius = attack_area_radius + 0.4,  force = "player" }
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
@@ -407,7 +408,7 @@ function creep.landed_strike(effect_id, surface, target_position, target)
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
       if hitpoints > 600 then
-        dmg = dmg * 0.6 + math.ceil( 95 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+        dmg = dmg * 0.7 + math.ceil( 95 * ( 1 + 1.3 * game.forces.enemy.evolution_factor ) )
       elseif hitpoints > 150 then
         dmg = dmg * 0.7 + math.ceil( 40 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
       end

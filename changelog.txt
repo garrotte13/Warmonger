@@ -10,8 +10,9 @@ Date: 2023-01-?
       Priority zone contents is processed not by proximity to the miner criterion anymore (Was it important?).
     - Faster creep deployment.
   Balancing:
-    - Counter-strikes make smaller creep areas.
+    - Counter-strikes make smaller, rounded creep thumbprints.
     - Counter-strikes are less often, but can happen for killing worms. Provoking "remote kill" distance is reduced.
+    - Counter-strike chance grows with enemy base size (spawners count).
   Info:
     - Removed redunant utility mod dependency.
 ---------------------------------------------------------------------------------------------------
