@@ -144,12 +144,12 @@ function creep.process_creep_queue(t)
 
       end
       if creep_pack.position then -- let's quickly engage all player's entities found to be timely checked
-        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius,  force = "player" }
+        local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius+0.97,  force = "player" }
         --local i = 0
         for _, entity in pairs(entities) do
           if entity.valid and entity.destructible and entity.is_entity_with_health then
             corrosion.engaging_fast(entity, t, false)
-            --i = i + 1
+           -- i = i + 1
          end
         end
         --if i > 0 then game.print("Strike sends ".. i .. " entities for check.") end
