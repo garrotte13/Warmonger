@@ -279,9 +279,9 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*28)+constants.creep_max_range-1)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
-  if range_ratio < 1.6 then return end
+  if range_ratio < 1.84 then return end
   local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 15 }
   local punisher
   local revengers = {}
