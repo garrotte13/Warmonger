@@ -139,6 +139,9 @@ function creep_eater.process(action_ticks, id, t)
         else
             --game.print("Creep miner with Id: " .. id .. " has no creep in radius. Turning off...")
             miner.entity.active = false
+            if global.corrosion.creepminer_hints then
+                surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "No creep in range.", time_to_live = 200}
+            end
             --miner.deactivation_tick = game.ticks_played
             --miner.stage = 50
             miner.stage = 0
@@ -394,6 +397,9 @@ function creep_eater.process(action_ticks, id, t)
         else
             if #tiles == i then -- time to go into stage 50, because we gathered all creep available
                 miner.entity.active = false
+                if global.corrosion.creepminer_hints then
+                    surface.create_entity{name = "true_creep_protected", position = miner.entity.position, text = "All creep in range has been collected.", time_to_live = 250}
+                end
                 --miner.deactivation_tick = game.ticks_played
             end
             if miner.corroded_help then
