@@ -22,7 +22,7 @@ data:extend(
 				recipe = "wm-residue-sulphuric-acid"
 			}
 		},
-		prerequisites = { "kovarex-enrichment-process", "power-armor-mk2"},
+		prerequisites = { "rocket-silo", "power-armor-mk2"},
 		unit =
 		{
 			count = 3000,
