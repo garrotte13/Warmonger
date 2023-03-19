@@ -25,6 +25,63 @@ local function generate_creep(entities)
   end
 end
 
+function creep.creepify()
+  local surface = game.get_surface("nauvis")
+  local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, force = "enemy" })
+
+  if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+    for _, entity in pairs(entities) do
+      if entity.valid then generate_creep({ entity }) end
+    end
+  else
+    for _, entity in pairs(entities) do
+      local building_name = entity.name
+      local rad
+      local type_name
+      local building_type
+      local building_tier
+
+      type_name, building_tier = string.match(building_name, ".+%-(.+)%-v%d+%-t(%d+)%-rampant")
+      if entity.valid and type_name and building_tier then
+
+          local buildings_tbl = {
+            ["hive"] = 3,
+            ["spitter-spawner"] = 2,
+            ["biter-spawner"] = 2,
+            ["spawner"] = 2,
+            ["worm"] = 1
+          }
+          building_type = buildings_tbl[type_name]
+          rad = math.random(3, (constants.creep_max_range + building_type)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+
+        global.creep.creep_queue[global.creep.creep_id_counter] = {
+            radius = rad,
+            position = entity.position,
+            stage = 0,
+            surface = surface,
+            fake = false,
+            type = building_type,
+            tier = building_tier
+        }
+        global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+      end
+    end
+  end
+
+  local t = game.tick
+  while global.creep.creep_id_counter > (global.creep.last_creep_id_counter+20) do
+    creep.process_creep_queue(t)
+  end
+
+  if game.forces["player"].technologies["advanced-material-processing"].researched then
+    game.forces["player"].recipes["creep-miner0-radar"].enabled = true
+  end
+  if game.forces["player"].technologies["electric-energy-distribution-2"].researched then
+    game.forces["player"].recipes["creep-miner1-radar"].enabled = true
+  end
+
+end
+
 function creep.init()
   global.creep = {
     on_biter_base_built = true,

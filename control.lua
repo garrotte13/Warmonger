@@ -40,6 +40,7 @@ script.on_init(function()
   action_ticks = global.dissention
   miner_queue = global.creep_miners_queue
   add_hooks()
+  creep.creepify()
 end)
 
 script.on_load(function(e)
