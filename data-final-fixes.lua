@@ -1,3 +1,5 @@
+if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
+
 local militaryrecipe = data.raw.recipe["military-science-pack"]
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})
@@ -14,6 +16,8 @@ table.insert(pcapsule.ingredients, {type="item", name="wm-bio-remains", amount=3
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
+  data.raw.car["nuclear-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
+  data.raw.car["advanced-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
   pcapsule = data.raw.recipe["repair-capsule-rampant-arsenal"]
 --[[  pcapsule.normal.result_count = 2
   pcapsule.normal.energy_required = pcapsule.normal.energy_required * 2
