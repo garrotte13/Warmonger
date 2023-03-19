@@ -9,6 +9,8 @@ Date: 2023-03-19
       the game stage when pure creep mining can't give enough biomass).
     - Tanks terrain-related speed slow down is halved to make it a preferred transport when crossing creep areas. Done for vanilla and RampantArsenal tanks.
     - Flying text hints added for creep miners finishing collecting creep.
+  Bugfixes:
+    - Creepminer sometimes ignored a new prioritized area selection.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.18
 Date: 2023-01-28
