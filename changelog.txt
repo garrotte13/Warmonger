@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.20
+Date: 2023-04-?
+  Minor Features:
+    - Support for "Restrictions on Artificial Tiles" mod.
+  Info:
+    - Rampant 3.2.0+ is recommended as it was finally released with support for Warmonger1.3.17 creep deployment logics. If you need to correct existing game: collect
+      all free creep areas, process all biomass and bioresidue into military packs and poison capsules (or into other items), then make a gamesave, turn off Warmonger,
+      load and make a newer save, turn on Warmonger and load save. Should work, but creepminers will be lost (if not uninstalled and reversed into ingredients).
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.19
 Date: 2023-03-19
   Major Features:
