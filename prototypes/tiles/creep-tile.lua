@@ -259,9 +259,10 @@ data:extend(
 		
 		mined_sound = collect_creep_sound,
 		walking_sound = creep_walking_sound,
+    RestrictionsOnArtificialTiles_DoNotRegister = true,
 		
 		transitions = creep_transitions,
-		transitions_between_transitions = creep_transitions_between_transitions		
+		transitions_between_transitions = creep_transitions_between_transitions
 	},
 
 	{
@@ -295,6 +296,7 @@ data:extend(
 		
 		mined_sound = collect_creep_sound,
 		walking_sound = creep_walking_sound,
+    RestrictionsOnArtificialTiles_DoNotRegister = true,
 		
 		transitions = creep_transitions,
 		transitions_between_transitions = creep_transitions_between_transitions
