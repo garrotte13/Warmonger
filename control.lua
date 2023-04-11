@@ -203,7 +203,7 @@ script.on_event(defines.events.on_entity_died, function(e)
       direction = e.entity.direction
 
     }
-    local next_tick = e.tick + 60000 + math.random(1, 920)
+    local next_tick = e.tick + 55000 + math.random(1, 1200)
     while action_ticks[next_tick] and action_ticks[next_tick].tree do
       next_tick = next_tick + 1
     end
