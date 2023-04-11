@@ -5,6 +5,14 @@ local util = require("scripts.util")
 
 local migrations = {}
 
+local function dissentionFix()
+  local a_ticks = global.dissention
+  local maxT = game.tick - 1
+  for i=1,maxT do
+    if a_ticks[i] then a_ticks[i] = nil end
+  end
+end
+
 function migrations.generic(ChangedModsData)
 
   creep.update()
@@ -120,6 +128,9 @@ function migrations.generic(ChangedModsData)
         end
       end
 
+    end
+    if minor == 3 and (build_ver > 17 and build_ver < 20) then
+      dissentionFix()
     end
   end
 end
