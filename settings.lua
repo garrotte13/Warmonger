@@ -24,6 +24,16 @@ data:extend({
     },
 
     {
+        type = "bool-setting",
+        name = "wm-ecoFriendlyBiters",
+        description = "wm-ecoFriendlyBiters",
+        setting_type = "runtime-global",
+        default_value = true,
+        order = "m[total]-g[ai]",
+
+    },
+
+    {
         type = "double-setting",
         name = "wm-CreepMiningPollution",
         description = "wm-CreepMiningPollution",

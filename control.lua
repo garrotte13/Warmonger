@@ -9,6 +9,7 @@ local migrations = require("scripts.migrations")
 local action_ticks
 local corrosion
 local miner_queue
+local biters_eco
 
 --local util = require("scripts.util")
 --util.add_commands(corrosion.commands)
@@ -41,12 +42,14 @@ script.on_init(function()
   miner_queue = global.creep_miners_queue
   add_hooks()
   creep.creepify()
+  biters_eco = settings.global["wm-ecoFriendlyBiters"].value
 end)
 
 script.on_load(function(e)
   action_ticks = global.dissention
   corrosion = global.corrosion
   miner_queue = global.creep_miners_queue
+  biters_eco = settings.global["wm-ecoFriendlyBiters"].value
   add_hooks()
 end)
 
@@ -98,7 +101,25 @@ script.on_event(defines.events.on_tick, function(event)
         end
       end
     end
-    act_now[t] = nil
+    if biters_eco and act_now.tree then
+      local foundPosition
+      local n_tree
+      foundPosition = act_now.tree.surface.find_non_colliding_position(act_now.tree.name, act_now.tree.position, 5, 0.5)
+      if foundPosition then
+        n_tree = act_now.tree.surface.create_entity({
+          name = act_now.tree.name,
+          position = foundPosition,
+          force = act_now.tree.force,
+          direction = act_now.tree.direction,
+          raise_built = true,
+        })
+
+      end
+    --[[if n_tree then game.print("A tree is re-built at [gps=".. foundPosition.x ..",".. foundPosition.y .."]") else
+      game.print("Tree rebuilding failed at [gps=".. act_now.tree.position.x ..",".. act_now.tree.position.y .."]")
+    end--]]
+    end
+    action_ticks[t] = nil
   end
   if global.creep_miners_queue[1] and creep_eater.process(action_ticks, global.creep_miners_queue[global.creep_miners_id], t) then
     global.creep_miners_id = global.creep_miners_id + 1
@@ -117,6 +138,7 @@ script.on_configuration_changed(function(ChangedModData)
     action_ticks = global.dissention
     corrosion = global.corrosion
     miner_queue = global.creep_miners_queue
+    biters_eco = settings.global["wm-ecoFriendlyBiters"].value
 end)
 
 --[[
@@ -148,6 +170,7 @@ script.on_event(defines.events.on_runtime_mod_setting_changed, function(e)
   if e.setting == "wm-CreepCorrosion" then corrosion.enabled = settings.global["wm-CreepCorrosion"].value
   elseif e.setting == "wm-CounterStrike" then corrosion.strike_back = settings.global["wm-CounterStrike"].value
   elseif e.setting == "wm-CreepMinerHints" then corrosion.creepminer_hints = settings.global["wm-CreepMinerHints"].value
+  elseif e.setting == "wm-ecoFriendlyBiters" then biters_eco = settings.global["wm-ecoFriendlyBiters"].value
   elseif e.setting == "wm-CreepMinerFueling" then global.creep_miner_refuel = settings.global["wm-CreepMinerFueling"].value end
 end)
 
@@ -171,6 +194,24 @@ script.on_event(defines.events.on_entity_died, function(e)
   corrosionF.disengaging(e.entity)
   if e.entity.valid and (e.entity.name == "creep-miner1-radar" or e.entity.name == "creep-miner0-radar") then
     creep_eater.remove (e.entity, true)
+  elseif biters_eco and e.entity.type == "tree" and e.force.name == "enemy" then
+    local new_tree = {
+      name = e.entity.name,
+      position = e.entity.position,
+      force = e.entity.force,
+      surface = e.entity.surface,
+      direction = e.entity.direction
+
+    }
+    local next_tick = e.tick + 60000 + math.random(1, 920)
+    while action_ticks[next_tick] and action_ticks[next_tick].tree do
+      next_tick = next_tick + 1
+    end
+    if action_ticks[next_tick] then action_ticks[next_tick].tree = new_tree
+    else
+        action_ticks[next_tick] = { tree = new_tree }
+    end
+    --game.print("A tree was destroyed by biters")
   elseif corrosion.enabled and corrosion.strike_back
    and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
     and game.forces.enemy.evolution_factor > 0.38 then
