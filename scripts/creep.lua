@@ -13,7 +13,7 @@ local function generate_creep(entities)
   for _, entity in pairs(entities) do
     if entity.type == "unit-spawner" then min_r = 1 else min_r = 0 end
     global.creep.creep_queue[global.creep.creep_id_counter] = {
-      radius = math.random(2, (constants.creep_max_range + min_r - 1)) + min_r + math.floor(game.forces.enemy.evolution_factor*4.5*(min_r+1)),
+      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.evolution_factor*4.5*(min_r+1)),
       position = entity.position,
       stage = 0,
       surface = surface,
@@ -52,7 +52,7 @@ function creep.creepify()
             ["worm"] = 1
           }
           building_type = buildings_tbl[type_name]
-          rad = math.random(3, (constants.creep_max_range + building_type)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+          rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
 
         global.creep.creep_queue[global.creep.creep_id_counter] = {
             radius = rad,
@@ -285,9 +285,9 @@ creep.remote_interface = {
       --local nname = type_name or "FUCKED"
       --local btype = building_type or 0
       --game.print("Creep for: ".. building_name .. " And name of type is: " .. nname .. " Tier is: " .. gg .. " Type #".. btype)
-      rad = math.random(3, (constants.creep_max_range + building_type)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+      rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
     else
-      rad = math.random(3, constants.creep_max_range) + math.ceil(game.forces.enemy.evolution_factor*9)
+      rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.evolution_factor*9)
     end
 
     global.creep.creep_queue[global.creep.creep_id_counter] = {
@@ -336,9 +336,9 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*28)+constants.creep_max_range-1)
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range-1)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
-  if range_ratio < 1.84 then return end
+  if range_ratio < 2.05 then return end
   local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 15 }
   local punisher
   local revengers = {}
@@ -358,7 +358,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
     return
   end
     local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
-    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*20)+constants.creep_max_range)
+    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*15)+constants.creep_max_range)
 
   local attack_area_radius = 2
   local attack_inaccuracy = 2

@@ -170,7 +170,7 @@ function creep_eater.process(action_ticks, id, t)
 
         miner.enemies = surface.find_entities_filtered{
          position = miner.entity.position,
-         radius = miner_range + 3 + constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*30),
+         radius = miner_range + 1.5 + constants.creep_max_range + game.forces.enemy.evolution_factor*20,
          type = {"unit-spawner", "turret"},
          force = "enemy"
         }
@@ -181,16 +181,21 @@ function creep_eater.process(action_ticks, id, t)
     elseif miner.stage == 5 then -- Filtering out protected tiles
 
         local tiles_free = #miner.cr_tiles
-        local distance_protect = constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*20)
-        distance_protect = distance_protect ^ 2
+        local distance_protect = ( constants.creep_max_range + math.ceil(game.forces.enemy.evolution_factor*10) ) ^ 2
+        local distance
         for k=1,#miner.enemies do
             if miner.enemies[k] and miner.enemies[k].valid then
                 for i=1,#miner.cr_tiles do
                     if (not miner.sort_tiles[i].protected) then
-                        if (((miner.enemies[k].position.x - miner.cr_tiles[i].position.x)^2) + ((miner.enemies[k].position.y - miner.cr_tiles[i].position.y)^2)) <= distance_protect then
+                        distance = (miner.enemies[k].position.x - miner.cr_tiles[i].position.x)^2 + (miner.enemies[k].position.y - miner.cr_tiles[i].position.y)^2
+                        if distance <= distance_protect then
                             miner.sort_tiles[i].protected = true
                             if miner.sort_tiles[i].oid ~= i then game.print("Oops !!") end
                             tiles_free = tiles_free - 1
+                        else
+                            if (not miner.sort_tiles[i].nearest_enemy) or (distance < miner.sort_tiles[i].nearest_enemy) then
+                                miner.sort_tiles[i].nearest_enemy = distance
+                            end
                         end
                     end
                 end
@@ -338,6 +343,7 @@ function creep_eater.process(action_ticks, id, t)
         local k = 0
         local bio = 0
         local bio2 = 0
+        local fire_distance = ( constants.creep_max_range + 1 + math.ceil(game.forces.enemy.evolution_factor*15) ) ^ 2
         while i<=#miner.cr_tiles and miner.ready_tiles>#tiles do
             if (not miner.sort_tiles[i].protected) then
                 k = miner.sort_tiles[i].oid
@@ -345,7 +351,8 @@ function creep_eater.process(action_ticks, id, t)
                     bio = bio + 1
                     creep1_cap = creep1_cap - 1
                     table.insert(tiles, {name = miner.cr_tiles[k].hidden_tile or "landfill", position = miner.cr_tiles[k].position})
-                    if #miner.enemies > 0 and math.random(1,5) > 1 then -- creep excavation touches enemy building
+                    if #miner.enemies > 0 and miner.sort_tiles[i].nearest_enemy
+                     and miner.sort_tiles[i].nearest_enemy < fire_distance and math.random(1,5) > 1 then -- creep excavation touches enemy building
                         k = math.random(1, #miner.enemies)
                         if miner.enemies[k] and miner.enemies[k].valid then
                             local applied_test_dmg = miner.enemies[k].damage(0.5, "player", "fire", miner.entity) -- teasing enemies
