@@ -14,7 +14,7 @@ data:extend(
 			{"steel-plate", 5},
 			{"iron-gear-wheel", 5},
 			{"pipe", 5},
-			{"electronic-circuit", 5}
+			{"advanced-circuit", 5}
 		},
 		result = "kr-bio-lab"
     },
@@ -40,7 +40,7 @@ data:extend(
 		name = "kr-biomass-growing",
 		category = "bioprocessing",
 		energy_required = 60,
-		-- emissions_multiplier = 2.5,
+		emissions_multiplier = 2,
 		enabled = false,
 		ingredients =
 		{
