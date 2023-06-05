@@ -78,6 +78,7 @@ function creep_eater.refuel(entity, chest_given)
            end
        end
    end
+   -- no fuel in chest. Ok then let's try to take fuel from last player accessed this miner if that player is nearby
        local last_user = entity.last_user
        if last_user and last_user.character then
            local character = last_user.character
@@ -170,7 +171,7 @@ function creep_eater.process(action_ticks, id, t)
 
         miner.enemies = surface.find_entities_filtered{
          position = miner.entity.position,
-         radius = miner_range + 1.5 + constants.creep_max_range + game.forces.enemy.evolution_factor*20,
+         radius = miner_range + 2 + constants.creep_max_range + game.forces.enemy.evolution_factor*15,
          type = {"unit-spawner", "turret"},
          force = "enemy"
         }
@@ -554,12 +555,13 @@ function creep_eater.scanned (radar, t)
     if r_tiles < 40 then
         global.creep_miners[id].ready_tiles = r_tiles + 7
     end
+    local nex_t = global.creep_miners[id].next_tick
     if global.creep_miners[id].stage == 60 then -- I stop waiting for fuel and go to work, freeing next refuel tick
-        global.dissention[global.creep_miners[id].next_tick].active_miner = nil
+        if nex_t and nex_t > 0 then global.dissention[nex_t].active_miner = nil end
         creep_eater.add_action_tick(global.dissention, id, t + 1)
         global.creep_miners[id].stage = 0
-    elseif global.creep_miners[id].stage == 0 then
-        global.dissention[global.creep_miners[id].next_tick].active_miner = nil
+    elseif global.creep_miners[id].stage == 0 then -- wake up and go to work now
+        if nex_t and nex_t > 0 then global.dissention[nex_t].active_miner = nil end
         creep_eater.add_action_tick(global.dissention, id, t + 1)
     end
     --game.print("Creep miner with Id: " .. id .. "got ready tiles: " .. global.creep_miners[id].ready_tiles)
