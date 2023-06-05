@@ -42,14 +42,21 @@ data:extend(
 		energy_required = 60,
 		emissions_multiplier = 2,
 		enabled = false,
+		icon =  "__Warmonger__/graphics/icons/cards/biters-research-data.png",
+		icon_size = 64,
+		icon_mipmaps = 4,
+		subgroup = "science-pack",
 		ingredients =
 		{
 			{type = "item", name = "stone-wall", amount = 20},
 			{type = "item", name = "biomass", amount = brd_cost + 1},
 			{type = "fluid", name = "sulfuric-acid", amount = 35 }
 		},
-		result = "biters-research-data",
-		result_count = 10
+		results=
+    	{
+			{name="wm-bio-remains", amount_min = math.ceil(brd_cost/3), amount_max = brd_cost+1, probability=.30},
+			{name="biters-research-data", amount = 10}
+		},
 	},
 
 	{

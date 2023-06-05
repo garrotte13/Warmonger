@@ -42,20 +42,20 @@ data:extend(
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
-				base_area = 10,
-				height = 2,
+				base_area = 2,
+				height = 1,
 				base_level = -1,
 				pipe_connections =
 				{
-					{ type="input-output", position = {0, -4} },
+					{ type="input", position = {0, -4} },
 				}
 			},
 			{
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
-				base_area = 10,
-				height = 2,
+				base_area = 2,
+				height = 1,
 				base_level = -1,
 				pipe_connections =
 				{
@@ -66,24 +66,24 @@ data:extend(
 				production_type = "output",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
-				base_area = 10,
-				height = 2,
-				base_level = -1,
+				base_area = 2,
+				height = 1,
+				base_level = 1,
 				pipe_connections =
 				{
-					{ type="input-output", position = {4, 0} }
+					{ type="output", position = {4, 0} }
 				}
 			},
 			{
 				production_type = "output",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
-				base_area = 10,
-				height = 2,
-				base_level = -1,
+				base_area = 2,
+				height = 1,
+				base_level = 1,
 				pipe_connections =
 				{
-					{ type="input-output", position = {-4, 0} }
+					{ type="output", position = {-4, 0} }
 				}
 			},
 			off_when_no_fluid_recipe = true
@@ -160,7 +160,7 @@ data:extend(
 			}
 		},
 		crafting_categories = {"bioprocessing"},
-		scale_entity_info_icon = true,
+		scale_entity_info_icon = false,
 		vehicle_impact_sound = sounds.generic_impact,
         working_sound = bio_lab_working_sound,
 		crafting_speed = 1,
