@@ -1,11 +1,12 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.21
-Date: 2023-06-11
+Date: 2023-06-05
   Bugfixes:
     - Critical error for newly installed mine creepers.
     - Biolab had improper modules support and incorrect pipes&fluids storage scheme.
   Balancing:
     - Biolab recipes are slightly tuned.
+    - Gathering biomass creep near enemy bases: provocation range is calculated now from excavated creep, not from creepminer position.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.20
 Date: 2023-04-11
