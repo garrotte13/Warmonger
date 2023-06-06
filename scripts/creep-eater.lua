@@ -272,8 +272,8 @@ function creep_eater.process(action_ticks, id, t)
             local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
             local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
             local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}
-            local add_to_rad = ( h_height * h_height ) + ( h_width * h_width )
-            if ((miner.x - area_centre.x)^2 + (miner.y - area_centre.y)^2) <= ( (miner_range)^2 + add_to_rad ) then
+            local add_to_rad = math.sqrt( h_height^2 + h_width^2 ) + 1
+            if math.sqrt((miner.x - area_centre.x)^2 + (miner.y - area_centre.y)^2) <= ( miner_range + add_to_rad ) then
                 miner.prio_box[player.index] = 1
             else
                 miner.prio_box[player.index] = 2

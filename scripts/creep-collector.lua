@@ -126,22 +126,10 @@ function creep_collector.priority_box(player, surface, tiles, sel_area)
   if global.prio_creep_mine[player.index] then circle_rendering.del_prio_rect(global.prio_creep_mine[player.index], player) end
   if tiles and tiles[1] then
     sel_area = util.box_ceiling(sel_area)
-    local h_height = math.abs(sel_area.right_bottom.y - sel_area.left_top.y) / 2
-    local h_width = math.abs(sel_area.right_bottom.x - sel_area.left_top.x) / 2
-    local area_centre = {x = sel_area.left_top.x + h_width, y = sel_area.left_top.y + h_height}
-    local add_to_rad = ( h_height * h_height ) + ( h_width * h_width )
     for i=1, global.creep_miners_last do
       if global.creep_miners[i] and global.creep_miners[i].entity and global.creep_miners[i].entity.valid then
         if not global.creep_miners[i].prio_box then global.creep_miners[i].prio_box = {} end
---[[
-        if ((global.creep_miners[i].x - area_centre.x)^2 + (global.creep_miners[i].y - area_centre.y)^2) <= ( (constants.miner_range(global.creep_miners[i].entity.name) + 1)^2 + add_to_rad ) then
-          global.creep_miners[i].prio_box[player.index] = 1
-        else
-          global.creep_miners[i].prio_box[player.index] = 2
-        end
-]]
         global.creep_miners[i].prio_box[player.index] = nil
-
       end
     end
     global.prio_creep_mine[player.index] = sel_area
