@@ -1,5 +1,8 @@
 if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
 
+data.raw.tile["kr-creep"].pollution_absorption_per_second = 0.0002
+data.raw.tile["fk-creep"].pollution_absorption_per_second = 0.0001
+
 local militaryrecipe = data.raw.recipe["military-science-pack"]
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})

@@ -15,6 +15,7 @@
 		"? IndustrialRevolution >= 2.3.0",
 		"? pycoalprocessing >= 1.8.8",
 		"! Krastorio2 >= 0.0.1",
-		"! Krastorio2Assets >= 1.0.0"
+		"! Krastorio2Assets >= 1.0.0",
+		"(?) alien-biomes" 
 	]
 }
