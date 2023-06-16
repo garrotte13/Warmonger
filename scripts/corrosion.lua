@@ -80,7 +80,7 @@ local function disengage_it (posX, posY)
     local t = global.corrosion.affected[posX .. ":" .. posY].next_tick
     local to_keep = {}
     local i = 0
-    if t and global.dissention[t] then
+    if t and t > 0 and global.dissention[t] then
       for _, pos in pairs(global.dissention[t].corrosion_affected) do
         if pos.x ~= posX or posY ~= pos.y then
           table.insert(to_keep, pos)
