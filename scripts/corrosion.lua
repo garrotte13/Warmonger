@@ -35,7 +35,7 @@ function corrosion.engaging (entity, t)
     }
  end
  if creep_amount > 0 then
-  t = t + 22 + math.random(1,12)
+  t = t + 12 + math.random(1,15)
   global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = true}
   global.corrosion.affected_num = global.corrosion.affected_num + 1
   if global.dissention[t] then
@@ -51,11 +51,13 @@ function corrosion.engaging (entity, t)
 
 end
 
+-- no_check = false MEANS that building must be checked for tile collision at next corruption event !!
+
 function corrosion.engaging_fast (entity, t, please_no_check)
   if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot"
    or entity.prototype.type == "character" then return end
   local e_area = util.box_ceiling(entity.selection_box)
-  t = t + 24 + math.random(1,10)
+  t = t + 14 + math.random(1,20)
   if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
     global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = please_no_check}
     global.corrosion.affected_num = global.corrosion.affected_num + 1

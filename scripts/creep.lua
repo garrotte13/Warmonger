@@ -158,7 +158,7 @@ function creep.process_creep_queue(t)
           if actual_name == "kr-creep" then -- we mustn't change fate
             r = 4
           elseif creep_pack.fake then
-            r = 3
+            if math.random(1,10) > 7 then r = 4 else r = 3 end -- 30% nothing for creep revenge strikes
           else
             -- local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- old flib tiles-wrong calculation again
             local d = math.sqrt(((creep_pack.tiles[i].position.x + 0.5) - creep_pack.position.x) ^ 2 + ((creep_pack.tiles[i].position.y + 0.5) - creep_pack.position.y) ^ 2)
@@ -205,7 +205,7 @@ function creep.process_creep_queue(t)
         --local i = 0
         for _, entity in pairs(entities) do
           if entity.valid and entity.destructible and entity.is_entity_with_health then
-            corrosion.engaging_fast(entity, t, false)
+            corrosion.engaging_fast(entity, t, false) -- check building for collision before corruption dmg application
            -- i = i + 1
          end
         end
@@ -221,7 +221,7 @@ function creep.process_creep_queue(t)
               force = "player"}
             for _, entity in pairs(entities) do
               if entity.valid and entity.destructible and entity.is_entity_with_health then
-                corrosion.engaging_fast(entity, t, true)
+                corrosion.engaging_fast(entity, t, true) -- apply corruption without check
               end
             end
           end
