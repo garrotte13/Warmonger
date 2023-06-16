@@ -129,23 +129,6 @@ corrosion.commands = {
 }
 
 
-function corrosion.affecting()  -- legacy
- if not global.corrosion.enabled then return end
- for _, entity in pairs(global.corrosion.affected) do
-  if entity.valid then
-    local surface = entity.surface
-    local h_ratio = entity.get_health_ratio() / 2
-    local rnd_coeff = (math.random() / 2) + 0.5
-    local dmg = math.floor( rnd_coeff * entity.health * ( 0.05 + game.forces.enemy.evolution_factor/12 ) * ( 1 - h_ratio ) )
-    -- at least 5 health will be left for biters/worms to finish
-    local recieved_dmg = entity.damage(dmg, "enemy", "acid")
-    if recieved_dmg > 0 then
-      surface.play_sound{path = "acid_burns", position = entity.position}
-    end
-  end
- end
-end
-
 function corrosion.affect(entity)
      local surface = entity.surface
      local h_ratio = entity.get_health_ratio() / 2
@@ -206,29 +189,6 @@ function corrosion.update_tiles(surface, tiles)
     end
  end
  --if j > 0 then game.print("Miner sends ".. j .. "/" .. i .. " entities for check.") end
- -- game.print("Objects tortured left:" .. global.corrosion.affected_num)
- -- game.print("Objects tortured processed:" .. i)
-end
-
-function corrosion.update_surface(surface) -- OBSOLETE for obsolete creep_collector tool
-  if not global.corrosion.enabled then return end
-  local i = 0
-  for _, entity in pairs(global.corrosion.affected) do
-    i = i + 1
-    if entity.valid and entity.surface == surface then
-      local obj_area = util.box_ceiling(entity.selection_box)
-      local creep_amount = 0
-      creep_amount = surface.count_tiles_filtered{
-        area = obj_area,
-        name = {"kr-creep", "fk-creep"}
-      }
-      if creep_amount == 0 then
-        global.corrosion.affected[obj_area.left_top.x .. ":" .. obj_area.left_top.y] = nil
-        global.corrosion.affected_num = global.corrosion.affected_num - 1
-        -- game.print("Freed of creep object with name: " .. entity.name .. " located at top left x:" .. obj_area.left_top.x .. " y:" .. obj_area.left_top.y .. ", bottom right x:" .. obj_area.right_bottom.x .. " y:" .. obj_area.right_bottom.y)        
-      end
-    end
- end
  -- game.print("Objects tortured left:" .. global.corrosion.affected_num)
  -- game.print("Objects tortured processed:" .. i)
 end

@@ -53,15 +53,6 @@ script.on_load(function(e)
   add_hooks()
 end)
 
---[[script.on_nth_tick(60, function(e)
- corrosion.affecting()
-end) 
-
-script.on_nth_tick(3, function(e)
-  creep_eater.process()
-end)
---]]
-
 script.on_event(defines.events.on_tick, function(event)
   local t = event.tick
   creep.process_creep_queue(t)
