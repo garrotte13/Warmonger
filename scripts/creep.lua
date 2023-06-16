@@ -332,7 +332,7 @@ creep.remote_interface = {
 }
 
 function creep.check_strike (killed_e, killer_e, killer_force)
-  if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) then return end
+  if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) or (killed_e.surface ~= killer_e.surface) then return end
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
@@ -480,7 +480,17 @@ function creep.landed_strike(effect_id, surface, target_position, target)
     end
   end
 
-  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
+--  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
+  if global.creep.surfaces[surface.index] then
+    global.creep.creep_queue[global.creep.creep_id_counter] = {
+      radius = attack_area_radius-0.6,
+      position = attack_pos,
+      stage = 0,
+      surface = surface,
+      fake = true
+    }
+    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+  end
 end
 
 return creep
