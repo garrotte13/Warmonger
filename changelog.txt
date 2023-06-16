@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.22
+Date: 2023-06-16
+  Bugfixes:
+    - Finally fixed creepminer sometimes ignored prioritized area selection.
+    - Fixing a breakage of creep tiles being done by one popular mod.
+    - Another 'nil' error for creep miners - when waking up not sleeping.
+  Balancing:
+    - Counter-strikes trigger on bigger radius to guarantee safe wall defense by rocket/capsule launchers after evolution exceeds 70%.
+  Minor Features:
+    - Fully randomized counter-strike creep thumbprint. But still rounded and of range-dependent size.
+    - One more effect for revenge strike
+---------------------------------------------------------------------------------------------------
 Version: 1.3.21
 Date: 2023-06-05
   Bugfixes:
