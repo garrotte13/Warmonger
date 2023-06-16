@@ -337,10 +337,10 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / (math.ceil(game.forces.enemy.evolution_factor*27)+constants.creep_max_range)
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / ( (game.forces.enemy.evolution_factor*32) + constants.creep_max_range - 4)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
   if range_ratio < 2.05 then return end
-  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 65, type = "unit-spawner", force = "enemy", limit = 15 }
+  local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 70, type = "unit-spawner", force = "enemy", limit = 10 }
   local punisher
   local revengers = {}
   if revengers_raw and revengers_raw[1] then
@@ -351,22 +351,22 @@ function creep.check_strike (killed_e, killer_e, killer_force)
         k = k + 1
       end
     end
-  else return end
+  else return end -- no one left to revenge
   if revengers[1] and math.random(1,ch+#revengers) > ch then
     punisher = revengers[math.random(1,#revengers)]
   else
-    --game.print("There is no one left nearby to revenge!")
+    --game.print("There is no one healthy left nearby to revenge!")
     return
   end
     local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
-    range_ratio = range / (math.ceil(game.forces.enemy.evolution_factor*27)+constants.creep_max_range+1)
+    range_ratio = range / ( (game.forces.enemy.evolution_factor*32) + constants.creep_max_range + 1)
 
   local attack_area_radius = 2
   local attack_inaccuracy = 2
-  if range_ratio > 10 then
+  if range_ratio > 8 then
     attack_area_radius = 5
     attack_inaccuracy = 7
-  elseif range_ratio > 4 then
+  elseif range_ratio > 3 then
     attack_area_radius = 3
     attack_inaccuracy = 4
   end
@@ -389,7 +389,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 1,
       max_range = 5 + range
     }
-    --game.print("sending big one..")
+    game.print("sending big one..")
   elseif attack_area_radius == 3 then
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile2",
@@ -400,7 +400,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 2,
       max_range = 4 + range
     }
-    --game.print("sending middle one..")
+    game.print("sending middle one..")
   else
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile1",
@@ -411,7 +411,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 2.5,
       max_range = 2 + range
     }
-    --game.print("sending small one..")
+    game.print("sending small one..")
   end
   if not proj then
     game.print("We failed to launch revenge strike shell!")
