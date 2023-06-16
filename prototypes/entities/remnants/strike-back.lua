@@ -92,6 +92,10 @@ data:extend({
           }
 --]]
 
+{
+  type = "create-entity",
+  entity_name = "acid-splash-fire-worm-behemoth"
+},
         }
       }
     },
@@ -191,7 +195,10 @@ data:extend({
             scale = 8/32
           }
 --]]
-
+{
+  type = "create-entity",
+  entity_name = "acid-splash-fire-worm-big"
+},
         }
       }
     },
@@ -291,7 +298,10 @@ data:extend({
             scale = 8/32
           }
 --]]
-
+{
+  type = "create-entity",
+  entity_name = "acid-splash-fire-worm-medium"
+},
         }
       }
     },
