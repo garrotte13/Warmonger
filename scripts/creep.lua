@@ -389,7 +389,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 1,
       max_range = 5 + range
     }
-    game.print("sending big one..")
+    --game.print("sending big one..")
   elseif attack_area_radius == 3 then
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile2",
@@ -400,7 +400,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 2,
       max_range = 4 + range
     }
-    game.print("sending middle one..")
+    --game.print("sending middle one..")
   else
     proj = killed_e.surface.create_entity {
       name = "wm-revenge-projectile1",
@@ -411,7 +411,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
       speed = 2.5,
       max_range = 2 + range
     }
-    game.print("sending small one..")
+    --game.print("sending small one..")
   end
   if not proj then
     game.print("We failed to launch revenge strike shell!")
