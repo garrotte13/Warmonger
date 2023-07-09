@@ -239,6 +239,14 @@ script.on_event(defines.events.script_raised_destroy, function(e)
   end
 end)
 
+script.on_event(defines.events.on_player_built_tile, function(e)
+  creep_collector.tiles_mined(e.tiles, game.surfaces[e.surface_index], e.tick, game.players[e.player_index])
+end)
+
+script.on_event(defines.events.on_robot_built_tile, function(e)
+  creep_collector.tiles_mined(e.tiles, game.surfaces[e.surface_index], e.tick, nil, e.robot)
+end)
+
 script.on_event(defines.events.on_sector_scanned, function(e)
   creep_eater.scanned(e.radar, e.tick)
 end, {{filter="name", name="creep-miner1-radar"}, {filter="name", name="creep-miner0-radar"}} )

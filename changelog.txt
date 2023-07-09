@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.23
+Date: 2023-07-09
+  Bugfixes:
+    - Removed revenge strike console messages.
+  Minor Features:
+    - Fixed creep replacement availability (game engine issue).
+---------------------------------------------------------------------------------------------------
 Version: 1.3.22
 Date: 2023-06-16
   Bugfixes:
@@ -9,7 +16,7 @@ Date: 2023-06-16
     - Counter-strikes trigger on bigger radius to guarantee safe wall defense by rocket/capsule launchers after evolution exceeds 70%.
   Minor Features:
     - Fully randomized counter-strike creep thumbprint. But still rounded and of range-dependent size.
-    - One more effect for revenge strike
+    - One more effect for revenge strike.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.21
 Date: 2023-06-05

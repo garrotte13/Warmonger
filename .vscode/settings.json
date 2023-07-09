@@ -17,5 +17,18 @@
         "tile_variations_template",
         "rendering",
         "global"
+    ],
+    "factorio.versions": [
+        {
+            "name": "mainFactorio",
+            "factorioPath": "f:\\Games\\SteamLibrary\\steamapps\\common\\Factorio\\bin\\x64\\factorio.exe",
+            "active": true
+        }
+    ],
+    "Lua.workspace.library": [
+        "f:\\Games\\SteamLibrary\\steamapps\\common\\Factorio\\data"
+    ],
+    "Lua.workspace.userThirdParty": [
+        "c:\\Users\\Ot'ki\\AppData\\Roaming\\Code\\User\\workspaceStorage\\e5ea1ed2b085a2bd34e59e3f24c87ebe\\justarandomgeek.factoriomod-debug\\sumneko-3rd"
     ]
 }
