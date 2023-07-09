@@ -22,28 +22,24 @@ end
 function creep_collector.tiles_mined(tiles, surface, t, player, robot)
   local cr_tiles = {}
   local cr_count = 1
-  local fk_count = 0
-  local kr_count = 0
   for i=1, #tiles do
     if tiles[i].old_tile.name == "kr-creep" or tiles[i].old_tile.name == "fk-creep" then
       cr_tiles[cr_count] = {
         name = tiles[i].old_tile.name,
         position = tiles[i].position
       }
-      if tiles[i].old_tile.name == "kr-creep" then kr_count = kr_count + 1 else fk_count = fk_count + 1 end
       cr_count = cr_count + 1
     end
   end
   if cr_count == 1 then return end
-  --game.print("Creep tiles replaced: " .. cr_count-1)
   surface.set_tiles(cr_tiles)
-  local dmg = (cr_count - 1) * math.random(5,7)
+  local dmg = (cr_count - 1) * math.random(10,15)
   if robot and robot.valid and robot.destructible then
     robot.damage(dmg, "enemy", "acid")
   elseif player then
     local char = player.character
     if char and char.valid then
-      char.damage(dmg*2, "enemy", "acid")
+      char.damage(dmg, "enemy", "acid")
     end
   end
 end
