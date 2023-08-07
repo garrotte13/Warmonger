@@ -19,8 +19,10 @@ table.insert(pcapsule.ingredients, {type="item", name="wm-bio-remains", amount=3
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
-  data.raw.car["nuclear-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
-  data.raw.car["advanced-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
+  if settings.startup["rampant-arsenal-enableVehicle"].value then
+    data.raw.car["nuclear-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
+    data.raw.car["advanced-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
+  end
   pcapsule = data.raw.recipe["repair-capsule-rampant-arsenal"]
 --[[  pcapsule.normal.result_count = 2
   pcapsule.normal.energy_required = pcapsule.normal.energy_required * 2
