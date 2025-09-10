@@ -65,7 +65,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = {amount = 50 , type = "explosion"}
+                    damage = {amount = 30 , type = "explosion"}
                   }
                 }
               }

@@ -49,7 +49,7 @@ script.on_event(defines.events.on_entity_died, function(e)
   if strike_back
    and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
     and game.forces.enemy.get_evolution_factor(e.entity.surface) > 0.38 then
-      game.print("Checking if it's time for counter attack...")
+      --game.print("Checking if it's time for counter attack...")
      creep.check_strike(e.entity, e.cause, e.force)
   end
 end)
