@@ -1,5 +1,5 @@
-local corrosion = require("scripts.corrosion")
-local circle_rendering = require("scripts.miner-circle-rendering")
+--local corrosion = require("scripts.corrosion")
+--local circle_rendering = require("scripts.miner-circle-rendering")
 
 local constants = require("scripts.constants")
 local util = require("scripts.util")
@@ -44,7 +44,7 @@ function creep_collector.tiles_mined(tiles, surface, t, player, robot)
   end
 end
 
-
+--[[
 function creep_collector.player_removed(player_index)
   if global.prio_creep_mine[player_index] then circle_rendering.del_prio_rect(global.prio_creep_mine[player_index], game.get_player(player_index)) end
   global.prio_creep_mine[player_index] = nil
@@ -69,5 +69,5 @@ function creep_collector.priority_box(player, surface, tiles, sel_area)
   end
 
 end
-
+]]
 return creep_collector

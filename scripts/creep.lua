@@ -1,27 +1,24 @@
 local constants = require("scripts.constants")
-local corrosion = require("scripts.corrosion")
-local creep_eater = require("scripts.creep-eater")
+--local corrosion = require("scripts.corrosion")
+--local creep_eater = require("scripts.creep-eater")
 
 local creep = {}
 
-local function generate_creep(entities)
+local function generate_creep(entities) -- all entities must be strictly from one surface. Surface is pre-checked for creep allowed
   local surface = entities[1].surface
-  if not global.creep.surfaces[surface.index] then
-    return
-  end
   local min_r = 2
   for _, entity in pairs(entities) do
     if entity.type == "unit-spawner" then min_r = 1 else min_r = 0 end
-    global.creep.creep_queue[global.creep.creep_id_counter] = {
-      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.evolution_factor*4.5*(min_r+1)),
+    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
+      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.5*(min_r+1)),
       position = entity.position,
       stage = 0,
       surface = surface,
       fake = false,
       type = min_r + 1,
-      tier = 1 + math.floor(game.forces.enemy.evolution_factor * 9.8)
+      tier = 1 + math.floor(game.forces.enemy.get_evolution_factor(surface) * 9.8)
     }
-    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+    storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
 end
 
@@ -29,11 +26,11 @@ function creep.creepify()
   local surface = game.get_surface("nauvis")
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, force = "enemy" })
 
-  if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
+   -- if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
     for _, entity in pairs(entities) do
       if entity.valid then generate_creep({ entity }) end
     end
-  else
+    --[[ else
     for _, entity in pairs(entities) do
       local building_name = entity.name
       local rad
@@ -54,7 +51,7 @@ function creep.creepify()
           building_type = buildings_tbl[type_name]
           rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
 
-        global.creep.creep_queue[global.creep.creep_id_counter] = {
+        storage.creep.creep_queue[storage.creep.creep_id_counter] = {
             radius = rad,
             position = entity.position,
             stage = 0,
@@ -63,27 +60,28 @@ function creep.creepify()
             type = building_type,
             tier = building_tier
         }
-        global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+        storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
       end
     end
+    
   end
-
+  ]]
   local t = game.tick
-  while global.creep.creep_id_counter > (global.creep.last_creep_id_counter+20) do
+  while storage.creep.creep_id_counter > (storage.creep.last_creep_id_counter+20) do
     creep.process_creep_queue(t)
   end
-
+  --[[
   if game.forces["player"].technologies["advanced-material-processing"].researched then
     game.forces["player"].recipes["creep-miner0-radar"].enabled = true
   end
   if game.forces["player"].technologies["electric-energy-distribution-2"].researched then
     game.forces["player"].recipes["creep-miner1-radar"].enabled = true
   end
-
+  ]]
 end
 
 function creep.init()
-  global.creep = {
+  storage.creep = {
     on_biter_base_built = true,
     on_chunk_generated = true,
     creep_id_counter = 0,
@@ -94,13 +92,13 @@ function creep.init()
 end
 
 function creep.on_biter_base_built(entity)
-  if (entity.type == "unit-spawner" or entity.type == "turret") and global.creep.surfaces[entity.surface.index] then
+  if (entity.type == "unit-spawner" or entity.type == "turret") and storage.creep.surfaces[entity.surface.index] then
     generate_creep({ entity })
   end
 end
 
 function creep.on_chunk_generated(chunk_area, surface)
-  if not global.creep.surfaces[surface.index] then
+  if not storage.creep.surfaces[surface.index] then
     return
   end
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, area = chunk_area, force = "enemy" })
@@ -110,28 +108,28 @@ function creep.on_chunk_generated(chunk_area, surface)
 end
 
 function creep.update()
-    if not global.creep.creep_id_counter then
-        global.creep.creep_id_counter = 1
+    if not storage.creep.creep_id_counter then
+        storage.creep.creep_id_counter = 1
     end
-    if not global.creep.last_creep_id_counter then
-        global.creep.last_creep_id_counter = 1
+    if not storage.creep.last_creep_id_counter then
+        storage.creep.last_creep_id_counter = 1
     end
-    if not global.creep.creep_queue then
-        global.creep.creep_queue = {}
+    if not storage.creep.creep_queue then
+        storage.creep.creep_queue = {}
     end
 end
 
 function creep.process_creep_queue(t)
-    if global.creep.creep_id_counter == global.creep.last_creep_id_counter then
+    if storage.creep.creep_id_counter == storage.creep.last_creep_id_counter then
         return
     end
 
-    local creep_pack = global.creep.creep_queue[global.creep.last_creep_id_counter]
+    local creep_pack = storage.creep.creep_queue[storage.creep.last_creep_id_counter]
     if creep_pack.stage == 0 then
         creep_pack.tiles = creep_pack.surface.find_tiles_filtered({
                 position = creep_pack.position,
                 radius = creep_pack.radius,
-                collision_mask={"ground-tile"}
+                collision_mask = { ground_tile=true }
         })
         creep_pack.stage = 1
     elseif creep_pack.stage == 1 then
@@ -143,11 +141,11 @@ function creep.process_creep_queue(t)
           ne_coef = ( (creep_pack.type or 2) * 1.2 ) + ( creep_pack.tier / 16 )
           ne_prob = 3 + ( creep_pack.tier * 4 ) - (creep_pack.type or 2)
         elseif (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-          ne_coef = 2 + math.floor(3 * game.forces.enemy.evolution_factor)
-          ne_prob = 4 + math.ceil(12 * game.forces.enemy.evolution_factor)
+          ne_coef = 2 + math.floor(3 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
+          ne_prob = 4 + math.ceil(12 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
         else
-          ne_coef = 2 + math.floor(2 * game.forces.enemy.evolution_factor)
-          ne_prob = 4 + math.ceil(20 * game.forces.enemy.evolution_factor)
+          ne_coef = 2 + math.floor(2 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
+          ne_prob = 4 + math.ceil(20 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
         end
         for i=1,#creep_pack.tiles do
           local r = 1 -- by default it will be biomass creep
@@ -179,22 +177,22 @@ function creep.process_creep_queue(t)
         creep_pack.stage = 2
     elseif creep_pack.stage == 2 then
         creep_pack.surface.set_tiles(creep_pack.creep_tiles)
-        if global.corrosion.enabled then
+        --[[if global.corrosion.enabled then
           creep_pack.stage = 3
-        else
-          global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
-          global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
-        end
-    elseif creep_pack.stage == 3 then
+        else]]
+          storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
+          storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
+        --end
+      --[[elseif creep_pack.stage == 3 then
       if creep_pack.fake and creep_pack.position then -- mine creepers are awoken only by revenge strikes, not by RampantSiegeAI or Creeper2
-        for i=1, global.creep_miners_last do
-          if global.creep_miners[i] and global.creep_miners[i].stage == 0
-           and global.creep_miners[i].entity and global.creep_miners[i].entity.valid and (not global.creep_miners[i].entity.active) then
-            local d = (constants.miner_range(global.creep_miners[i].entity.name) + creep_pack.radius)^2
-            if ((global.creep_miners[i].x - creep_pack.position.x)^2 + (global.creep_miners[i].y - creep_pack.position.y)^2) <= d then
-              local nex_t = global.creep_miners[i].next_tick
+        for i=1, storage.creep_miners_last do
+          if storage.creep_miners[i] and storage.creep_miners[i].stage == 0
+           and storage.creep_miners[i].entity and storage.creep_miners[i].entity.valid and (not storage.creep_miners[i].entity.active) then
+            local d = (constants.miner_range(storage.creep_miners[i].entity.name) + creep_pack.radius)^2
+            if ((storage.creep_miners[i].x - creep_pack.position.x)^2 + (storage.creep_miners[i].y - creep_pack.position.y)^2) <= d then
+              local nex_t = storage.creep_miners[i].next_tick
               if nex_t and nex_t > 0 then global.dissention[nex_t].active_miner = nil end
-              global.creep_miners[i].entity.active = true
+              storage.creep_miners[i].entity.active = true
               creep_eater.add_action_tick(global.dissention, i, t + 1)
             end
           end
@@ -227,32 +225,33 @@ function creep.process_creep_queue(t)
             end
           end
       end
-      global.creep.creep_queue[global.creep.last_creep_id_counter] = nil
-      global.creep.last_creep_id_counter = global.creep.last_creep_id_counter + 1
+      storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
+      storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
+      ]]
     end
 end
 
 creep.remote_interface = {
   set_creep_on_chunk_generated = function(value)
-    if not global.creep then
+    if not storage.creep then
       return
     end
     if type(value) ~= "boolean" then
       error("Value for 'creep_on_chunk_generated' must be a boolean.")
     end
-    global.creep.on_chunk_generated = value
+    storage.creep.on_chunk_generated = value
   end,
   set_creep_on_biter_base_built = function(value)
-    if not global.creep then
+    if not storage.creep then
       return
     end
     if type(value) ~= "boolean" then
       error("Value for 'creep_on_biter_base_built' must be a boolean.")
     end
-    global.creep.on_biter_base_built = value
+    storage.creep.on_biter_base_built = value
   end,
   spawn_creep_at_position = function(surface, position, override, building_name)
-    if not global.creep then
+    if not storage.creep then
       return
     end
     if type(surface) ~= "table" or type(position) ~= "table" or not surface.valid then
@@ -260,7 +259,7 @@ creep.remote_interface = {
     end
     -- The code here is duplicated from `generate_creep()` because that function is specifically optimized for multiple
     -- entities, while this function only needs to do it once.
-    if not global.creep.surfaces[surface.index] and not override then
+    if not storage.creep.surfaces[surface.index] and not override then
       return
     end
 
@@ -288,10 +287,10 @@ creep.remote_interface = {
       --game.print("Creep for: ".. building_name .. " And name of type is: " .. nname .. " Tier is: " .. gg .. " Type #".. btype)
       rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
     else
-      rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.evolution_factor*9)
+      rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.get_evolution_factor(surface)*9)
     end
 
-    global.creep.creep_queue[global.creep.creep_id_counter] = {
+    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
         radius = rad,
         position = position,
         stage = 0,
@@ -300,35 +299,35 @@ creep.remote_interface = {
         type = building_type,
         tier = building_tier
     }
-    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+    storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end,
 
   spawn_fake_creep_at_position_radius = function(surface, position, override, radius_ext)
-    if not global.creep then return end
+    if not storage.creep then return end
     if type(surface) ~= "table" or type(position) ~= "table" or not surface.valid then
       error("The surface or the position are invalid.")
     end
-    if not global.creep.surfaces[surface.index] and not override then return end
-    global.creep.creep_queue[global.creep.creep_id_counter] = {
+    if not storage.creep.surfaces[surface.index] and not override then return end
+    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       radius = radius_ext,
       position = position,
       stage = 0,
       surface = surface,
       fake = true
   }
-  global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+  storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end,
 
   spawn_creep_tiles = function(surface, tiles, override)
-    if not global.creep then return end
-    if not global.creep.surfaces[surface.index] and not override then return end
-    global.creep.creep_queue[global.creep.creep_id_counter] = {
+    if not storage.creep then return end
+    if not storage.creep.surfaces[surface.index] and not override then return end
+    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       stage = 2,
       surface = surface,
       fake = true,
       creep_tiles = tiles
   }
-  global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+  storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
 }
 
@@ -337,7 +336,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
   -- local range_debug = math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 )
-  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / ( (game.forces.enemy.evolution_factor*32) + constants.creep_max_range - 4)
+  local range_ratio = ( math.sqrt( (killer_e.position.x - killed_e.position.x)^2 + (killer_e.position.y - killed_e.position.y)^2 ) ) / ( (game.forces.enemy.get_evolution_factor(killer_e.surface)*32) + constants.creep_max_range - 4)
   --game.print("Killed enemy structure distance is: " .. math.ceil(range_debug))
   if range_ratio < 2.05 then return end
   local revengers_raw = killed_e.surface.find_entities_filtered{ position = killed_e.position, radius = 70, type = "unit-spawner", force = "enemy", limit = 10 }
@@ -359,7 +358,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
     return
   end
     local range = math.sqrt( (killer_e.position.x - punisher.position.x)^2 + (killer_e.position.y - punisher.position.y)^2 )
-    range_ratio = range / ( (game.forces.enemy.evolution_factor*32) + constants.creep_max_range + 1)
+    range_ratio = range / ( (game.forces.enemy.get_evolution_factor(killer_e.surface)*32) + constants.creep_max_range + 1)
 
   local attack_area_radius = 2
   local attack_inaccuracy = 2
@@ -456,19 +455,19 @@ function creep.landed_strike(effect_id, surface, target_position, target)
   local dmg_coeff = 1 + (math.random(1,31)-16)*0.02
   for _, entity in pairs(entities) do
     if entity.valid and entity.destructible and entity.is_entity_with_health then
-      local hitpoints = entity.prototype.max_health
+      local hitpoints = entity.max_health
       if entity.prototype.type == "character" then
         hitpoints = hitpoints * (1 + entity.player.character_health_bonus) + 300
         -- hitpoints = hitpoints * (1 + entity.player.force.character_health_bonus)
+      elseif entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
+        game.print("Aaah, I got you dirty cheater!")
+        hitpoints = hitpoints * 5
       end
-      if entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
-        hitpoints = hitpoints * 7
-      end
-      local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.evolution_factor/5 ) ) -- big one time damage and can be lethal
+      local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.get_evolution_factor(surface) / 5 ) ) -- big one time damage and can be lethal
       if hitpoints > 600 then
-        dmg = dmg * 0.7 + math.ceil( 95 * ( 1 + 1.3 * game.forces.enemy.evolution_factor ) )
+        dmg = dmg * 0.7 + math.ceil( 95 * ( 1 + 1.3 * game.forces.enemy.get_evolution_factor(surface) ) )
       elseif hitpoints > 150 then
-        dmg = dmg * 0.7 + math.ceil( 40 * ( 1 + 1.2 * game.forces.enemy.evolution_factor ) )
+        dmg = dmg * 0.7 + math.ceil( 40 * ( 1 + 1.2 * game.forces.enemy.get_evolution_factor(surface) ) )
       end
       dmg = dmg * dmg_coeff
       local recieved_dmg1 = entity.damage(dmg/2, "enemy", "poison")
@@ -482,15 +481,15 @@ function creep.landed_strike(effect_id, surface, target_position, target)
   end
 
 --  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
-  if global.creep.surfaces[surface.index] then
-    global.creep.creep_queue[global.creep.creep_id_counter] = {
+  if storage.creep.surfaces[surface.index] then
+    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       radius = attack_area_radius-0.6,
       position = attack_pos,
       stage = 0,
       surface = surface,
       fake = true
     }
-    global.creep.creep_id_counter = global.creep.creep_id_counter + 1
+    storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
 end
 

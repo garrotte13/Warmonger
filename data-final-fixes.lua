@@ -1,8 +1,8 @@
 if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
 
-data.raw.tile["kr-creep"].pollution_absorption_per_second = 0.0002
-data.raw.tile["fk-creep"].pollution_absorption_per_second = 0.0001
-
+--data.raw.tile["kr-creep"].absorptions_per_second = 0.0002
+--data.raw.tile["fk-creep"].absorptions_per_second = 0.0001
+--[[
 local militaryrecipe = data.raw.recipe["military-science-pack"]
 table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
 table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})
@@ -15,7 +15,7 @@ for i=1, #pcapsule.ingredients do
   if pcapsule.ingredients[i].amount then pcapsule.ingredients[i].amount = pcapsule.ingredients[i].amount * 2 else pcapsule.ingredients[i][2] = pcapsule.ingredients[i][2] * 2 end
 end
 table.insert(pcapsule.ingredients, {type="item", name="wm-bio-remains", amount=3})
-
+]]
 -- log(serpent.dump(data.raw.recipe))
 
 if mods["RampantArsenal"] then
@@ -23,7 +23,7 @@ if mods["RampantArsenal"] then
     data.raw.car["nuclear-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
     data.raw.car["advanced-tank-vehicle-rampant-arsenal"].terrain_friction_modifier = 0.1
   end
-  pcapsule = data.raw.recipe["repair-capsule-rampant-arsenal"]
+ -- pcapsule = data.raw.recipe["repair-capsule-rampant-arsenal"]
 --[[  pcapsule.normal.result_count = 2
   pcapsule.normal.energy_required = pcapsule.normal.energy_required * 2
   pcapsule.expensive.result_count = 2
@@ -35,6 +35,7 @@ if mods["RampantArsenal"] then
   for i=1, #pcapsule.expensive.ingredients do
     if pcapsule.expensive.ingredients[i].amount then pcapsule.expensive.ingredients[i].amount = pcapsule.expensive.ingredients[i].amount * 2 else pcapsule.expensive.ingredients[i][2] = pcapsule.expensive.ingredients[i][2] * 2 end
   end ]]
+  --[[
   table.insert( pcapsule.normal.ingredients, {type="item", name="wm-bio-remains", amount=2} )
   table.insert( pcapsule.expensive.ingredients, {type="item", name="wm-bio-remains", amount=3} )
   pcapsule = data.raw.recipe["healing-capsule-rampant-arsenal"]
@@ -51,7 +52,7 @@ if mods["RampantArsenal"] then
   table.insert( data.raw.recipe["mk3-shield-rampant-arsenal"].expensive.ingredients, {type="item", name="biomass", amount=750} )
   --table.insert( data.raw.recipe[""].ingredients, {type="item", name="biomass", amount=3} )
  end
-
+]]
  if mods["RampantIndustry"] then
 
   pcapsule = data.raw.recipe["advanced-repair-pack-rampant-industry"]
@@ -66,27 +67,8 @@ if mods["RampantArsenal"] then
   table.insert( data.raw.recipe["air-filter-rampant-industry"].ingredients, {type="item", name="biomass", amount=90} )
  end
 
-if mods["IndustrialRevolution"] then
-  for i, component in pairs(militaryrecipe.ingredients) do
-      for _, value in pairs(component) do
-        if value == "gunpowder" then
-          militaryrecipe.ingredients[i] = {type="item", name="biters-research-data", amount=1}
-          break
-        end
-      end
-  end
-  local bitersresearch = data.raw.recipe["biters-research-data"]
-  for i, component in pairs(bitersresearch.ingredients) do
-    for _, value in pairs(component) do
-      if value == "stone-wall" then
-        bitersresearch.ingredients[i] = {type="item", name="gunpowder", amount=6}
-        break
-      end
-    end
-  end
-  -- Bioprocessing recipe will be fixed later if anyone notices IR2 compatibility at all...
-else
-  if militaryrecipe.ingredients then
+--[[
+ if militaryrecipe.ingredients then
     for i, component in pairs(militaryrecipe.ingredients) do
       for _, value in pairs(component) do
         if value == "stone-wall" then
@@ -113,4 +95,6 @@ else
       end
     end
   end
+  ]]
+
 end

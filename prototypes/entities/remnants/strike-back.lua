@@ -21,7 +21,7 @@ data:extend({
     map_color = {r=1, g=1, b=0},
     picture =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell.png",
       draw_as_glow = true,
       width = 64,
       height = 64,
@@ -29,7 +29,7 @@ data:extend({
     },
     shadow =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell-shadow.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell-shadow.png",
       width = 64,
       height = 64,
       scale = 0.5
@@ -65,7 +65,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = {amount = 5 , type = "explosion"}
+                    damage = {amount = 50 , type = "explosion"}
                   }
                 }
               }
@@ -125,7 +125,7 @@ data:extend({
     map_color = {r=1, g=1, b=0},
     picture =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell.png",
       draw_as_glow = true,
       width = 64,
       height = 64,
@@ -133,7 +133,7 @@ data:extend({
     },
     shadow =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell-shadow.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell-shadow.png",
       width = 64,
       height = 64,
       scale = 0.5
@@ -228,7 +228,7 @@ data:extend({
     map_color = {r=1, g=1, b=0},
     picture =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell.png",
       draw_as_glow = true,
       width = 64,
       height = 64,
@@ -236,7 +236,7 @@ data:extend({
     },
     shadow =
     {
-      filename = "__base__/graphics/entity/artillery-projectile/hr-shell-shadow.png",
+      filename = "__base__/graphics/entity/artillery-projectile/shell-shadow.png",
       width = 64,
       height = 64,
       scale = 0.5

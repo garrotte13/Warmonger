@@ -127,7 +127,7 @@ data:extend(
 	--	fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
 		order = "a[biomass]",
-		stack_size = 400
+		stack_size = 200
 	},
 
   {
@@ -150,7 +150,7 @@ data:extend(
 		fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
 		order = "a[wm-bio-remains]",
-		stack_size = 300
+		stack_size = 200
 	},
 
   {
@@ -162,28 +162,29 @@ data:extend(
     pictures = {
       { size = 64, filename = "__Warmonger__/graphics/icons/items/creep-collector.png", scale = 0.25, mipmap_count = 4 },
     },
-    flags = { "not-stackable", "spawnable", "only-in-cursor", "hidden" },
+    flags = { "not-stackable", "spawnable", "only-in-cursor"},
+    hidden = true,
     stack_size = 1,
     subgroup = "terrain",
     order = "z-[collector-tools]-b[creep-collector]",
-    selection_color = { r = 0.50, g = 0, b = 0.35 },
-    alt_selection_color = { r = 0.55, g = 0.35, b = 0.40 },
-    selection_mode = {
-      "any-tile",
+    select = {
+      border_color = { r = 0.50, g = 0, b = 0.35 },
+		  cursor_box_type = "not-allowed",
+		  mode =  { "any-tile", },
+      tile_filters = { "kr-creep", "fk-creep" },
+      tile_filter_mode = "whitelist",
     },
-    alt_selection_mode = {
-      "any-tile",
+    alt_select = {
+      border_color = { r = 0.55, g = 0.35, b = 0.40 },
+		  cursor_box_type = "not-allowed",
+		  mode =  { "any-tile", },
+      tile_filters = { "kr-creep", "fk-creep" },
+      tile_filter_mode = "whitelist",
     },
-    selection_cursor_box_type = "not-allowed",
-    alt_selection_cursor_box_type = "not-allowed",
     always_include_tiles = true,
     show_in_library = false,
-    tile_filters = { "kr-creep", "fk-creep" },
-    alt_tile_filters = { "kr-creep", "fk-creep" },
-    tile_filter_mode = "whitelist",
-    alt_tile_filter_mode = "whitelist",
   },
-	
+	--[[
 	{
 		type = "item",
 		name = "biters-research-data",
@@ -206,7 +207,9 @@ data:extend(
     place_result = "kr-bio-lab",
     stack_size = 50,
   },
+]]
 
+--[[
   {
     type = "flying-text",
     name = "true_creep_protected",
@@ -216,4 +219,5 @@ data:extend(
     --localised_name = "message.wm-true-creep-protected",
 
   }
+  ]]
 })
