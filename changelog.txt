@@ -2,7 +2,7 @@
 Version: 2.0.0
 Date: 2025-09-12
   Major Features:
-    - Factorio2.0 compatibility. Need to fix creep tiles pictures issue.
+    - Factorio2.0 compatibility. Enemy bases decorations replaced with creep.
     - Corrosion is removed. New damage system under consideration. Strike back counteraction works.
     - Ecomode of trees reviving is temporary down. Is it worth it without Rampant?
     - Creep processors and biolab removed. Need new way to remove creep and get some products (or not)
