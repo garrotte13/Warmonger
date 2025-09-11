@@ -4,6 +4,7 @@ data:extend({
   type = "simple-entity",
   name = "wm-revenge-doll",
   max_health = 20000,
+  hidden = true,
   picture = {
     filename = "__core__/graphics/empty.png",
     priority = "low",
@@ -19,6 +20,7 @@ data:extend({
     flags = {"not-on-map"},
     reveal_map = false,
     map_color = {r=1, g=1, b=0},
+    hidden = true,
     picture =
     {
       filename = "__base__/graphics/entity/artillery-projectile/shell.png",
@@ -121,6 +123,7 @@ data:extend({
     type = "artillery-projectile",
     name = "wm-revenge-projectile2",
     flags = {"not-on-map"},
+    hidden = true,
     reveal_map = false,
     map_color = {r=1, g=1, b=0},
     picture =
@@ -169,7 +172,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = {amount = 5 , type = "explosion"}
+                    damage = {amount = 20 , type = "explosion"}
                   }
                 }
               }
@@ -224,6 +227,7 @@ data:extend({
     type = "artillery-projectile",
     name = "wm-revenge-projectile1",
     flags = {"not-on-map"},
+    hidden = true,
     reveal_map = false,
     map_color = {r=1, g=1, b=0},
     picture =
@@ -272,7 +276,7 @@ data:extend({
                 {
                   {
                     type = "damage",
-                    damage = {amount = 5 , type = "explosion"}
+                    damage = {amount = 10 , type = "explosion"}
                   }
                 }
               }

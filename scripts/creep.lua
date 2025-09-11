@@ -2,7 +2,7 @@ local constants = require("scripts.constants")
 --local corrosion = require("scripts.corrosion")
 --local creep_eater = require("scripts.creep-eater")
 
-local creep = {}
+local creeping = {}
 
 local function generate_creep(entities) -- all entities must be strictly from one surface. Surface is pre-checked for creep allowed
   local surface = entities[1].surface
@@ -22,9 +22,24 @@ local function generate_creep(entities) -- all entities must be strictly from on
   end
 end
 
-function creep.creepify()
+function creeping.creepify()
   local surface = game.get_surface("nauvis")
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, force = "enemy" })
+
+  surface.destroy_decoratives{name = {
+      "enemy-decal",
+      "enemy-decal-transparent",
+      "muddy-stump",
+      "worms-decal",
+      "light-mud-decal",
+      "dark-mud-decal",
+      --"red-croton",
+      --"red-pita",
+      --"lichen-decal",
+      --"shroom-decal"
+    },
+  }
+
 
    -- if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
     for _, entity in pairs(entities) do
@@ -68,7 +83,7 @@ function creep.creepify()
   ]]
   local t = game.tick
   while storage.creep.creep_id_counter > (storage.creep.last_creep_id_counter+20) do
-    creep.process_creep_queue(t)
+    creeping.process_creep_queue(t)
   end
   --[[
   if game.forces["player"].technologies["advanced-material-processing"].researched then
@@ -80,7 +95,7 @@ function creep.creepify()
   ]]
 end
 
-function creep.init()
+function creeping.init()
   storage.creep = {
     on_biter_base_built = true,
     on_chunk_generated = true,
@@ -91,13 +106,13 @@ function creep.init()
   }
 end
 
-function creep.on_biter_base_built(entity)
+function creeping.on_biter_base_built(entity)
   if (entity.type == "unit-spawner" or entity.type == "turret") and storage.creep.surfaces[entity.surface.index] then
     generate_creep({ entity })
   end
 end
 
-function creep.on_chunk_generated(chunk_area, surface)
+function creeping.on_chunk_generated(chunk_area, surface)
   if not storage.creep.surfaces[surface.index] then
     return
   end
@@ -107,7 +122,7 @@ function creep.on_chunk_generated(chunk_area, surface)
   end
 end
 
-function creep.update()
+function creeping.update()
     if not storage.creep.creep_id_counter then
         storage.creep.creep_id_counter = 1
     end
@@ -119,7 +134,7 @@ function creep.update()
     end
 end
 
-function creep.process_creep_queue(t)
+function creeping.process_creep_queue(t)
     if storage.creep.creep_id_counter == storage.creep.last_creep_id_counter then
         return
     end
@@ -231,7 +246,7 @@ function creep.process_creep_queue(t)
     end
 end
 
-creep.remote_interface = {
+creeping.remote_interface = {
   set_creep_on_chunk_generated = function(value)
     if not storage.creep then
       return
@@ -331,7 +346,7 @@ creep.remote_interface = {
   end
 }
 
-function creep.check_strike (killed_e, killer_e, killer_force)
+function creeping.check_strike (killed_e, killer_e, killer_force)
   if (killer_force and killer_force.name == "enemy") or (not killer_e) or (not killer_e.valid) or (killed_e.surface ~= killer_e.surface) then return end
   local ch = killed_e.type == "unit-spawner" and 4 or 8
   -- if ( killed_e.type == "unit-spawner" and ch < 5 ) or ch < 8 then return end
@@ -418,7 +433,7 @@ function creep.check_strike (killed_e, killer_e, killer_force)
   doll.destroy{}
 end
 
-function creep.landed_strike(effect_id, surface, target_position, target)
+function creeping.landed_strike(effect_id, surface, target_position, target)
   local attack_pos
   local attack_area_radius
   local attack_incomers
@@ -493,4 +508,4 @@ function creep.landed_strike(effect_id, surface, target_position, target)
   end
 end
 
-return creep
+return creeping

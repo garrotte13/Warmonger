@@ -35,6 +35,12 @@ script.on_load(function(e)
   add_hooks()
 end)
 
+script.on_event(defines.events.on_tick, function(event)
+  local t = event.tick
+  creep.process_creep_queue(t)
+  
+end)
+
 script.on_event(defines.events.on_script_trigger_effect, function(e)
   local surface = game.surfaces[e.surface_index]
     creep.landed_strike(e.effect_id, surface, e.target_position, e.target_entity)
@@ -59,4 +65,11 @@ script.on_event(defines.events.on_player_built_tile, function(e)
 end)
 script.on_event(defines.events.on_robot_built_tile, function(e)
   creep_collector.tiles_mined(e.tiles, game.surfaces[e.surface_index], e.tick, nil, e.robot)
+end)
+
+script.on_event(defines.events.on_player_selected_area, function(e)
+  local player = game.get_player(e.player_index)
+  if (e.item == "kr-creep-collector") then
+    creep_collector.collect(player, e.surface, e.tiles, e.area)
+  end
 end)

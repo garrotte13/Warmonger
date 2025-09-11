@@ -1,5 +1,14 @@
 if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
 
+-- fff-358
+data.raw["unit-spawner"]["biter-spawner"].spawn_decoration = {}
+data.raw["unit-spawner"]["spitter-spawner"].spawn_decoration = {}
+data.raw["turret"]["small-worm-turret"].spawn_decoration = {}
+data.raw["turret"]["big-worm-turret"].spawn_decoration = {}
+data.raw["turret"]["medium-worm-turret"].spawn_decoration = {}
+data.raw["turret"]["behemoth-worm-turret"].spawn_decoration = {}
+
+
 --data.raw.tile["kr-creep"].absorptions_per_second = 0.0002
 --data.raw.tile["fk-creep"].absorptions_per_second = 0.0001
 --[[

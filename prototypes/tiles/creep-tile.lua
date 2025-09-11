@@ -63,15 +63,9 @@ out_of_map_transition_group_id = 2
 patch_for_inner_corner_of_transition_between_transition =
 {
   filename = "__base__/graphics/terrain/water-transitions/water-patch.png",
-  width = 32,
-  height = 32,
-  hr_version =
-  {
-    filename = "__base__/graphics/terrain/water-transitions/hr-water-patch.png",
     scale = 0.5,
     width = 64,
     height = 64
-  }
 }
 
 local function make_tile_transition_from_template_variation(src_x, src_y, cnt_, line_len_, is_tall, normal_res_transition, high_res_transition)
@@ -324,14 +318,13 @@ data:extend(
 		walking_speed_modifier = 0.35,
 		layer = 200,
     --flags = { "hidden" },
-    hidden = true,
+    --hidden = true,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
-    lowland_fog = true,
-		variants = tile_variations_template
+    variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
-			"__Warmonger__/graphics/tiles/creep/hr-creep.png",      
+			"__Warmonger__/graphics/tiles/creep/creep.png",      
       "__base__/graphics/terrain/masks/transition-1.png",
 			{
 				max_size = 4,
@@ -362,16 +355,16 @@ data:extend(
     collision_mask = { layers = { ghost = true, ground_tile = true },  not_colliding_with_itself = true},
     minable = {mining_time = 10000},
 		--minable = {mining_time = 1000, result = "wm-bio-remains", probability = 0, amount = 0},
-		walking_speed_modifier = 0.40,
+		walking_speed_modifier = 0.35,
 		layer = 201,
     --flags = { "hidden" },
-    hidden = true,
+    --hidden = true,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
-		variants = tile_variations_template
+    variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
-			"__Warmonger__/graphics/tiles/creep/hr-creep.png",
+			"__Warmonger__/graphics/tiles/creep/creep.png",
       "__base__/graphics/terrain/masks/transition-1.png",
 			{
 				max_size = 4,
