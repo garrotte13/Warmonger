@@ -191,7 +191,7 @@ function creeping.process_creep_queue(t)
         end
         creep_pack.stage = 2
     elseif creep_pack.stage == 2 then
-        creep_pack.surface.set_tiles(creep_pack.creep_tiles)
+        creep_pack.surface.set_tiles(creep_pack.creep_tiles, true, false)
         --[[if global.corrosion.enabled then
           creep_pack.stage = 3
         else]]

@@ -312,7 +312,7 @@ data:extend(
 		needs_correction = false,
 		can_be_part_of_blueprint = false,
 --		collision_mask = { "ghost-layer", "ground-tile", "colliding-with-tiles-only" },
-		collision_mask = { layers = { ghost = true, ground_tile = true },  not_colliding_with_itself = true},
+		collision_mask = { layers = { ghost = true, ground_tile = true, water_tile = true},  not_colliding_with_itself = true},
     minable = {mining_time = 10000},
 		--minable = {mining_time = 1000, result = "biomass", probability = 0.0, amount = 0},
 		walking_speed_modifier = 0.35,
@@ -321,6 +321,7 @@ data:extend(
     --hidden = true,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
+    effect = "water",
     variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
@@ -352,7 +353,7 @@ data:extend(
 		needs_correction = false,
 		can_be_part_of_blueprint = false,
 		--collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
-    collision_mask = { layers = { ghost = true, ground_tile = true },  not_colliding_with_itself = true},
+    collision_mask = { layers = { ghost = true, ground_tile = true, water_tile = true},  not_colliding_with_itself = true},
     minable = {mining_time = 10000},
 		--minable = {mining_time = 1000, result = "wm-bio-remains", probability = 0, amount = 0},
 		walking_speed_modifier = 0.35,
@@ -360,7 +361,7 @@ data:extend(
     --flags = { "hidden" },
     --hidden = true,
 		transition_overlay_layer_offset = 3,
-		decorative_removal_probability = 0.35,
+    decorative_removal_probability = 0.35,
     variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
