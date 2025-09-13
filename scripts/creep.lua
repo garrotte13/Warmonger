@@ -496,6 +496,7 @@ function creeping.landed_strike(effect_id, surface, target_position, target)
   end
 
 --  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
+--[[
   if storage.creep.surfaces[surface.index] then
     storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       radius = attack_area_radius-0.6,
@@ -506,6 +507,7 @@ function creeping.landed_strike(effect_id, surface, target_position, target)
     }
     storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
+  ]]
 end
 
 return creeping
