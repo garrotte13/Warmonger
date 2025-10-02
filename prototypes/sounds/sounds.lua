@@ -5,10 +5,10 @@ data:extend({
     name = "kr-collect-creep",
     category = "alert",
     filename = "__Warmonger__/sounds/tiles/creep-deconstruction.ogg",
-    volume = 0.75,
+    volume = 0.55,
     audible_distance_modifier = 0.5,
     aggregation = {
-      max_count = 1,
+      max_count = 2,
       remove = false,
       count_already_playing = true,
     },

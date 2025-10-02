@@ -39,9 +39,9 @@ data:extend(
 		{
 			result = "kr-creep",
 			condition_size = 1,
-			condition = { "water-tile" }
+			condition = { layers = { water_tile = true} }
 		},
-		stack_size = 400
+		stack_size = 100
 	},
 
   {
@@ -83,11 +83,11 @@ data:extend(
 		{
 			result = "fk-creep",
 			condition_size = 1,
-      condition = { "water-tile" }
+      condition = { layers = { water_tile = true} }
 		},
 		stack_size = 100
 	},
---]]
+]]
 	{
 		type = "item",
 		name = "biomass",
@@ -127,7 +127,7 @@ data:extend(
 	--	fuel_top_speed_multiplier = 0.8,
 		subgroup = "raw-material",
 		order = "a[biomass]",
-		stack_size = 200
+		stack_size = 100
 	},
 
   {
@@ -145,12 +145,12 @@ data:extend(
     },
 		fuel_category = "chemical",
 		fuel_value = "1MJ",
-		fuel_emissions_multiplier = 2.4,
-		fuel_acceleration_multiplier = 0.8,
-		fuel_top_speed_multiplier = 0.8,
+		fuel_emissions_multiplier = 2.0,
+		fuel_acceleration_multiplier = 0.9,
+		fuel_top_speed_multiplier = 0.9,
 		subgroup = "raw-material",
 		order = "a[wm-bio-remains]",
-		stack_size = 200
+		stack_size = 100
 	},
 
   {
@@ -207,9 +207,8 @@ data:extend(
     place_result = "kr-bio-lab",
     stack_size = 50,
   },
-]]
 
---[[
+
   {
     type = "flying-text",
     name = "true_creep_protected",
@@ -219,5 +218,6 @@ data:extend(
     --localised_name = "message.wm-true-creep-protected",
 
   }
-  ]]
+]]
+
 })

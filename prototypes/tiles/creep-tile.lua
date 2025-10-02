@@ -321,7 +321,7 @@ data:extend(
     --hidden = true,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
-    effect = "water",
+    --effect = "water", White water? Has someone jerked off on my creep?
     variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",

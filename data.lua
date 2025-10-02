@@ -14,3 +14,5 @@ require("__Warmonger__/prototypes/entities/remnants/strike-back")
 require("__Warmonger__/prototypes/others/key-bind-initialization")
 require("__Warmonger__/prototypes/others/shortcut")
 
+require("__Warmonger__/prototypes/botfarm/creep-miner-bot")
+require("__Warmonger__/prototypes/botfarm/items-bots")
