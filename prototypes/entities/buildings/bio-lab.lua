@@ -36,57 +36,62 @@ data:extend(
 		{
 			{type = "impact", percent = 50}
 		},
+		fluid_boxes_off_when_no_fluid_recipe = true,
 		fluid_boxes =
 		{
 			{
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
+				volume = 1000,
 				base_area = 2,
 				height = 1,
 				base_level = -1,
 				pipe_connections =
 				{
-					{ type="input", position = {0, -4} },
+					{ flow_direction = "input", direction = defines.direction.east, position = {0, -3} },
 				}
 			},
 			{
 				production_type = "input",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
+				volume = 1000,
 				base_area = 2,
 				height = 1,
 				base_level = -1,
 				pipe_connections =
 				{
-					{ type="input-output", position = {0, 4} }
+					{ flow_direction = "input-output", direction = defines.direction.west, position = {0, 3} }
 				}
 			},
 			{
 				production_type = "output",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
+				volume = 1000,
 				base_area = 2,
 				height = 1,
 				base_level = 1,
 				pipe_connections =
 				{
-					{ type="output", position = {4, 0} }
+					{ flow_direction = "output", direction = defines.direction.north, position = {3, 0} }
 				}
 			},
 			{
 				production_type = "output",
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
+				volume = 1000,
 				base_area = 2,
 				height = 1,
 				base_level = 1,
 				pipe_connections =
 				{
-					{ type="output", position = {-4, 0} }
+					{ flow_direction = "output", direction = defines.direction.south, position = {-3, 0} }
 				}
 			},
-			off_when_no_fluid_recipe = true
+
 		},
 		collision_box = {{-3.25, -3.25}, {3.25, 3.25}},
 		selection_box = {{-3.5, -3.5}, {3.5, 3.5}},
@@ -169,9 +174,9 @@ data:extend(
 		{
 			type = "electric",
 			usage_priority = "secondary-input",
-			emissions_per_minute = 6
+			emissions_per_minute = { pollution = 6 }
 		},
-		energy_usage = "210KW",
+		energy_usage = "210kW",
 		ingredient_count = 3,
 	},
 

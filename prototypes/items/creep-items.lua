@@ -150,7 +150,25 @@ data:extend(
 		fuel_top_speed_multiplier = 0.9,
 		subgroup = "raw-material",
 		order = "a[wm-bio-remains]",
-		stack_size = 100
+		stack_size = 150
+	},
+
+  {
+		type = "item",
+		name = "wm-ochre",
+		icon = "__Warmonger__/graphics/icons/items/apm_slag.png",
+		icon_size = 64,
+		icon_mipmaps = 4,
+		pictures = {
+      {
+        size = 64,
+        filename = "__Warmonger__/graphics/icons/items/apm_slag.png",
+        scale = 0.5,
+      },
+    },
+		subgroup = "raw-material",
+		order = "a[wm-ochre]",
+		stack_size = 50
 	},
 
   {
@@ -184,7 +202,7 @@ data:extend(
     always_include_tiles = true,
     show_in_library = false,
   },
-	--[[
+
 	{
 		type = "item",
 		name = "biters-research-data",
@@ -208,7 +226,7 @@ data:extend(
     stack_size = 50,
   },
 
-
+--[[
   {
     type = "flying-text",
     name = "true_creep_protected",

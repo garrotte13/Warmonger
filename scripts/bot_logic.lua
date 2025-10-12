@@ -1,5 +1,9 @@
 local bot_behavior = {}
 
+local fuel_items
+local bot_fuel_capacity = 48000
+local bot_fuel_min = 22000
+
 local offsets_list = {
     {x = 0, y = 0},
     {x = 0, y = -1},
@@ -49,6 +53,55 @@ function bot_behavior.search_zones(r)
             mbot.searching_field.final = true
         end
         return bot_behavior.search_zones(r)
+    end
+end
+
+local function gg_fuel_items()
+    if not fuel_items then
+        fuel_items = {}
+        for _, item in pairs (prototypes.get_item_filtered{{ filter = 'fuel-value', comparison = '>', value = '1'}}) do
+            if item.fuel_category == "chemical" then
+                table.insert(fuel_items, {name = item.name, value = item.fuel_value * 0.0008})
+            end
+        end
+        table.sort(fuel_items, function(a, b) return prototypes.item[a.name].stack_size > prototypes.item[b.name].stack_size end)
+    end
+end
+
+function bot_behavior.fuel_reserve_by_char(playerN)
+    if not playerN then return end
+    local char1 = game.get_player(playerN).character
+    if not char1 or not char1.valid then return end
+    local CharInv = char1.get_main_inventory()
+    if not CharInv and not CharInv.valid then return end
+    if CharInv.get_item_count("wm-ochre") == 0 then
+        game.get_player(playerN).create_local_flying_text{text = "Not enough ochre found in player's inventory", position = char1.position, time_to_live = 150}
+        return
+    end
+    gg_fuel_items()
+    for _, item in pairs (fuel_items) do
+       local count = math.min(math.ceil(bot_fuel_capacity / item.value), CharInv.get_item_count(item.name))
+       if count >= math.ceil(bot_fuel_min / item.value) then
+        return CharInv.remove({name = item.name, count = count}) * item.value ,
+         CharInv.remove({name="wm-ochre", count = math.min(CharInv.get_item_count("wm-ochre"), 5)}) * 5 ,
+          item.name
+       end
+    end
+    game.get_player(playerN).create_local_flying_text{text = "Not enough fuel found in player's inventory", position = char1.position, time_to_live = 150}
+end
+
+function bot_behavior.extract_fuel(fuel, fuel_name)
+    --{name = "coal", count = math.floor(mbot.fuel/3200) - 1})
+    gg_fuel_items()
+    local f
+    if fuel_name then
+        for _, item in pairs (fuel_items) do
+            if item.name == fuel_name then
+                f = math.floor(fuel / item.value) - 1
+                if f > 0 then return f end
+                return
+            end
+        end
     end
 end
 

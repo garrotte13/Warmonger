@@ -1,16 +1,16 @@
 data:extend({
---[[
+
     {
         type = "int-setting",
         name = "wm-BiomassToBitersReseach",
         description = "wm-BiomassToBitersReseach",
         setting_type = "startup",
-        default_value = 7,
+        default_value = 3,
         minimum_value = 2,
-        maximum_value = 18,
+        maximum_value = 10,
 
     },
-
+--[[
     {
         type = "double-setting",
         name = "wm-CreepMiningPollution",

@@ -5,18 +5,38 @@ data:extend(
 
 	{
 		type = "recipe",
+		name = "wm-ochre",
+		energy_required = 15,
+		category = "advanced-crafting",
+		--emissions_multiplier = 2,
+		enabled = true,
+		ingredients =
+		{
+			{type = "item", name = "stone", amount = 2},
+			{type = "item", name = "iron-ore", amount = 1},
+			{type = "fluid", name = "steam", amount = 35 }
+		},
+		results={
+			{type = "item", name = "wm-ochre", amount = 2}
+		}
+	},
+
+	{
+		type = "recipe",
 		name = "kr-bio-lab",
 		energy_required = 20,
 		enabled = false,
 		ingredients =
 		{
-			{"biomass", 900},
-			{"steel-plate", 5},
-			{"iron-gear-wheel", 5},
-			{"pipe", 5},
-			{"advanced-circuit", 5}
+			{type = "item", name = "biomass", amount = 900},
+			{type = "item", name = "steel-plate", amount = 5},
+			{type = "item", name = "iron-gear-wheel", amount = 5},
+			{type = "item", name = "pipe", amount = 5},
+			{type = "item", name = "advanced-circuit", amount = 5}
 		},
-		result = "kr-bio-lab"
+		results={
+			{type = "item", name ="kr-bio-lab",	amount = 1}
+		}
     },
 
 	{
@@ -28,11 +48,12 @@ data:extend(
 		enabled = false,
 		ingredients =
 		{
-			{"stone-wall", 2},
-			{"biomass", brd_cost}
+			{type = "item", name = "stone-wall", amount = 2},
+			{type = "item", name = "biomass", amount = brd_cost}
 		},
-		result = "biters-research-data",
-		result_count = 1
+		results={
+			{type = "item", name ="biters-research-data", amount = 1}
+		}
 	},
 
 	{
@@ -52,10 +73,10 @@ data:extend(
 			{type = "item", name = "biomass", amount = brd_cost + 1},
 			{type = "fluid", name = "sulfuric-acid", amount = 35 }
 		},
-		results=
+		results =
     	{
-			{name="wm-bio-remains", amount_min = math.ceil(brd_cost/3), amount_max = brd_cost+1, probability=.30},
-			{name="biters-research-data", amount = 10}
+			{type = "item", name="wm-bio-remains", amount_min = math.ceil(brd_cost/3), amount_max = brd_cost+1, probability=.30},
+			{type = "item", name="biters-research-data", amount = 10}
 		},
 	},
 

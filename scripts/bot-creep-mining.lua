@@ -25,18 +25,26 @@ function mining_bots.add(entity, playerN, e_tick)
     local mbots = storage.wm_creep_miners
     local action_ticks = storage.dissention
     --game.print("Registering bot with a unit number: " .. r)
+    local fuel
+    local ochre
+    local fuel_item
+    fuel, ochre, fuel_item = bot_func.fuel_reserve_by_char(playerN)
+    if not fuel then
+        entity.active = false
+        return
+    end
+
     local next_t = find_free_tick(e_tick + 60) -- give the newborn a second to look around
     mbots[r] = {
         tile = nil, -- the target creep tile pos selected by bot
-        --tile_underneath = nil,
         entity = entity,
-        fuel = 48000, -- 12x4MJ 12 units of coal or 4 units of solid fuel. 80% efficiency means 15 coal or 5 solid is needed.
-        ochre = 25, -- 5 units, where every 2 units are made of 2 iron and 3 stone + water
+        fuel = fuel, -- 12x4MJ 12 units of coal or 4 units of solid fuel. 80% efficiency means 15 coal or 5 solid is needed.
+        fuel_name = fuel_item,
+        ochre = ochre, -- 5 units, where every 2 units are made of 2 iron and 3 stone + water
         bio1 = 0,
         bio2 = 0,
         tileOid = nil,
         pos_found_tiles = entity.position, -- original position for search of new/existing tiles fields
-        --found_tiles = nil,
         field = {}, -- table of fields the bot is processing
         searching_field = nil, -- a pos of the field bot checked for creep last time
         activity = bot_actions.search_field,        
@@ -56,9 +64,21 @@ function mining_bots.remove(r, entity, tempInv, e_tick)
         if mbot.next_tick and mbot.next_tick >= e_tick then action_ticks[mbot.next_tick].bot = nil end
         fields_func.unlock_tiles(r)
         fields_func.unlink_fields(r)
-        if tempInv then
+        if tempInv and tempInv.valid then
             bot_func.consume_fuel_basic(r, e_tick)
-
+            if mbot.bio1 > 0 then
+                tempInv.insert({name = "biomass", count = mbot.bio1})
+            end
+            if mbot.bio2 > 0 then
+                tempInv.insert({name = "wm-bio-remains", count = mbot.bio2})
+            end
+            if mbot.ochre > 4 then
+                tempInv.insert({name = "wm-ochre", count = math.floor(mbot.ochre/5)})
+            end
+            local f = bot_func.extract_fuel(mbot.fuel, mbot.fuel_name)
+            if f then
+                tempInv.insert({name = mbot.fuel_name, count = f})
+            end
         end
         storage.wm_creep_miners[r] = nil
         storage.wm_creep_miners_count = storage.wm_creep_miners_count - 1
@@ -254,7 +274,10 @@ end
 function mining_bots.confusion(r, e_tick)
     local mbot = storage.wm_creep_miners[r]
     if not mbot or not mbot.entity or not mbot.entity.valid then return end
-    if mbot.next_tick then storage.dissention[mbot.next_tick].bot = nil end
+    if mbot.next_tick then
+        storage.dissention[mbot.next_tick].bot = nil
+        mbot.next_tick = nil
+    end
     if not mbot.entity or not mbot.entity.valid then
         game.print("A registered bot was suddenly found dead/removed! Number = " .. r)
         fields_func.unlock_tiles(r)
@@ -300,7 +323,10 @@ end
 function mining_bots.arrival(r, e_tick)
     local mbot = storage.wm_creep_miners[r]
     if not mbot or not mbot.entity or not mbot.entity.valid then return end
-    if mbot.next_tick then storage.dissention[mbot.next_tick].bot = nil end
+    if mbot.next_tick then
+        storage.dissention[mbot.next_tick].bot = nil
+        mbot.next_tick = nil
+    end
     if not mbot.entity or not mbot.entity.valid then
         game.print("A registered bot was suddenly found dead/removed! Number = " .. r)
         fields_func.unlock_tiles(r)
