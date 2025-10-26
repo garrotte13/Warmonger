@@ -7,7 +7,8 @@ local bot_actions = {
     mining = 2,
     running = 3,
     search_field = 4,
-    home = 5
+    home = 5,
+    refueling = 6
 }
 
 
@@ -18,6 +19,15 @@ local function find_free_tick(e_tick)
         action_ticks[e_tick] = {bot = 0, tree = nil}
     end
 return e_tick
+end
+
+function mining_bots.Show_Selected(e)
+    local player = game.players[e.player_index]
+    local entity = player.selected
+    if entity and entity.valid and entity.name == "wm-droid-1" and entity.unit_number and entity.force == player.force then
+        local mbot = storage.wm_creep_miners[entity.unit_number]
+        player.create_local_flying_text{text = "Fuel: " .. mbot.fuel .. " Ochre: " .. mbot.ochre, position = entity.position, time_to_live = 120}
+    end
 end
 
 function mining_bots.add(entity, playerN, e_tick)
@@ -31,6 +41,22 @@ function mining_bots.add(entity, playerN, e_tick)
     fuel, ochre, fuel_item = bot_func.fuel_reserve_by_char(playerN)
     if not fuel then
         entity.active = false
+        mbots[r] = {
+            tile = nil,
+            entity = entity,
+            fuel = 0,
+            fuel_name = nil,
+            ochre = 0,
+            bio1 = 0,
+            bio2 = 0,
+            tileOid = nil,
+            pos_found_tiles = entity.position,
+            field = {},
+            searching_field = nil,
+            activity = bot_actions.refueling,        
+            t_activity = e_tick,
+            next_tick = nil
+        }
         return
     end
 
@@ -287,8 +313,8 @@ function mining_bots.confusion(r, e_tick)
         return true
     end
     bot_func.consume_fuel_basic(r, e_tick)
+    if not mbot.entity.commandable.command then return end -- some lost bot
     local next_t
-    
     if mbot.activity == bot_actions.home then
         if mbot.entity.commandable.command.type ~= defines.command.wander then
             game.get_player("garrotte").create_local_flying_text{text = "I'm lost! My command is " .. mbot.entity.commandable.command.type, position = mbot.entity.position, time_to_live = 120}

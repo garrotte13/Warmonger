@@ -98,8 +98,6 @@ script.on_event(defines.events.on_robot_built_entity, function(e) -- shouldn't h
   end
 end)
 
-
-
 script.on_event(defines.events.on_player_mined_entity, function(e)
   if e.entity.valid and e.entity.name == "wm-droid-1" then
     creepmining.remove(nil, e.entity, e.buffer, e.tick)
@@ -151,7 +149,9 @@ script.on_event(defines.events.on_ai_command_completed, function(e)
   end
 end)
 
-
+script.on_event(defines.events.on_selected_entity_changed, function(e)
+  creepmining.Show_Selected(e)
+end)
 
 
 script.on_event(defines.events.on_player_built_tile, function(e)

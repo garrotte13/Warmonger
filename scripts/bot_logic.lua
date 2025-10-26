@@ -20,7 +20,8 @@ bot_behavior.bot_actions = {
     mining = 2,
     running = 3,
     search_field = 4,
-    home = 5
+    home = 5,
+    refueling = 6
 }
 
 function bot_behavior.search_zones(r)
@@ -80,7 +81,7 @@ function bot_behavior.fuel_reserve_by_char(playerN)
     end
     gg_fuel_items()
     for _, item in pairs (fuel_items) do
-       local count = math.min(math.ceil(bot_fuel_capacity / item.value), CharInv.get_item_count(item.name))
+       local count = math.min(math.floor(bot_fuel_capacity / item.value), CharInv.get_item_count(item.name))
        if count >= math.ceil(bot_fuel_min / item.value) then
         return CharInv.remove({name = item.name, count = count}) * item.value ,
          CharInv.remove({name="wm-ochre", count = math.min(CharInv.get_item_count("wm-ochre"), 5)}) * 5 ,
@@ -92,9 +93,9 @@ end
 
 function bot_behavior.extract_fuel(fuel, fuel_name)
     --{name = "coal", count = math.floor(mbot.fuel/3200) - 1})
-    gg_fuel_items()
     local f
-    if fuel_name then
+    if fuel_name and fuel > 0 then
+        gg_fuel_items()
         for _, item in pairs (fuel_items) do
             if item.name == fuel_name then
                 f = math.floor(fuel / item.value) - 1
@@ -102,6 +103,8 @@ function bot_behavior.extract_fuel(fuel, fuel_name)
                 return
             end
         end
+    else
+        return
     end
 end
 
@@ -111,7 +114,7 @@ function bot_behavior.consume_fuel_mining(r)
     if mbot.fuel < 1 then
         game.print("Unit " .. r .. " overconsumed fuel by value of " .. -mbot.fuel)
     end
-    game.get_player("garrotte").create_local_flying_text{text = "Fuel left: " .. mbot.fuel, position = mbot.entity.position, time_to_live = 100}
+    --game.get_player("garrotte").create_local_flying_text{text = "Fuel left: " .. mbot.fuel, position = mbot.entity.position, time_to_live = 100}
 end
 
 function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
@@ -121,7 +124,11 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
     -- Defining constants
     local bot_fuel_consumption = 1
     if not Fuel_Coeff then
-        Fuel_Coeff = mbot.entity.commandable.command.type
+        if mbot.entity.commandable.command then
+            Fuel_Coeff = mbot.entity.commandable.command.type
+        else
+            return true
+        end
         if Fuel_Coeff == defines.command.wander then Fuel_Coeff = 3
          elseif Fuel_Coeff == defines.command.stop then Fuel_Coeff = 1
           elseif Fuel_Coeff == defines.command.go_to_location then Fuel_Coeff = 5

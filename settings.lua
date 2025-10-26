@@ -5,8 +5,8 @@ data:extend({
         name = "wm-BiomassToBitersReseach",
         description = "wm-BiomassToBitersReseach",
         setting_type = "startup",
-        default_value = 3,
-        minimum_value = 2,
+        default_value = 4,
+        minimum_value = 0,
         maximum_value = 10,
 
     },
