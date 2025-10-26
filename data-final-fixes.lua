@@ -1,19 +1,35 @@
+local brd_cost = settings.startup["wm-BiomassToBitersReseach"].value
 if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
 
 -- fff-358
-data.raw["unit-spawner"]["biter-spawner"].spawn_decoration = {}
-data.raw["unit-spawner"]["spitter-spawner"].spawn_decoration = {}
-data.raw["turret"]["small-worm-turret"].spawn_decoration = {}
-data.raw["turret"]["big-worm-turret"].spawn_decoration = {}
-data.raw["turret"]["medium-worm-turret"].spawn_decoration = {}
-data.raw["turret"]["behemoth-worm-turret"].spawn_decoration = {}
-if data.raw["unit-spawner"]["arachnid-spawner-unitspawner"] then data.raw["unit-spawner"]["arachnid-spawner-unitspawner"].spawn_decoration = {} end
+for _, sp in pairs(data.raw["unit-spawner"]) do
+  for _, fl in pairs(sp.flags) do
+    if fl == "placeable-enemy" then
+      sp.spawn_decoration = {}
+      break
+    end
+  end
+end
+for _, sp in pairs(data.raw["turret"]) do
+  for _, fl in pairs(sp.flags) do
+    if fl == "placeable-enemy" then
+      sp.spawn_decoration = {}
+      break
+    end
+  end
+end
+--data.raw["unit-spawner"]["biter-spawner"].spawn_decoration = {}
+--data.raw["unit-spawner"]["spitter-spawner"].spawn_decoration = {}
+--data.raw["turret"]["small-worm-turret"].spawn_decoration = {}
+--data.raw["turret"]["big-worm-turret"].spawn_decoration = {}
+--data.raw["turret"]["medium-worm-turret"].spawn_decoration = {}
+--data.raw["turret"]["behemoth-worm-turret"].spawn_decoration = {}
+--if data.raw["unit-spawner"]["arachnid-spawner-unitspawner"] then data.raw["unit-spawner"]["arachnid-spawner-unitspawner"].spawn_decoration = {} end
 
 --data.raw.tile["kr-creep"].absorptions_per_second = 0.0002
 --data.raw.tile["fk-creep"].absorptions_per_second = 0.0001
 
-local militaryrecipe = data.raw.recipe["military-science-pack"]
-table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
+
 --table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})
 --table.insert(data.raw.technology["electric-energy-distribution-2"].effects, { type = "unlock-recipe", recipe = "creep-miner1-radar"})
 
@@ -77,6 +93,9 @@ if mods["RampantArsenal"] then
  end
 end
 
+if brd_cost > 0 then
+ local militaryrecipe = data.raw.recipe["military-science-pack"]
+ table.insert(data.raw.technology["military-science-pack"].effects, { type = "unlock-recipe", recipe = "biters-research-data"})
  if militaryrecipe.ingredients then
     for i, component in pairs(militaryrecipe.ingredients) do
       for _, value in pairs(component) do
@@ -104,3 +123,4 @@ end
       end
     end
   end
+end
