@@ -8,7 +8,7 @@ local function generate_creep(entities) -- all entities must be strictly from on
   local surface = entities[1].surface
   local min_r = 2
   for _, entity in pairs(entities) do
-    if entity.type == "unit-spawner" then min_r = 1 else min_r = 0 end
+    if entity.type == "unit-spawner" then min_r = 2 else min_r = 1 end
     storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.5*(min_r+1)),
       position = entity.position,
@@ -154,7 +154,7 @@ function creeping.process_creep_queue(t)
         local ne_prob
         if creep_pack.tier then
           ne_coef = ( (creep_pack.type or 2) * 1.2 ) + ( creep_pack.tier / 16 )
-          ne_prob = 3 + ( creep_pack.tier * 4 ) - (creep_pack.type or 2)
+          ne_prob = 3 + ( creep_pack.tier * 3 ) - (creep_pack.type or 2)
         elseif (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
           ne_coef = 2 + math.floor(3 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
           ne_prob = 4 + math.ceil(12 * game.forces.enemy.get_evolution_factor(creep_pack.surface))
@@ -173,9 +173,8 @@ function creeping.process_creep_queue(t)
           elseif creep_pack.fake then
             if math.random(1,10) > 7 then r = 4 else r = 3 end -- 30% nothing for creep revenge strikes
           else
-            -- local d = misc.get_distance(creep_pack.tiles[i].position, creep_pack.position)  -- old flib tiles-wrong calculation again
             local d = math.sqrt(((creep_pack.tiles[i].position.x + 0.5) - creep_pack.position.x) ^ 2 + ((creep_pack.tiles[i].position.y + 0.5) - creep_pack.position.y) ^ 2)
-            if (d > 3.8) and ( (creep_pack.radius - d) < 4.9) then   -- no biomass on distal rings
+            if (d > 3.8) and ( (creep_pack.radius - d) < 1.9) then   -- no biomass on distal rings
               if math.random(1,10) > 6 then r = 4 else r = 3 end  -- 60% fake creep, 40% nothing
             elseif (d > ne_coef ) then -- bigger and bigger 100% biomass core underneath growing New Enemies structures
               if math.random(1,ne_prob) > 2 then r = 3 end -- less biomass with every 10% or 5% evo increase
