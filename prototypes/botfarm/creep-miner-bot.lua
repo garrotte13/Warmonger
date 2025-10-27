@@ -56,7 +56,7 @@ data:extend({
   flags = {"placeable-player", "player-creation", "placeable-off-grid"},
   --subgroup="creatures",
   order="e-a-b-d",
-  has_belt_immunity = true,
+  has_belt_immunity = false,
   max_health = 200,
   alert_when_damaged = true,
   healing_per_tick = 0.00,

@@ -17,7 +17,7 @@ data:extend({
     subgroup = "wm-devices",
     order = "z[droid]-e",
   },
-  {
+  --[[{
     type = "item",
     name = "wm-droid-1-dummy",
     icon_size = 64,
@@ -27,7 +27,7 @@ data:extend({
     subgroup = "capsule",
     
     stack_size = 1,
-  },
+  },]]
 
   {
     type = "recipe",
@@ -44,7 +44,7 @@ data:extend({
     },
     results={ {type="item", name="wm-droid-1", amount=1} },
   },
-
+  --[[
   {
     type = "recipe",
     name = "wm-droid-1-dummy",
@@ -59,22 +59,21 @@ data:extend({
     },
     results={ {type="item", name="wm-droid-1-dummy", amount=1} },
   },
-
+  ]]
 
   {
     type = "technology",
     name = "wm-creepmining-droid-1",
     icon_size = 256, icon_mipmaps = 4,
     icon = "__Warmonger__/graphics/testbot/robotarmy-tech-droid-flame.png",
-    prerequisites = {"engine"},
+    prerequisites = {"engine", "logistics-2"},
     unit =
     {
-      count = 80,
+      count = 100,
       ingredients =
       {
         {"automation-science-pack", 1},
-        {"logistic-science-pack", 1},
-        {"military-science-pack", 1}
+        {"logistic-science-pack", 1},        
       },
       time = 30
     },
@@ -84,10 +83,10 @@ data:extend({
         type = "unlock-recipe",
         recipe = "wm-droid-1"
       },
-      {
-        type = "unlock-recipe",
-        recipe = "wm-droid-1-dummy"
-      },
+      --{
+      --  type = "unlock-recipe",
+      --  recipe = "wm-droid-1-dummy"
+      --},
     },
     order = "c-c-e"
   },
