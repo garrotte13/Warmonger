@@ -1,9 +1,173 @@
-data:extend({
 
+
+local dir_eff3 =
+{
+  type = "instant",
+  target_effects =
+      {
+          type = "nested-result",
+          action =
+              {
+                  {
+                      type = "area",
+                      radius = 2 + (1 * 0.5),
+                      force = "ally",
+                      entity_flags = {"placeable-enemy"},
+                      action_delivery =
+                          {
+                              type = "instant",
+                              target_effects =
+                                  {
+                                      type = "damage",
+                                      damage = { amount = -5 * 1, type = "wm_healing"}
+                                  }
+                          }
+                  },
+                  {
+                      type = "area",
+                      radius = 2 + (1 * 0.5),
+                      force = "enemy",
+                      action_delivery =
+                          {
+                              type = "instant",
+                              target_effects =
+                                  {
+                                      type = "damage",
+                                      damage = { amount = 1.5 * 1, type = "poison"}
+                                  }
+                          }
+                  }
+              }
+      }
+}
+
+local function Counter_PoisonCloud(attributes, attack)
+  data:extend({
+  {
+    type = "smoke-with-trigger",
+    name = attributes.name,
+    flags = {"not-on-map"},
+    show_when_smoke_off = true,
+    animation =
+        {
+            filename = "__base__/graphics/entity/cloud/cloud-45-frames.png",
+            --flags = { "compressed" },
+            priority = "low",
+            width = 256,
+            height = 256,
+            frame_count = 45,
+            animation_speed = 0.5,
+            line_length = 7,
+            scale = attributes.scale or 3,
+        },
+    slow_down_factor = attributes.slowdown or 0,
+    affected_by_wind = attributes.wind,
+    cyclic = true,
+    duration = attributes.duration or 60 * 20,
+    fade_away_duration = attributes.outDuration or (attributes.duration and attributes.duration * 0.25) or 2 * 60,
+    spread_duration = attributes.inDuration or (attributes.duration and attributes.duration * 0.25) or 10,
+    color = attributes.tint or { r = 0.2, g = 0.9, b = 0.2 },
+    action = attack or
+        {
+            type = "direct",
+            action_delivery =
+                {
+                    type = "instant",
+                    target_effects =
+                        {
+                            type = "nested-result",
+                            action =
+                                {
+                                    type = "area",
+                                    radius = 11,
+                                    entity_flags = {"breaths-air"},
+                                    action_delivery =
+                                        {
+                                            type = "instant",
+                                            target_effects =
+                                                {
+                                                    type = "damage",
+                                                    damage = { amount = 8, type = "poison"}
+                                                }
+                                        }
+                                }
+                        }
+                }
+        },
+    action_cooldown = attributes.cooldown or 30
+  }
+  })
+end
+--[[
+if not settings.startup["wm-CreepCorrosion"].value then
+  for i=1,3 do
+    Counter_PoisonCloud(
+        {
+            name = "wm-cs-poison-cloud-t" .. i,
+            scale = 0.80 + (i * 0.15),
+            wind = true,
+            slowdown = -1.3,
+            duration = 10 * (i * 5),
+            cooldown = 5
+        },
+        {
+            type = "direct",
+            action_delivery =
+                {
+                    type = "instant",
+                    target_effects =
+                        {
+                            type = "nested-result",
+                            action =
+                                {
+                                    {
+                                        type = "area",
+                                        radius = 2 + (i * 0.5),
+                                        force = "ally",
+                                        entity_flags = {"placeable-enemy"},
+                                        action_delivery =
+                                            {
+                                                type = "instant",
+                                                target_effects =
+                                                    {
+                                                        type = "damage",
+                                                        damage = { amount = -5 * i, type = "healing"}
+                                                    }
+                                            }
+                                    },
+                                    {
+                                        type = "area",
+                                        radius = 2 + (i * 0.5),
+                                        force = "enemy",
+                                        action_delivery =
+                                            {
+                                                type = "instant",
+                                                target_effects =
+                                                    {
+                                                        type = "damage",
+                                                        damage = { amount = 1.5 * i, type = "poison"}
+                                                    }
+                                            }
+                                    }
+                                }
+                        }
+                }
+        }
+    )
+  end
+
+end
+]]
+
+data:extend({
+  { -- this defines a damage type so resistances don't effect this damage
+  type = "damage-type", 
+  name = "wm_healing"
+},
 {
   type = "simple-entity",
   name = "wm-revenge-doll",
-  max_health = 20000,
+  max_health = 200000,
   hidden = true,
   picture = {
     filename = "__core__/graphics/empty.png",
@@ -114,7 +278,9 @@ data:extend({
           effect_id = "wm-strike-back-3"
           }
         }
-      }
+      },
+      not settings.startup["wm-CreepCorrosion"].value and dir_eff3
+
     },
     height_from_ground = 280 / 64
   },
@@ -218,7 +384,8 @@ data:extend({
           effect_id = "wm-strike-back-2"
           }
         }
-      }
+      },
+      not settings.startup["wm-CreepCorrosion"].value and dir_eff3
     },
     height_from_ground = 280 / 64
   },
@@ -322,7 +489,8 @@ data:extend({
           effect_id = "wm-strike-back-1"
           }
         }
-      }
+      },
+      not settings.startup["wm-CreepCorrosion"].value and dir_eff3
     },
     height_from_ground = 280 / 64
   },

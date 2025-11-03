@@ -9,10 +9,6 @@
 	"dependencies":
 	[
 		"base >= 2.0.40",
-		"? RampantArsenal",
-		"? RampantIndustry",
-		"? Rampant >= 3.3.0",
-		"? alien-biomes",
 		"? bobenemies"
 	]
 }

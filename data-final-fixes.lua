@@ -1,6 +1,39 @@
 local brd_cost = settings.startup["wm-BiomassToBitersReseach"].value
 if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"].terrain_friction_modifier = 0.1 end
 
+if settings.startup["wm-CreepCorrosion"].value == false then
+  local buildings =
+  {
+    "accumulator", "arithmetic-combinator", "turret", "electric-turret", "fluid-turret", "unit-spawner", "artillery-turret", "assembling-machine",
+    "beacon", "boiler", "burner-generator", "constant-combinator", "container", "curved-rail-a", "curved-rail-b", "decider-combinator", "electric-energy-interface",
+    "electric-pole", "furnace", "gate", "generator", "heat-interface", "heat-pipe", "infinity-container", "infinity-pipe", "inserter", "lab", "lamp",
+    "legacy-curved-rail", "legacy-straight-rail", "loader", "loader-1x1", "logistic-container", "market", "mining-drill", "offshore-pump", "pipe", "pipe-to-ground",
+    "power-switch", "programmable-speaker", "pump", "rail-chain-signal", "rail-signal", "reactor", "roboport", "rocket-silo", "solar-panel", "splitter",
+    "storage-tank", "straight-rail", "train-stop", "transport-belt", "underground-belt", "wall"
+  }
+  for _, tp in pairs(buildings) do
+    for _, pt in pairs(data.raw[tp]) do
+        local enemy
+        if pt.flags then
+          for _, fl in pairs(pt.flags) do
+            if fl == "placeable-enemy" then
+              enemy = true
+              break
+            end
+          end
+        end
+        if (not enemy) then
+          if not pt.collision_mask then
+            pt.collision_mask = data.raw["utility-constants"]["default"].default_collision_masks[tp]
+          end
+          pt.collision_mask.layers.creep_tile = true
+        end
+      --end
+    end
+  end
+end
+
+
 -- fff-358
 for _, sp in pairs(data.raw["unit-spawner"]) do
   for _, fl in pairs(sp.flags) do

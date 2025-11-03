@@ -56,11 +56,11 @@ local creep_walking_sound =
 }
 
 -- Sprites
-water_tile_type_names = { "water", "deepwater", "water-green", "deepwater-green", "water-shallow", "water-mud" }
-default_transition_group_id = 0
-water_transition_group_id = 1
-out_of_map_transition_group_id = 2
-patch_for_inner_corner_of_transition_between_transition =
+local water_tile_type_names = { "water", "deepwater", "water-green", "deepwater-green", "water-shallow", "water-mud" }
+local default_transition_group_id = 0
+local water_transition_group_id = 1
+local out_of_map_transition_group_id = 2
+local patch_for_inner_corner_of_transition_between_transition =
 {
   filename = "__base__/graphics/terrain/water-transitions/water-patch.png",
     scale = 0.5,
@@ -103,7 +103,7 @@ local function init_transition_between_transition_common_options(base)
   return t
 end
 
-function init_transition_between_transition_water_out_of_map_options(base)
+local function init_transition_between_transition_water_out_of_map_options(base)
   return init_transition_between_transition_common_options(base)
 end
 
@@ -188,7 +188,7 @@ local ground_to_out_of_map_transition =
   create_transition_to_out_of_map_from_template("__base__/graphics/terrain/out-of-map-transition/out-of-map-transition.png",
                                                 "__base__/graphics/terrain/out-of-map-transition/hr-out-of-map-transition.png",
                                                 { has_base_layer = false, has_background = true, has_mask = true })
-base_tile_transition_effect_maps = {}
+local base_tile_transition_effect_maps = {}
 local ttfxmaps = base_tile_transition_effect_maps
 
 
@@ -302,6 +302,33 @@ local creep_transitions_between_transitions = {
   },
 }
 
+local c_layers = {ghost = true, ground_tile = true}
+if not settings.startup["wm-CreepCorrosion"].value then
+  data:extend(
+    {
+      {
+        type = "collision-layer",
+        name = "creep_tile"
+      }
+    })
+  c_layers = {ghost = true, ground_tile = true, creep_tile = true}
+  local ignore_types =
+  {
+    ["unit"] = true,
+    ["explosion"] = true,
+    ["tree"] = true,
+    ["combat-robot"] = true,
+    ["construction-robot"] = true,
+    ["logistic-robot"] = true,
+    ["land-mine"] = true,
+    ["vehicle"] = true,
+    ["character"] = true,
+    ["simple-entity"] = true,
+    ["rock"] = true,
+  }
+
+  
+end
 
 data:extend(
 {
@@ -313,7 +340,7 @@ data:extend(
 		can_be_part_of_blueprint = false,
     --collision_mask = { "ghost-layer", "ground-tile", "colliding-with-tiles-only" },
 		--collision_mask = { layers = { ghost = true, ground_tile = true, water_tile = true},  not_colliding_with_itself = true},
-    collision_mask = { layers = { ghost = true, ground_tile = true},  not_colliding_with_itself = true},
+    collision_mask = { layers = c_layers,  not_colliding_with_itself = true},
     minable = {mining_time = 10000},
 		--minable = {mining_time = 1000, result = "biomass", probability = 0.0, amount = 0},
 		walking_speed_modifier = 0.35,
@@ -322,7 +349,7 @@ data:extend(
     --hidden = true,
 		transition_overlay_layer_offset = 3,
 		decorative_removal_probability = 0.35,
-    --effect = "water", White water? Has someone jerked off on my creep?
+    --effect = "water", White water?
     variants = tile_variations_template
 		(
 			--"__Warmonger__/graphics/tiles/creep/creep.png", "__base__/graphics/terrain/masks/transition-1.png",
@@ -355,7 +382,7 @@ data:extend(
 		can_be_part_of_blueprint = false,
 		--collision_mask = { "ghost-layer", "ground-tile", "floor-layer", "not-colliding-with-itself" },
     --collision_mask = { layers = { ghost = true, ground_tile = true, water_tile = true},  not_colliding_with_itself = true},
-    collision_mask = { layers = { ghost = true, ground_tile = true},  not_colliding_with_itself = true},
+    collision_mask = { layers = c_layers,  not_colliding_with_itself = true},
     minable = {mining_time = 10000},
 		--minable = {mining_time = 1000, result = "wm-bio-remains", probability = 0, amount = 0},
 		walking_speed_modifier = 0.35,

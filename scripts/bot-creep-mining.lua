@@ -269,7 +269,7 @@ function mining_bots.process(r, e_tick)
                     mbot.entity.commandable.set_command({
                         type = defines.command.go_to_location,
                         destination = {x = selected_tile.x + 0.5, y = selected_tile.y + 0.5},
-                        radius = 0.9,
+                        radius = 1.05,
                         distraction = defines.distraction.none
                     })
                     next_t = find_free_tick(e_tick + 1200) -- 20 seconds timeout to reach the selected tile
