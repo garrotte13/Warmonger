@@ -1,26 +1,14 @@
 local creep_collector = require("scripts.creep-collector")
 local creep = require("scripts.creep")
 local creepmining = require("scripts.bot-creep-mining")
+local corrosionF = require("scripts.corrosion")
 
 local biters_eco
 local strike_back
 local action_ticks
+local corrosion_enabled
 
 remote.add_interface("kr-creep", creep.remote_interface)
-
-local function add_hooks()
---  if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
-
-    script.on_event(defines.events.on_chunk_generated, function(e)
-      creep.on_chunk_generated(e.area, e.surface)
-    end)
-
-    script.on_event(defines.events.on_biter_base_built, function(e)
-      creep.on_biter_base_built(e.entity)
-    end)
---  end
-
-end
 
 script.on_init(function()
   storage.wm_creep_miners = {}
@@ -31,17 +19,23 @@ script.on_init(function()
   storage.dissention[0] = {bot = nil}
   action_ticks = storage.dissention
   creep.init()
-  add_hooks()
   creep.creepify()
   biters_eco = settings.global["wm-ecoFriendlyBiters"].value
-  strike_back = settings.global["wm-CounterStrike"].value 
+  strike_back = settings.global["wm-CounterStrike"].value
+  corrosion_enabled =  settings.startup["wm-CreepCorrosion"].value
+  if corrosion_enabled then corrosionF.init() end
 end)
 
 script.on_load(function(e)
   biters_eco = settings.global["wm-ecoFriendlyBiters"].value
   strike_back = settings.global["wm-CounterStrike"].value
   action_ticks = storage.dissention
-  add_hooks()
+  corrosion_enabled = settings.startup["wm-CreepCorrosion"].value
+
+end)
+
+script.on_configuration_changed(function()
+  if corrosion_enabled then corrosionF.init() end
 end)
 
 script.on_event(defines.events.on_tick, function(event)
@@ -70,8 +64,46 @@ script.on_event(defines.events.on_tick, function(event)
     if act_now.bot then
       creepmining.process(act_now.bot, t)
     end
+    if corrosion_enabled and act_now.corrosion_affected then -- we do have something to corrode today
+      for _, pos in pairs(act_now.corrosion_affected) do
+        local entity
+        local corrosion = storage.corrosion
+        if corrosion.affected[pos.x .. ":" .. pos.y] then
+          entity = corrosion.affected[pos.x .. ":" .. pos.y].e
+        else
+          break
+        end
+        if entity.valid and ( corrosion.affected[pos.x .. ":" .. pos.y].no_check or corrosionF.is_still_affected(entity) ) then
+          corrosion.affected[pos.x .. ":" .. pos.y].no_check = true
+          corrosionF.affect(entity)
+          if action_ticks[t+30] then
+            if action_ticks[t+30].corrosion_affected then
+              table.insert(action_ticks[t+30].corrosion_affected, {x = pos.x, y = pos.y})
+            else
+              action_ticks[t+30].corrosion_affected = {{x = pos.x, y = pos.y}}
+            end
+          else
+            action_ticks[t+30] = { corrosion_affected = {{x = pos.x, y = pos.y}} }
+          end
+          corrosion.affected[pos.x .. ":" .. pos.y].next_tick = t+30
+
+        else
+          corrosion.affected_num = corrosion.affected_num - 1
+          corrosion.affected[pos.x .. ":" .. pos.y] = nil
+        end
+      end
+    end
     action_ticks[t] = nil
   end
+end)
+
+script.on_event(defines.events.on_chunk_generated, function(e)
+  creep.on_chunk_generated(e.area, e.surface)
+end)
+
+script.on_event(defines.events.on_biter_base_built, function(e)
+  game.print("Biters are doing something bad...")
+  creep.on_biter_base_built(e.entity)
 end)
 
 script.on_event(defines.events.on_script_trigger_effect, function(e)
@@ -81,32 +113,47 @@ end)
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(e)
   if e.setting == "wm-ecoFriendlyBiters" then biters_eco = settings.global["wm-ecoFriendlyBiters"].value
-  elseif e.setting == "wm-CounterStrike" then strike_back = settings.global["wm-CounterStrike"].value end
+  elseif e.setting == "wm-CounterStrike" then strike_back = settings.global["wm-CounterStrike"].value
+  --elseif e.setting == "wm-CreepCorrosion" then
+    --corrosion_enabled = settings.global["wm-CreepCorrosion"].value
+    -- Trigger here a change of corrosion state for everything in the runtime
+    --storage.corrosion_enabled = settings.global["wm-CreepCorrosion"].value
+  end
 end)
 
 
 
 script.on_event(defines.events.on_built_entity, function(e)
-  if e.entity.valid and e.entity.name == "wm-droid-1" then
+  if not e.entity.valid then return end
+  if e.entity.name == "wm-droid-1" then
     creepmining.add(e.entity, e.player_index, e.tick)
+  elseif corrosion_enabled then
+    corrosionF.engaging(e.entity, e.tick)
   end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(e) -- shouldn't happen?
-  if e.entity.valid and e.entity.name == "wm-droid-1" then
+  if not e.entity.valid then return end
+  if e.entity.name == "wm-droid-1" then
     creepmining.add(e.entity, nil, e.tick)
+  elseif corrosion_enabled then
+    corrosionF.engaging(e.entity, e.tick)
   end
 end)
 
 script.on_event(defines.events.on_player_mined_entity, function(e)
   if e.entity.valid and e.entity.name == "wm-droid-1" then
     creepmining.remove(nil, e.entity, e.buffer, e.tick)
+  elseif corrosion_enabled then
+    corrosionF.disengaging(e.entity)
   end
 end)
 
 script.on_event(defines.events.on_robot_mined_entity, function(e) -- shouldn't happen?
   if e.entity.valid and e.entity.name == "wm-droid-1" then
     creepmining.remove(nil, e.entity, e.buffer, e.tick)
+  elseif corrosion_enabled then
+    corrosionF.disengaging(e.entity)
   end
 end)
 
@@ -130,11 +177,13 @@ script.on_event(defines.events.on_entity_died, function(e)
         action_ticks[next_tick] = { tree = new_tree }
     end
     --game.print("A tree was destroyed by biters")
-  elseif strike_back
-   and (e.entity.force.name == "enemy") and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
+  elseif strike_back and (e.entity.force.name == "enemy")
+   and (e.entity.type == "unit-spawner" or e.entity.type == "turret")
     and game.forces.enemy.get_evolution_factor(e.entity.surface) > 0.38 then
       --game.print("Checking if it's time for counter attack...")
      creep.check_strike(e.entity, e.cause, e.force)
+  elseif corrosion_enabled then
+    corrosionF.disengaging(e.entity)
   end
 end)
 

@@ -1,18 +1,19 @@
 local util = require("scripts.util")
-local corrosion = {}
+local corrosionF = {}
 
-function corrosion.init()
- global.corrosion = {
- enabled = settings.global["wm-CreepCorrosion"].value,
- strike_back = settings.global["wm-CounterStrike"].value,
- affected = {},
- affected_num = 0,
- creepminer_hints = settings.global["wm-CreepMinerHints"].value
+function corrosionF.init()
+  if not storage.corrosion then
+    storage.corrosion = {
+    --enabled = settings.global["wm-CreepCorrosion"].value,
+    affected = {},
+    affected_num = 0,
+    --creepminer_hints = settings.global["wm-CreepMinerHints"].value
  }
+  end
 end
 
-function corrosion.engaging (entity, t)
- if (not global.corrosion.enabled) or (not entity.destructible) or (not entity.is_entity_with_health)
+function corrosionF.engaging (entity, t)
+ if (not entity.destructible) or (not entity.is_entity_with_health) or entity.prototype.type == "unit" 
   or entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot" or entity.prototype.type == "character"
    then return end
  local e_area = util.box_ceiling(entity.selection_box)
@@ -36,16 +37,16 @@ function corrosion.engaging (entity, t)
  end
  if creep_amount > 0 then
   t = t + 12 + math.random(1,15)
-  global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = true}
-  global.corrosion.affected_num = global.corrosion.affected_num + 1
-  if global.dissention[t] then
-    if global.dissention[t].corrosion_affected then
-      table.insert(global.dissention[t].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
+  storage.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = true}
+  storage.corrosion.affected_num = storage.corrosion.affected_num + 1
+  if storage.dissention[t] then
+    if storage.dissention[t].corrosion_affected then
+      table.insert(storage.dissention[t].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
     else
-      global.dissention[t].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
+      storage.dissention[t].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
     end
   else
-    global.dissention[t] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
+    storage.dissention[t] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
   end
  end
 
@@ -53,22 +54,22 @@ end
 
 -- no_check = false MEANS that building must be checked for tile collision at next corruption event !!
 
-function corrosion.engaging_fast (entity, t, please_no_check)
+function corrosionF.engaging_fast (entity, t, please_no_check)
   if entity.prototype.weight or entity.prototype.type == "logistic-robot" or entity.prototype.type == "construction-robot"
-   or entity.prototype.type == "character" then return end
+   or entity.prototype.type == "character" or entity.prototype.type == "unit"  then return end
   local e_area = util.box_ceiling(entity.selection_box)
   t = t + 14 + math.random(1,20)
-  if not global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
-    global.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = please_no_check}
-    global.corrosion.affected_num = global.corrosion.affected_num + 1
-  if global.dissention[t] then
-    if global.dissention[t].corrosion_affected then
-      table.insert(global.dissention[t].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
+  if not storage.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] then
+    storage.corrosion.affected[e_area.left_top.x .. ":" .. e_area.left_top.y] = {e = entity, next_tick = t, no_check = please_no_check}
+    storage.corrosion.affected_num = storage.corrosion.affected_num + 1
+  if storage.dissention[t] then
+    if storage.dissention[t].corrosion_affected then
+      table.insert(storage.dissention[t].corrosion_affected, {x = e_area.left_top.x, y = e_area.left_top.y})
     else
-      global.dissention[t].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
+      storage.dissention[t].corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}}
     end
   else
-    global.dissention[t] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
+    storage.dissention[t] = { corrosion_affected = {{x = e_area.left_top.x, y = e_area.left_top.y}} }
   end
   end
   
@@ -76,66 +77,67 @@ function corrosion.engaging_fast (entity, t, please_no_check)
 end
 
 local function disengage_it (posX, posY)
-  if global.corrosion.affected[posX .. ":" .. posY] then
-    local t = global.corrosion.affected[posX .. ":" .. posY].next_tick
+  if storage.corrosion.affected[posX .. ":" .. posY] then
+    local t = storage.corrosion.affected[posX .. ":" .. posY].next_tick
     local to_keep = {}
     local i = 0
-    if t and t > 0 and global.dissention[t] then
-      for _, pos in pairs(global.dissention[t].corrosion_affected) do
+    if t and t > 0 and storage.dissention[t] then
+      for _, pos in pairs(storage.dissention[t].corrosion_affected) do
         if pos.x ~= posX or posY ~= pos.y then
           table.insert(to_keep, pos)
         else i = i + 1
         end
       end
     end
-    if i > 0 then global.dissention[t].corrosion_affected = to_keep else game.print("Shit happened!") end
-    global.corrosion.affected[posX .. ":" .. posY] = nil
-    global.corrosion.affected_num = global.corrosion.affected_num - 1
-    -- game.print("Creep was underneath. Objects tortured left:" .. global.corrosion.affected_num)
+    if i > 0 then storage.dissention[t].corrosion_affected = to_keep else game.print("Shit happened!") end
+    storage.corrosion.affected[posX .. ":" .. posY] = nil
+    storage.corrosion.affected_num = storage.corrosion.affected_num - 1
+    -- game.print("Creep was underneath. Objects tortured left:" .. storage.corrosion.affected_num)
   end
 end
   
 
-function corrosion.disengaging (entity)
- if (not global.corrosion.enabled) or (entity.force.name~="player") then return end
+function corrosionF.disengaging (entity)
+ if (entity.force.name~="player") then return end
  local turret_area = util.box_ceiling(entity.selection_box)
  -- game.print("Disappeared object of name: " .. entity.name)
  disengage_it (turret_area.left_top.x, turret_area.left_top.y)
 end
 
-corrosion.commands = {
+--[[
+corrosionF.commands = {
   ["disable-corrosion"] = function()
-    global.corrosion.enabled = false
+    storage.corrosion.enabled = false
     game.print({ "message.corrosion-disabled" })
   end,
   ["enable-corrosion"] = function()
-    global.corrosion.enabled = true
+    storage.corrosion.enabled = true
     game.print({ "message.corrosion-enabled" })
   end,
   ["disable-corrosion-strikes"] = function()
-    global.corrosion.strike_back = false
+    storage.corrosion.strike_back = false
     game.print({ "message.corrosion-strikes-disabled" })
   end,
   ["enable-corrosion-strikes"] = function()
-    global.corrosion.strike_back = true
+    storage.corrosion.strike_back = true
     game.print({ "message.corrosion-strikes-enabled" })
   end,
   ["disable-creepminer-hints"] = function()
-    global.corrosion.creepminer_hints = false
+    storage.corrosion.creepminer_hints = false
     game.print({ "message.creepminer-hints-disabled" })
   end,
   ["enable-creepminer-hints"] = function()
-    global.corrosion.creepminer_hints = true
+    storage.corrosion.creepminer_hints = true
     game.print({ "message.creepminer-hints-enabled" })
   end,
 }
+]]
 
-
-function corrosion.affect(entity)
+function corrosionF.affect(entity)
      local surface = entity.surface
      local h_ratio = entity.get_health_ratio() / 2
      local rnd_coeff = (math.random() / 4) + 0.25
-     local dmg = math.floor( rnd_coeff * entity.health * ( 0.09 + game.forces.enemy.evolution_factor/8 ) * ( 1 - h_ratio ) )
+     local dmg = math.floor( rnd_coeff * entity.health * ( 0.09 + game.forces.enemy.get_evolution_factor(surface)/8 ) * ( 1 - h_ratio ) )
      -- at least 5 health will be left for biters/worms to finish
      local recieved_dmg = entity.damage(dmg, "enemy", "acid")
      if recieved_dmg > 0 then
@@ -143,12 +145,12 @@ function corrosion.affect(entity)
      end
  end
 
-function corrosion.update_tiles(surface, tiles)
-  if not global.corrosion.enabled then return end
+function corrosionF.update_tiles(surface, tiles)
+  --if not storage.corrosion.enabled then return end
   --local i = 0
   --local j = 0
   local entity
-  for _, aff in pairs(global.corrosion.affected) do
+  for _, aff in pairs(storage.corrosion.affected) do
     --i = i + 1
     entity = aff.e
     if entity and entity.valid and entity.surface == surface then
@@ -191,11 +193,11 @@ function corrosion.update_tiles(surface, tiles)
     end
  end
  --if j > 0 then game.print("Miner sends ".. j .. "/" .. i .. " entities for check.") end
- -- game.print("Objects tortured left:" .. global.corrosion.affected_num)
+ -- game.print("Objects tortured left:" .. storage.corrosion.affected_num)
  -- game.print("Objects tortured processed:" .. i)
 end
 
-function corrosion.is_still_affected(entity)
+function corrosionF.is_still_affected(entity)
   local obj_area = util.box_ceiling(entity.selection_box)
   local sec_area = entity.secondary_selection_box
   if sec_area then
@@ -224,4 +226,4 @@ function corrosion.is_still_affected(entity)
   end
 end
 
-return corrosion
+return corrosionF

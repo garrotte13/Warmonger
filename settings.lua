@@ -10,7 +10,8 @@ data:extend({
         maximum_value = 10,
 
     },
---[[
+
+    --[[
     {
         type = "double-setting",
         name = "wm-CreepMiningPollution",
@@ -61,15 +62,6 @@ data:extend({
 
     {
         type = "bool-setting",
-        name = "wm-CreepCorrosion",
-        description = "wm-CreepCorrosion",
-        setting_type = "runtime-global",
-        default_value = true,
-        order = "m[total]-b[ai]",
-
-    },
-    {
-        type = "bool-setting",
         name = "wm-CreepMinerHints",
         description = "wm-CreepMinerHints",
         setting_type = "runtime-global",
@@ -77,8 +69,17 @@ data:extend({
         order = "m[total]-d[ai]",
 
     },
+    ]]
 
-]]
+    {
+        type = "bool-setting",
+        name = "wm-CreepCorrosion",
+        description = "wm-CreepCorrosion",
+        setting_type = "startup",
+        default_value = false,
+        order = "m[total]-b[ai]",
+    },
+
     {
         type = "bool-setting",
         name = "wm-ecoFriendlyBiters",

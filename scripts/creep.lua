@@ -1,5 +1,5 @@
 local constants = require("scripts.constants")
---local corrosion = require("scripts.corrosion")
+local corrosionF = require("scripts.corrosion")
 --local creep_eater = require("scripts.creep-eater")
 
 local creeping = {}
@@ -43,7 +43,7 @@ function creeping.creepify()
 
    -- if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
     for _, entity in pairs(entities) do
-      if entity.valid then generate_creep({ entity }) end
+      if entity.valid and (not string.find(entity.name,"bob-")) then generate_creep({ entity }) end
     end
     --[[ else
     for _, entity in pairs(entities) do
@@ -85,14 +85,6 @@ function creeping.creepify()
   while storage.creep.creep_id_counter > (storage.creep.last_creep_id_counter+20) do
     creeping.process_creep_queue(t)
   end
-  --[[
-  if game.forces["player"].technologies["advanced-material-processing"].researched then
-    game.forces["player"].recipes["creep-miner0-radar"].enabled = true
-  end
-  if game.forces["player"].technologies["electric-energy-distribution-2"].researched then
-    game.forces["player"].recipes["creep-miner1-radar"].enabled = true
-  end
-  ]]
 end
 
 function creeping.init()
@@ -118,7 +110,7 @@ function creeping.on_chunk_generated(chunk_area, surface)
   end
   local entities = surface.find_entities_filtered({ type = { "unit-spawner", "turret" }, area = chunk_area, force = "enemy" })
   for _, entity in pairs(entities) do
-    if entity.valid then generate_creep({ entity }) end
+    if entity.valid and (not string.find(entity.name,"bob-")) then generate_creep({ entity }) end
   end
 end
 
@@ -191,34 +183,20 @@ function creeping.process_creep_queue(t)
         creep_pack.stage = 2
     elseif creep_pack.stage == 2 then
         creep_pack.surface.set_tiles(creep_pack.creep_tiles, true, false)
-        --[[if global.corrosion.enabled then
+        if settings.startup["wm-CreepCorrosion"].value then
           creep_pack.stage = 3
-        else]]
+        else
           storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
           storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
-        --end
-      --[[elseif creep_pack.stage == 3 then
-      if creep_pack.fake and creep_pack.position then -- mine creepers are awoken only by revenge strikes, not by RampantSiegeAI or Creeper2
-        for i=1, storage.creep_miners_last do
-          if storage.creep_miners[i] and storage.creep_miners[i].stage == 0
-           and storage.creep_miners[i].entity and storage.creep_miners[i].entity.valid and (not storage.creep_miners[i].entity.active) then
-            local d = (constants.miner_range(storage.creep_miners[i].entity.name) + creep_pack.radius)^2
-            if ((storage.creep_miners[i].x - creep_pack.position.x)^2 + (storage.creep_miners[i].y - creep_pack.position.y)^2) <= d then
-              local nex_t = storage.creep_miners[i].next_tick
-              if nex_t and nex_t > 0 then global.dissention[nex_t].active_miner = nil end
-              storage.creep_miners[i].entity.active = true
-              creep_eater.add_action_tick(global.dissention, i, t + 1)
-            end
-          end
         end
+      elseif creep_pack.stage == 3 then
 
-      end
       if creep_pack.position then -- let's quickly engage all player's entities found to be timely checked
         local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius+1.5,  force = "player" }
         --local i = 0
         for _, entity in pairs(entities) do
           if entity.valid and entity.destructible and entity.is_entity_with_health then
-            corrosion.engaging_fast(entity, t, false) -- check building for collision before corruption dmg application
+            corrosionF.engaging_fast(entity, t, false) -- check building for collision before corruption dmg application
            -- i = i + 1
          end
         end
@@ -234,14 +212,14 @@ function creeping.process_creep_queue(t)
               force = "player"}
             for _, entity in pairs(entities) do
               if entity.valid and entity.destructible and entity.is_entity_with_health then
-                corrosion.engaging_fast(entity, t, true) -- apply corruption without check
+                corrosionF.engaging_fast(entity, t, true) -- apply corruption without check
               end
             end
           end
       end
       storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
       storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
-      ]]
+      
     end
 end
 
@@ -268,9 +246,9 @@ creeping.remote_interface = {
     if not storage.creep then
       return
     end
-    if type(surface) ~= "table" or type(position) ~= "table" or not surface.valid then
-      error("The surface or the position are invalid.")
-    end
+    --if type(surface) ~= "table" or type(position) ~= "table" or not surface.valid then
+      --error("The surface or the position are invalid.")
+    --end
     -- The code here is duplicated from `generate_creep()` because that function is specifically optimized for multiple
     -- entities, while this function only needs to do it once.
     if not storage.creep.surfaces[surface.index] and not override then
@@ -282,28 +260,43 @@ creeping.remote_interface = {
     local building_tier
     if building_name then
       local type_name
-      type_name, building_tier = string.match(building_name, ".+%-(.+)%-v%d+%-t(%d+)%-rampant")
-      -- faction.type.."-hive-v"..v.."-t"..factionSize.."-rampant"
-      -- faction.type.."-spitter-spawner-v"..v.."-t"..factionSize.."-rampant"
-      -- faction.type.."-biter-spawner-v"..v.."-t"..factionSize.."-rampant"
-      -- faction.type.."-worm-v"..v.."-t"..factionSize.."-rampant", factionSize
-      local buildings_tbl = {
-        ["hive"] = 3,
-        ["spitter-spawner"] = 2,
-        ["biter-spawner"] = 2,
-        ["spawner"] = 2,
-        ["worm"] = 1
-      }
-      building_type = buildings_tbl[type_name]
-      --local gg = building_tier or 0
-      --local nname = type_name or "FUCKED"
-      --local btype = building_type or 0
-      --game.print("Creep for: ".. building_name .. " And name of type is: " .. nname .. " Tier is: " .. gg .. " Type #".. btype)
-      rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+      if string.find(building_name, "-rampant") then
+        type_name, building_tier = string.match(building_name, ".+%-(.+)%-v%d+%-t(%d+)%-rampant")
+        -- faction.type.."-hive-v"..v.."-t"..factionSize.."-rampant"
+        -- faction.type.."-spitter-spawner-v"..v.."-t"..factionSize.."-rampant"
+        -- faction.type.."-biter-spawner-v"..v.."-t"..factionSize.."-rampant"
+        -- faction.type.."-worm-v"..v.."-t"..factionSize.."-rampant", factionSize
+        local buildings_tbl = {
+          ["hive"] = 3,
+          ["spitter-spawner"] = 2,
+          ["biter-spawner"] = 2,
+          ["spawner"] = 2,
+          ["worm"] = 1
+        }
+        building_type = buildings_tbl[type_name]
+        rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.5) + building_type - 2
+      elseif string.find(building_name,"worm") then
+        building_type = 1
+        local w_tiers = { "small", "medium", "big", "bob-huge-", "bob-giant-", "titan", "behemoth", "leviathan" }
+        for i = 1, #w_tiers do
+          if string.find(building_name, w_tiers[i]) then
+            building_tier = i
+            break
+          end
+        end
+      elseif string.find(building_name,"super") then
+          building_type = 3
+      else
+          building_type = 2
+      end
+        if building_tier then
+          rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.64) + building_type - 2
+        else
+          rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * game.forces.enemy.get_evolution_factor(surface) * 5.5) + building_type - 2
+        end
     else
-      rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.get_evolution_factor(surface)*9)
+       rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.get_evolution_factor(surface)*9)
     end
-
     storage.creep.creep_queue[storage.creep.creep_id_counter] = {
         radius = rad,
         position = position,
@@ -475,7 +468,7 @@ function creeping.landed_strike(effect_id, surface, target_position, target)
         -- hitpoints = hitpoints * (1 + entity.player.force.character_health_bonus)
       elseif entity.prototype.type == "spider-vehicle" then -- cheaters pay triple price
         --game.print("Aaah, I got you dirty cheater!")
-        hitpoints = hitpoints * 5
+        hitpoints = hitpoints * 7
       end
       local dmg = math.ceil( hitpoints * ( 0.1 + game.forces.enemy.get_evolution_factor(surface) / 5 ) ) -- big one time damage and can be lethal
       if hitpoints > 600 then
@@ -495,8 +488,8 @@ function creeping.landed_strike(effect_id, surface, target_position, target)
   end
 
 --  remote.call("kr-creep", "spawn_fake_creep_at_position_radius", surface, attack_pos, false, attack_area_radius-0.6)
---[[
-  if storage.creep.surfaces[surface.index] then
+
+  if settings.startup["wm-CreepCorrosion"].value and storage.creep.surfaces[surface.index] then
     storage.creep.creep_queue[storage.creep.creep_id_counter] = {
       radius = attack_area_radius-0.6,
       position = attack_pos,
@@ -506,7 +499,7 @@ function creeping.landed_strike(effect_id, surface, target_position, target)
     }
     storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
-  ]]
+  
 end
 
 return creeping
