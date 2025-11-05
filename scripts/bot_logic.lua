@@ -78,8 +78,8 @@ function bot_behavior.search_zones_near(r)
         if not our_field then
             return cur_pos
         end
-        if our_field.size_now > 0 and (not v_in_table(r, our_field.bots)) and ( ((1 + #our_field.bots)*4) <= our_field.size_now or
-         (mbot.searching_field.final and #our_field.bots < our_field.size_now) ) then
+        -- ( ((1 + #our_field.bots)*4) <= our_field.size_now or (mbot.searching_field.final and #our_field.bots < our_field.size_now) )
+        if our_field.size_now > 0 and (not v_in_table(r, our_field.bots)) then
             table.insert(our_field.bots, r)
             table.insert(mbot.field, cur_pos)
             mbot.activity = bot_behavior.bot_actions.idle

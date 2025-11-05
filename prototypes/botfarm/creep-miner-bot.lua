@@ -60,10 +60,10 @@ data:extend({
   max_health = 200,
   alert_when_damaged = true,
   healing_per_tick = 0.00,
-  collision_box = {{-0.9*droidscale, -0.9*droidscale}, {0.9*droidscale, 0.9*droidscale}},
+  collision_box = {{-0.7*droidscale, -0.7*droidscale}, {0.7*droidscale, 0.7*droidscale}},
   selection_box = {{-0.8*droidscale, -0.8*droidscale}, {0.8, 0.8*droidscale}},
   sticker_box = {{-0.5, -0.5}, {0.5, 0.5}},
-  vision_distance = 15,
+  vision_distance = 45,
   affected_by_tiles = true,
   is_military_target = true,
   radar_range = 1,
@@ -77,7 +77,7 @@ data:extend({
     allow_try_return_to_spawner = false
   },
   movement_speed = 0.04,
-  minable = {hardness = 0.1, mining_time = 0.5, result = "wm-droid-1"},
+  minable = {hardness = 0.1, mining_time = 0.6, result = "wm-droid-1"},
   absorptions_to_join_attack={},
   distraction_cooldown = 0,
   distance_per_frame =  0.03,
@@ -102,7 +102,7 @@ data:extend({
     },
   {
       type = "fire",
-      percent = 60
+      percent = 50
     }
   },
   destroy_action =
