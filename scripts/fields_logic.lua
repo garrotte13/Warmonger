@@ -5,7 +5,7 @@ function creep_fields.create(f_pos)
     storage.wm_cr_fields_meta[f_pos.x .. ":" .. f_pos.y] = {
         size_now = 0,
         bots = {},
-        mod_time = game.tick
+        mod_time = 0
     }
     storage.wm_creep_fields[f_pos.x .. ":" .. f_pos.y] = {}
 end
@@ -41,7 +41,7 @@ function creep_fields.delete(f_pos)
     local crbots = storage.wm_creep_miners
     local field = storage.wm_cr_fields_meta[f_pos.x .. ":" .. f_pos.y]
     storage.wm_creep_fields[f_pos.x .. ":" .. f_pos.y] = nil
-    field.mod_time = game.tick
+    --field.mod_time = game.tick
     for i = 1, #field.bots do
         if crbots[field.bots[i]].field then
             for k = 1, #crbots[field.bots[i]].field do

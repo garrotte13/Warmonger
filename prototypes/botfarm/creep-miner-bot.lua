@@ -72,7 +72,7 @@ data:extend({
   {
     allow_destroy_when_commands_fail = false,
     do_separation = true,
-    path_resolution_modifier = 2,
+    path_resolution_modifier = 3,
     join_attacks = false,
     allow_try_return_to_spawner = false
   },

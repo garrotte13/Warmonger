@@ -4,17 +4,6 @@ local fuel_items
 local bot_fuel_capacity = 48000
 local bot_fuel_min = 22000
 
-local offsets_list = {
-    {x = 0, y = 0},
-    {x = 0, y = -1},
-    {x = 1, y = -1},
-    {x = 1, y = 0},
-    {x = 1, y = 1},
-    {x = 0, y = 1},
-    {x = -1, y = 1},
-    {x = -1, y = 0},
-    {x = -1, y = -1}
-}
 bot_behavior.bot_actions = {
     idle = 1,
     mining = 2,
@@ -24,7 +13,102 @@ bot_behavior.bot_actions = {
     refueling = 6
 }
 
-function bot_behavior.search_zones(r)
+local function getsign(dx)
+    if dx < 0 then
+        dx = -1
+    elseif dx > 0 then
+        dx = 1
+    end
+    return dx
+end
+
+local function v_in_table(v, t)
+    for i = 1, #t do
+        if t[i] == v then return true end
+    end
+end
+
+function bot_behavior.search_zones_near(r)
+    local mbot = storage.wm_creep_miners[r]
+    local origin_pos = {
+        x = math.floor((mbot.pos_found_tiles.x)/8),
+        y = math.floor((mbot.pos_found_tiles.y)/8)
+        }
+    local our_field
+    local diff_x = mbot.entity.position.x - (origin_pos.x*8 + 4)
+    local diff_y = mbot.entity.position.y - (origin_pos.y*8 + 4)
+    local autolist_offsets = {}
+    local dx = getsign(diff_x)
+    local dy = getsign(diff_y)
+    if diff_x * diff_x > diff_y * diff_y then
+        autolist_offsets = {
+            {dx, 0},
+            {dx, dy},
+            {0, dy},
+            {dx, -dy},
+            {0, -dy},
+            {-dx, dy},
+            {-dx, 0},
+            {-dx, -dy}
+        }
+    else
+        autolist_offsets = {
+            {0, dy},
+            {dx, dy},
+            {dx, 0},
+            {-dx, dy},
+            {-dx, 0},
+            {dx, -dy},
+            {0, -dy},
+            {-dx, -dy}
+        }
+    end
+    if diff_x * diff_x > 9 or diff_y * diff_y > 9 then
+        table.insert(autolist_offsets, 4, {0,0})
+    else
+        table.insert(autolist_offsets, 1, {0,0})
+    end
+    local cur_pos
+    for i = 1, 9 do
+        cur_pos = {
+            x = origin_pos.x + autolist_offsets[i][1],
+            y = origin_pos.y + autolist_offsets[i][2]
+        }
+        our_field = storage.wm_cr_fields_meta[cur_pos.x .. ":" .. cur_pos.y]
+        if not our_field then
+            return cur_pos
+        end
+        if our_field.size_now > 0 and (not v_in_table(r, our_field.bots)) and ( ((1 + #our_field.bots)*4) <= our_field.size_now or
+         (mbot.searching_field.final and #our_field.bots < our_field.size_now) ) then
+            table.insert(our_field.bots, r)
+            table.insert(mbot.field, cur_pos)
+            mbot.activity = bot_behavior.bot_actions.idle
+            return
+        end
+    end
+    if mbot.searching_field.final then
+        if mbot.activity == bot_behavior.bot_actions.search_field then
+            mbot.activity = bot_behavior.bot_actions.home
+        else
+            mbot.searching_field.n = 9
+        end
+    else
+        mbot.searching_field.final = true
+    end
+end
+--[[
+function bot_behavior.search_zones_legacy(r)
+    local offsets_list = {
+        {x = 0, y = 0},
+        {x = 0, y = -1},
+        {x = 1, y = -1},
+        {x = 1, y = 0},
+        {x = 1, y = 1},
+        {x = 0, y = 1},
+        {x = -1, y = 1},
+        {x = -1, y = 0},
+        {x = -1, y = -1}
+    }
     local mbot = storage.wm_creep_miners[r]
     local n = mbot.searching_field.n
     local f_pos = {
@@ -53,10 +137,10 @@ function bot_behavior.search_zones(r)
             mbot.searching_field.n = 1
             mbot.searching_field.final = true
         end
-        return bot_behavior.search_zones(r)
+        return bot_behavior.search_zones_legacy(r)
     end
 end
-
+]]
 local function gg_fuel_items()
     if not fuel_items then
         fuel_items = {}
@@ -94,11 +178,12 @@ end
 function bot_behavior.extract_fuel(fuel, fuel_name)
     --{name = "coal", count = math.floor(mbot.fuel/3200) - 1})
     local f
+    fuel = fuel - 50
     if fuel_name and fuel > 0 then
         gg_fuel_items()
         for _, item in pairs (fuel_items) do
             if item.name == fuel_name then
-                f = math.floor(fuel / item.value) - 1
+                f = math.floor(fuel / item.value)
                 if f > 0 then return f end
                 return
             end
@@ -119,7 +204,7 @@ end
 
 function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
     local mbot = storage.wm_creep_miners[r]
-    if not mbot.entity.active then return true end
+    if not mbot.entity.active then return false end
 
     -- Defining constants
     local bot_fuel_consumption = 1
@@ -132,7 +217,7 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
         if Fuel_Coeff == defines.command.wander then Fuel_Coeff = 3
          elseif Fuel_Coeff == defines.command.stop then Fuel_Coeff = 1
           elseif Fuel_Coeff == defines.command.go_to_location then Fuel_Coeff = 5
-           else Fuel_Coeff = 0
+           else Fuel_Coeff = 3
         end
     end
 
@@ -148,7 +233,7 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
         end
         mbot.t_activity = e_tick
         --game.get_player("garrotte").create_local_flying_text{text = "Fuel left: " .. mbot.fuel, position = mbot.entity.position, time_to_live = 100}
-        if mbot.fuel < 5000 then
+        if mbot.fuel < 3000 then
             mbot.entity.active = false
             if mbot.tileOid then
                 storage.wm_creep_fields[math.floor((mbot.tile.x)/8) .. ":" .. math.floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
