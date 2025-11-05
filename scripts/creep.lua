@@ -292,7 +292,7 @@ creeping.remote_interface = {
         if building_tier then
           rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.64) + building_type - 2
         else
-          rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * game.forces.enemy.get_evolution_factor(surface) * 5.5) + building_type - 2
+          rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * game.forces.enemy.get_evolution_factor(surface) * 4.3) + building_type - 2
         end
     else
        rad = math.random(3, constants.creep_max_range - 2) + math.ceil(game.forces.enemy.get_evolution_factor(surface)*9)
