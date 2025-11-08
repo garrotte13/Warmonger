@@ -1,3 +1,31 @@
+local bioremains = {
+  type = "item",
+  name = "wm-bio-remains",
+  icon = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
+  icon_size = 32,
+  --icon_mipmaps = 4,
+  pictures = {
+    {
+      size = 32,
+      filename = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
+      scale = 0.5,
+    },
+  },
+
+  subgroup = "raw-material",
+  order = "a[wm-bio-remains]",
+  stack_size = 150
+}
+
+if not mods["bobenemies"] then
+bioremains.fuel_category = "chemical"
+bioremains.fuel_value = "1MJ"
+bioremains.fuel_emissions_multiplier = 2.0
+bioremains.fuel_acceleration_multiplier = 0.9
+bioremains.fuel_top_speed_multiplier = 0.9
+end
+
+
 data:extend(
 {
 --[[
@@ -130,28 +158,7 @@ data:extend(
 		stack_size = 100
 	},
 
-  {
-		type = "item",
-		name = "wm-bio-remains",
-		icon = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
-		icon_size = 32,
-		--icon_mipmaps = 4,
-		pictures = {
-      {
-        size = 32,
-        filename = "__Warmonger__/graphics/icons/items/dry_mud_icon.png",
-        scale = 0.5,
-      },
-    },
-		fuel_category = "chemical",
-		fuel_value = "1MJ",
-		fuel_emissions_multiplier = 2.0,
-		fuel_acceleration_multiplier = 0.9,
-		fuel_top_speed_multiplier = 0.9,
-		subgroup = "raw-material",
-		order = "a[wm-bio-remains]",
-		stack_size = 150
-	},
+  bioremains,
 
   {
 		type = "item",
@@ -213,29 +220,5 @@ data:extend(
 		order = "a01[biters-research-data]",
 		stack_size = 200
 	},
-
-  {
-    type = "item",
-    name = "kr-bio-lab",
-    icon = "__Warmonger__/graphics/icons/entities/bio-lab.png",
-    icon_size = 64,
-    icon_mipmaps = 4,
-    subgroup = "production-machine",
-    order = "d-g2[bio-lab]",
-    place_result = "kr-bio-lab",
-    stack_size = 50,
-  },
-
---[[
-  {
-    type = "flying-text",
-    name = "true_creep_protected",
-    speed = 0.01,
-    time_to_live = 150,
-    text_alignment = "center",
-    --localised_name = "message.wm-true-creep-protected",
-
-  }
-]]
 
 })

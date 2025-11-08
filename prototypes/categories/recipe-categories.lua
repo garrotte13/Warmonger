@@ -4,8 +4,5 @@ data:extend({
     name = "bioprocessing"
   },
 
-  {
-    type = "recipe-category",
-    name = "creep-raw-material-recipe"
-  }
+
 })
