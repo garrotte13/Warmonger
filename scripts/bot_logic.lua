@@ -3,6 +3,7 @@ local bot_behavior = {}
 local fuel_items
 local bot_fuel_capacity = 48000
 local bot_fuel_min = 22000
+local bot_fuel_consumption = 1.1
 
 bot_behavior.bot_actions = {
     idle = 1,
@@ -10,7 +11,8 @@ bot_behavior.bot_actions = {
     running = 3,
     search_field = 4,
     home = 5,
-    refueling = 6
+    refueling = 6,
+    depot = 7
 }
 
 local function getsign(dx)
@@ -195,7 +197,7 @@ end
 
 function bot_behavior.consume_fuel_mining(r)
     local mbot = storage.wm_creep_miners[r]
-    mbot.fuel = mbot.fuel - 800
+    mbot.fuel = mbot.fuel - 900 * bot_fuel_consumption
     if mbot.fuel < 1 then
         game.print("Unit " .. r .. " overconsumed fuel by value of " .. -mbot.fuel)
     end
@@ -205,9 +207,6 @@ end
 function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
     local mbot = storage.wm_creep_miners[r]
     if not mbot.entity.active then return false end
-
-    -- Defining constants
-    local bot_fuel_consumption = 1
     if not Fuel_Coeff then
         if mbot.entity.commandable.command then
             Fuel_Coeff = mbot.entity.commandable.command.type
@@ -220,12 +219,8 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
            else Fuel_Coeff = 3
         end
     end
-
     local ToConsume = 0
-    
-        ToConsume = (e_tick - mbot.t_activity) * Fuel_Coeff * bot_fuel_consumption    
-        --ToConsume = (e_tick - mbot.t_activity) * bot_fuel_consumption    
-    
+    ToConsume = (e_tick - mbot.t_activity) * Fuel_Coeff * bot_fuel_consumption    
     if ToConsume > 0 then
         mbot.fuel = mbot.fuel - ToConsume
         if mbot.fuel < 1 then
@@ -233,12 +228,13 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
         end
         mbot.t_activity = e_tick
         --game.get_player("garrotte").create_local_flying_text{text = "Fuel left: " .. mbot.fuel, position = mbot.entity.position, time_to_live = 100}
-        if mbot.fuel < 3000 then
+        if mbot.fuel < 2200 then
             mbot.entity.active = false
             if mbot.tileOid then
                 storage.wm_creep_fields[math.floor((mbot.tile.x)/8) .. ":" .. math.floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
             end
             mbot.tileOid = nil
+            mbot.activity = bot_behavior.bot_actions.refueling
             return false
         else
             return true

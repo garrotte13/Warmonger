@@ -33,6 +33,23 @@ local function find_free_tick(e_tick)
 return e_tick
 end
 
+local function SendHome(r, e_tick)
+    local mbot = storage.wm_creep_miners[r]
+    mbot.activity = bot_actions.home
+    fields_func.unlock_tiles(r)
+    fields_func.unlink_fields(r)
+    mbot.entity.commandable.set_command({
+        type = defines.command.go_to_location,
+        destination = mbot.pos_found_tiles,
+        radius = 2.1,
+        distraction = defines.distraction.none
+    })
+    local next_t = find_free_tick(e_tick + 300)
+    mbot.running_long = 2100
+    storage.dissention[next_t].bot = r
+    mbot.next_tick = next_t
+end
+
 function mining_bots.Show_Selected(e)
     local player = game.players[e.player_index]
     local entity = player.selected
@@ -174,42 +191,20 @@ function mining_bots.process(r, e_tick)
         mbot.ochre = mbot.ochre - 1
         bot_func.consume_fuel_mining(r)
         mbot.t_activity = e_tick
-        if mbot.fuel < 9000 or mbot.ochre == 0 then
-            mbot.activity = bot_actions.home
-            mbot.entity.commandable.set_command({
-                type = defines.command.go_to_location,
-                destination = mbot.pos_found_tiles,
-                radius = 1.9,
-                distraction = defines.distraction.none
-            })
-            next_t = find_free_tick(e_tick + 300)
-            mbot.running_long = 2100
-        --[[elseif field_meta.size_now == 0 then
-            next_t = find_free_tick(e_tick + 90) -- taking a big rest after extracting last creep tile in the field
-            mbot.activity = bot_actions.search_field
-            mbot.entity.commandable.set_command({type = defines.command.wander, radius = 10, distraction = defines.distraction.none})
-            ]]
+        if mbot.fuel < 8000 or mbot.ochre == 0 then
+            SendHome(r, e_tick)
         else
             next_t = find_free_tick(e_tick + 40) -- taking a small rest after extraction activity
             mbot.activity = bot_actions.idle
+            action_ticks[next_t].bot = r
+            mbot.next_tick = next_t
         end
-        action_ticks[next_t].bot = r
-        mbot.next_tick = next_t
-
 
         -- SEARCHING FIELDS
     elseif mbot.activity == bot_actions.search_field then
-        bot_func.consume_fuel_basic(r, e_tick)
-        if mbot.fuel < 9000 then
-            mbot.activity = bot_actions.home
-            mbot.entity.commandable.set_command({
-                type = defines.command.go_to_location,
-                destination = mbot.pos_found_tiles,
-                radius = 1.2,
-                distraction = defines.distraction.none
-            })
-            next_t = find_free_tick(e_tick + 300)
-            mbot.running_long = 2100
+        if not bot_func.consume_fuel_basic(r, e_tick) then return end
+        if mbot.fuel < 8000 then
+            SendHome(r, e_tick)
         else
             if not mbot.searching_field then
                 mbot.searching_field = {n = 1, final = false}
@@ -219,7 +214,7 @@ function mining_bots.process(r, e_tick)
                 mbot.entity.commandable.set_command({
                     type = defines.command.go_to_location,
                     destination = mbot.pos_found_tiles,
-                    radius = 1.2,
+                    radius = 2.1,
                     distraction = defines.distraction.none
                 })
                 next_t = find_free_tick(e_tick + 300)
@@ -232,23 +227,17 @@ function mining_bots.process(r, e_tick)
             else
                 next_t = find_free_tick(e_tick + 20)
             end
+            action_ticks[next_t].bot = r
+            mbot.next_tick = next_t
         end
-        action_ticks[next_t].bot = r
-        mbot.next_tick = next_t
+
 
         -- NEW CREEP TARGETS, IDLE
     elseif mbot.activity == bot_actions.idle then
-        bot_func.consume_fuel_basic(r, e_tick)
-        if mbot.fuel < 9000 then
-            mbot.activity = bot_actions.home
-            mbot.entity.commandable.set_command({
-                type = defines.command.go_to_location,
-                destination = mbot.pos_found_tiles,
-                radius = 1.2,
-                distraction = defines.distraction.none
-            })
-            next_t = find_free_tick(e_tick + 300)
-            mbot.running_long = 2100
+        if not bot_func.consume_fuel_basic(r, e_tick) then return end
+        if mbot.fuel < 8000 then
+            SendHome(r, e_tick)
+            return
         elseif not mbot.field or not mbot.field[1] then
             mbot.activity = bot_actions.search_field
             next_t = find_free_tick(e_tick + 40)
@@ -323,6 +312,10 @@ function mining_bots.process(r, e_tick)
     -- CHECK RUNNING
     elseif mbot.activity == bot_actions.running or mbot.activity == bot_actions.home then
         if bot_func.consume_fuel_basic(r, e_tick) then
+            if mbot.fuel < 8000 and mbot.activity == bot_actions.running then
+                SendHome(r, e_tick)
+                return
+            end
             if mbot.running_long > 12 then
                 next_t = find_free_tick(e_tick + math.min(300, mbot.running_long))
                 mbot.running_long = mbot.running_long - (next_t - e_tick)
@@ -331,11 +324,9 @@ function mining_bots.process(r, e_tick)
             else
                 mining_bots.confusion(r, e_tick, true)
             end
-            
         else
-            -- running low on fuel
+            -- out of fuel already!
         end
-
     end
 end
 
@@ -365,7 +356,7 @@ function mining_bots.confusion(r, e_tick, checked)
             storage.wm_creep_miners_count = storage.wm_creep_miners_count - 1
             return true
         end
-        if not bot_func.consume_fuel_basic(r, e_tick) then return end
+        if not bot_func.consume_fuel_basic(r, e_tick, 5) then return end
     end
     local next_t
     if mbot.activity == bot_actions.home then
@@ -377,7 +368,7 @@ function mining_bots.confusion(r, e_tick, checked)
             mbot.entity.commandable.set_command({
                 type = defines.command.go_to_location,
                 destination = mbot.pos_found_tiles,
-                radius = 1.2,
+                radius = 2.1,
                 distraction = defines.distraction.none
             })
             next_t = find_free_tick(e_tick + 300) -- 40 more seconds timeout to reach original deploy position :-)
@@ -421,28 +412,16 @@ function mining_bots.arrival(r, e_tick)
         return true
     end
     --game.print("Droid has arrived to destination. Number = " .. r)
-    bot_func.consume_fuel_basic(r, e_tick, 5)
+    if not bot_func.consume_fuel_basic(r, e_tick, 5) then return end
     if mbot.activity == bot_actions.home then
         mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
-        game.get_player("garrotte").create_local_flying_text{text = "I'm done. Pick me up! My fuel: " .. mbot.fuel .. " My ochre: " .. mbot.ochre, position = mbot.entity.position, time_to_live = 220}
+        game.get_player("garrotte").create_local_flying_text{text = "I'm at home. Pick me up! My fuel: ", position = mbot.entity.position, time_to_live = 220}
         -- no more actions. Droid will be sleeping forever from now on.
-    elseif mbot.fuel < 9900 then
-        mbot.activity = bot_actions.home
-        if mbot.tileOid then
-            storage.wm_creep_fields[math.floor((mbot.tile.x)/8) .. ":" .. math.floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
-            mbot.tileOid = nil
-        end
-        mbot.entity.commandable.set_command({
-            type = defines.command.go_to_location,
-            destination = mbot.pos_found_tiles,
-            radius = 1.2,
-            distraction = defines.distraction.none
-        })
+        mbot.activity = bot_actions.depot
+        mbot.entity.active = false
+    elseif mbot.fuel < 7000 then
+        SendHome(r, e_tick)
         game.get_player("garrotte").create_local_flying_text{text = "I can't dig, have to return, because my fuel: " .. mbot.fuel, position = mbot.entity.position, time_to_live = 150}
-        local next_t = find_free_tick(e_tick + 300)
-        mbot.running_long = 2100
-        storage.dissention[next_t].bot = r
-        mbot.next_tick = next_t
     else
         local next_t
         mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
