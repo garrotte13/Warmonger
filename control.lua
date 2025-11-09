@@ -102,7 +102,6 @@ script.on_event(defines.events.on_chunk_generated, function(e)
 end)
 
 script.on_event(defines.events.on_biter_base_built, function(e)
-  game.print("Biters are doing something bad...")
   creep.on_biter_base_built(e.entity)
 end)
 

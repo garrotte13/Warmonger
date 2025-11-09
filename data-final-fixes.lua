@@ -51,28 +51,24 @@ for _, sp in pairs(data.raw["turret"]) do
     end
   end
 end
---data.raw["unit-spawner"]["biter-spawner"].spawn_decoration = {}
---data.raw["unit-spawner"]["spitter-spawner"].spawn_decoration = {}
---data.raw["turret"]["small-worm-turret"].spawn_decoration = {}
---data.raw["turret"]["big-worm-turret"].spawn_decoration = {}
---data.raw["turret"]["medium-worm-turret"].spawn_decoration = {}
---data.raw["turret"]["behemoth-worm-turret"].spawn_decoration = {}
---if data.raw["unit-spawner"]["arachnid-spawner-unitspawner"] then data.raw["unit-spawner"]["arachnid-spawner-unitspawner"].spawn_decoration = {} end
 
 --data.raw.tile["kr-creep"].absorptions_per_second = 0.0002
 --data.raw.tile["fk-creep"].absorptions_per_second = 0.0001
 
-
---table.insert(data.raw.technology["advanced-material-processing"].effects, { type = "unlock-recipe", recipe = "creep-miner0-radar"})
---table.insert(data.raw.technology["electric-energy-distribution-2"].effects, { type = "unlock-recipe", recipe = "creep-miner1-radar"})
-
+--[[
 local pcapsule = data.raw.recipe["poison-capsule"]
 pcapsule.results[1].amount = 2
 pcapsule.energy_required = pcapsule.energy_required * 2
 for i=1, #pcapsule.ingredients do
-  if pcapsule.ingredients[i].amount then pcapsule.ingredients[i].amount = pcapsule.ingredients[i].amount * 2 else pcapsule.ingredients[i][2] = pcapsule.ingredients[i][2] * 2 end
+  if pcapsule.ingredients[i].amount then
+    pcapsule.ingredients[i].amount = pcapsule.ingredients[i].amount * 2
+  else
+    pcapsule.ingredients[i][2] = pcapsule.ingredients[i][2] * 2
+  end
 end
 table.insert(pcapsule.ingredients, {type="item", name="wm-bio-remains", amount=3})
+]]
+table.insert(data.raw.recipe["poison-capsule"].ingredients, {type="item", name="wm-bio-remains", amount=1})
 
 -- log(serpent.dump(data.raw.recipe))
 
