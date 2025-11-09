@@ -37,6 +37,9 @@ local function SendHome(r, e_tick)
     local mbot = storage.wm_creep_miners[r]
     mbot.activity = bot_actions.home
     fields_func.unlock_tiles(r)
+    mbot.tile = nil
+    mbot.tileOid = nil
+    mbot.extile = nil
     fields_func.unlink_fields(r)
     mbot.entity.commandable.set_command({
         type = defines.command.go_to_location,
@@ -72,6 +75,7 @@ function mining_bots.add(entity, playerN, e_tick)
         entity.active = false
         mbots[r] = {
             tile = nil,
+            extile = nil,
             entity = entity,
             fuel = 0,
             fuel_name = nil,
@@ -90,9 +94,10 @@ function mining_bots.add(entity, playerN, e_tick)
         return
     end
 
-    local next_t = find_free_tick(e_tick + 60) -- give the newborn a second to look around
+    local next_t = find_free_tick(e_tick + 90) -- give the newborn a second to look around
     mbots[r] = {
         tile = nil, -- the target creep tile pos selected by bot
+        extile = nil,
         entity = entity,
         fuel = fuel, -- 12x4MJ 12 units of coal or 4 units of solid fuel. 80% efficiency means 15 coal or 5 solid is needed.
         fuel_name = fuel_item,
@@ -168,6 +173,7 @@ function mining_bots.process(r, e_tick)
         local pos_f = {x = math.floor((mbot.tile.x)/8), y = math.floor((mbot.tile.y)/8)}
         local field_meta = storage.wm_cr_fields_meta[ pos_f.x .. ":" .. pos_f.y ]
         local field = storage.wm_creep_fields[ pos_f.x .. ":" .. pos_f.y ]
+        mbot.extile = nil
         mbot.entity.surface.set_tiles({{
             name = field[mbot.tileOid].hidden_tile or "landfill",
             position = mbot.tile
@@ -211,15 +217,9 @@ function mining_bots.process(r, e_tick)
             end
             local res = bot_func.search_zones_near(r)
             if mbot.activity == bot_actions.home then
-                mbot.entity.commandable.set_command({
-                    type = defines.command.go_to_location,
-                    destination = mbot.pos_found_tiles,
-                    radius = 2.1,
-                    distraction = defines.distraction.none
-                })
-                next_t = find_free_tick(e_tick + 300)
-                mbot.running_long = 2100
-                game.get_player("garrotte").create_local_flying_text{text = "No more creep around. Going back to deploy position", position = mbot.entity.position, time_to_live = 150}
+                SendHome(r, e_tick)
+                game.get_player("garrotte").create_local_flying_text{text = "No more creep around. Going home", position = mbot.entity.position, time_to_live = 150}
+                return
             elseif res then
                 fields_func.create(res)
                 fields_func.search_creep(res)
@@ -258,13 +258,23 @@ function mining_bots.process(r, e_tick)
                 local found_tiles = storage.wm_creep_fields[mbot.field[k].x .. ":" .. mbot.field[k].y]
                 for i=1,#found_tiles do
                     if found_tiles[i] and found_tiles[i].x and (not found_tiles[i].hunter) then
-                        local dx = my_pos.x - (found_tiles[i].x + 0.5)
-                        local dy = my_pos.y - (found_tiles[i].y + 0.5)
-                        table.insert(sort_tiles, {
-                            distance = (dx * dx) + (dy * dy),
-                            oid = i,
-                            field = mbot.field[k].x .. ":" .. mbot.field[k].y
-                        })
+                        local tile_unreachable
+                        if mbot.extile and mbot.extile[1] then
+                            for j=1,#mbot.extile do
+                                if found_tiles[i].x == mbot.extile[j].x and found_tiles[i].y == mbot.extile[j].y then
+                                    tile_unreachable = true
+                                    break
+                                end
+                            end
+                        end
+                        local ddistance = (my_pos.x - (found_tiles[i].x + 0.5))^2 + (my_pos.y - (found_tiles[i].y + 0.5))^2
+                        if not tile_unreachable or ddistance <= 1.65^2 then
+                            table.insert(sort_tiles, {
+                                distance = ddistance,
+                                oid = i,
+                                field = mbot.field[k].x .. ":" .. mbot.field[k].y
+                            })
+                        end
                     end
                 end
             end
@@ -277,8 +287,7 @@ function mining_bots.process(r, e_tick)
                 mbot.tileOid = sort_tiles[1].oid
                 storage.wm_creep_fields[sort_tiles[1].field][sort_tiles[1].oid].hunter = r
                 mbot.tile = selected_tile
-                if (my_pos.x - (selected_tile.x + 0.5))^2 > 1.52^2 or (my_pos.y - (selected_tile.y + 0.5))^2 > 1.52^2 or
-                 ((my_pos.x - (selected_tile.x + 0.5))^2 + (my_pos.y - (selected_tile.y + 0.5))^2 ) > 1.65^2 then
+                if sort_tiles[1].distance > 1.65^2 then
                     mbot.activity = bot_actions.running
                     mbot.entity.commandable.set_command({
                         type = defines.command.go_to_location,
@@ -376,9 +385,11 @@ function mining_bots.confusion(r, e_tick, checked)
         end
     else
         fields_func.unlock_tiles(r)
-        next_t = find_free_tick(e_tick + 180)
+        if not mbot.extile then mbot.extile = {} end
+        table.insert(mbot.extile, mbot.tile)
         mbot.tile = nil
         mbot.tileOid = nil
+        next_t = find_free_tick(e_tick + 150)
         mbot.activity = bot_actions.idle
         if (not mbot.entity.commandable.command) or mbot.entity.commandable.command.type ~= defines.command.wander then
             game.get_player("garrotte").create_local_flying_text{text = "I can't get to my target tile!", position = mbot.entity.position, time_to_live = 120}
@@ -412,10 +423,11 @@ function mining_bots.arrival(r, e_tick)
         return true
     end
     --game.print("Droid has arrived to destination. Number = " .. r)
+    mbot.extile = nil
     if not bot_func.consume_fuel_basic(r, e_tick, 5) then return end
     if mbot.activity == bot_actions.home then
         mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
-        game.get_player("garrotte").create_local_flying_text{text = "I'm at home. Pick me up! My fuel: ", position = mbot.entity.position, time_to_live = 220}
+        game.get_player("garrotte").create_local_flying_text{text = "I'm at home. Pick me up!", position = mbot.entity.position, time_to_live = 220}
         -- no more actions. Droid will be sleeping forever from now on.
         mbot.activity = bot_actions.depot
         mbot.entity.active = false
@@ -427,7 +439,7 @@ function mining_bots.arrival(r, e_tick)
         mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
         local diff_x = ( mbot.entity.position.x - (mbot.tile.x + 0.5) ) ^ 2
         local diff_y = ( mbot.entity.position.y - (mbot.tile.y + 0.5) ) ^ 2
-        if diff_x > 2.52^2 or diff_y > 2.52^2 or ( diff_x + diff_y ) > 2.65^2 then -- let's try to look around once more
+        if ( diff_x + diff_y ) > 2.35^2 then -- let's try to look around once more
             fields_func.unlock_tiles(r)
             next_t = find_free_tick(e_tick + 20)
             mbot.tile = nil
