@@ -5,7 +5,7 @@ data:extend({
         name = "wm-BiomassToBitersReseach",
         description = "wm-BiomassToBitersReseach",
         setting_type = "startup",
-        default_value = 4,
+        default_value = (mods["bobenemies"] and 2) or 4,
         minimum_value = 0,
         maximum_value = 10,
 
