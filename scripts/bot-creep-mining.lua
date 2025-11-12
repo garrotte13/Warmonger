@@ -20,6 +20,16 @@ local direction_vectors = {
     [defines.direction.northwest]      = {-1, -1 },
     [defines.direction.northnorthwest] = {-1, -2 },
   }
+local function posititionsToDirect(subj, target)
+    --local deg = math.deg(math.atan2(target.y - subj.y, target.x - subj.x))
+    --local direction = (deg + 90) / 22.5
+    local direction = defines.direction.south
+    --if direction < 0 then
+      --direction = direction + 16
+    --end
+    --direction = math.floor(direction + 0.5)
+    return direction
+end
 
 local bot_actions = bot_func.bot_actions
 
@@ -58,7 +68,55 @@ function mining_bots.Show_Selected(e)
     local entity = player.selected
     if entity and entity.valid and entity.name == "wm-droid-1" and entity.unit_number and entity.force == player.force then
         local mbot = storage.wm_creep_miners[entity.unit_number]
-        player.create_local_flying_text{text = "Fuel: " .. mbot.fuel .. " Ochre: " .. mbot.ochre, position = entity.position, time_to_live = 120}
+        --player.create_local_flying_text{text = "Fuel: " .. mbot.fuel .. " Ochre: " .. mbot.ochre, position = entity.position, time_to_live = 120}
+        local value = mbot.fuel/48000
+        local red = math.min(2-value*2, 1)
+        local green = math.min(value*2, 1)
+        rendering.draw_rectangle{color = {0,0,0}, 
+        left_top = {entity = entity, offset = {-1-0.03, 1-0.03}},
+        right_bottom = {entity = entity, offset = { 1+0.03,	1.2+0.03}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
+        rendering.draw_rectangle{color = {0,0,0}, 
+        left_top = {entity = entity, offset = {1+2/32, 1.05}},
+        right_bottom = {entity = entity, offset = {1+3/32, 1.15}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
+        rendering.draw_rectangle{color = {red,green, 0}, filled = true,
+        left_top = {entity = entity, offset = {-1, 1.0}},
+        right_bottom = {entity = entity, offset = {-1 + 2*1*value, 1.2}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
+        value = mbot.ochre/25
+        red = math.min(2-value*2, 1)
+        green = math.min(value*2, 1)
+        rendering.draw_rectangle{color = {0,0,0}, 
+        left_top = {entity = entity, offset = {-1-0.03, 0.7-0.03}},
+        right_bottom = {entity = entity, offset = { 1+0.03,	0.9+0.03}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
+        rendering.draw_rectangle{color = {0,0,0}, 
+        left_top = {entity = entity, offset = {1+2/32, 0.65}},
+        right_bottom = {entity = entity, offset = {1+3/32, 0.85}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
+        rendering.draw_rectangle{color = {red,green, 0}, filled = true,
+        left_top = {entity = entity, offset = {-1, 0.7}},
+        right_bottom = {entity = entity, offset = {-1 + 2*1*value, 0.9}},
+        players = {player},
+        surface = entity.surface,
+        time_to_live = 120,
+        }
     end
 end
 
@@ -292,7 +350,7 @@ function mining_bots.process(r, e_tick)
                     mbot.entity.commandable.set_command({
                         type = defines.command.go_to_location,
                         destination = {x = selected_tile.x + 0.5, y = selected_tile.y + 0.5},
-                        radius = 0.81,
+                        radius = 0.99,
                         distraction = defines.distraction.none
                     })
                     next_t = find_free_tick(e_tick + 120)
@@ -301,6 +359,7 @@ function mining_bots.process(r, e_tick)
                     mbot.activity = bot_actions.mining
                     next_t = find_free_tick(e_tick + 119) -- mining lock
                     mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
+                    mbot.entity.direction = posititionsToDirect(my_pos, {x = selected_tile.x + 0.5, y = selected_tile.y + 0.5})
                     --mbot.entity.direction = defines.direction.north -- need to calculate direction here
                 end
                 if mbot.searching_field.n < 9 then
@@ -354,7 +413,7 @@ function mining_bots.confusion(r, e_tick, checked)
             if mbot.entity then
                 game.get_player("garrotte").create_local_flying_text{text = "Aaah! My ass hurts!", position = mbot.entity.position, time_to_live = 120}
             else
-                game.print("Aaah! My ass hurts!")
+                --game.print("Aaah! Bot is destroyed, but still confused!")
             end
         end
         if not mbot.entity or not mbot.entity.valid then
