@@ -9,7 +9,7 @@ data:extend(
 		energy_required = 15,
 		category = "advanced-crafting",
 		--emissions_multiplier = 2,
-		enabled = true,
+		enabled = false,
 		ingredients =
 		{
 			{type = "item", name = "stone", amount = 2},
