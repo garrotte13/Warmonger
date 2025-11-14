@@ -236,7 +236,7 @@ function mining_bots.process(r, e_tick)
             name = field[mbot.tileOid].hidden_tile or "landfill",
             position = mbot.tile
         }})
-        mbot.entity.surface.pollute(mbot.entity.position, 8, mbot.entity.name)
+        mbot.entity.surface.pollute(mbot.entity.position, 4, mbot.entity.name)
         if field[mbot.tileOid].name == "kr-creep" then
             mbot.bio1 = mbot.bio1 + 1
         else
