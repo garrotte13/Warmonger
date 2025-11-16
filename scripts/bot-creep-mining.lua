@@ -326,7 +326,7 @@ function mining_bots.process(r, e_tick)
                             end
                         end
                         local ddistance = (my_pos.x - (found_tiles[i].x + 0.5))^2 + (my_pos.y - (found_tiles[i].y + 0.5))^2
-                        if not tile_unreachable or ddistance <= 1.65^2 then
+                        if (not tile_unreachable) or (ddistance <= 1.65^2) then
                             table.insert(sort_tiles, {
                                 distance = ddistance,
                                 oid = i,

@@ -6,7 +6,7 @@ data:extend(
 	{
 		type = "recipe",
 		name = "wm-ochre",
-		energy_required = 15,
+		energy_required = 8,
 		category = "advanced-crafting",
 		--emissions_multiplier = 2,
 		enabled = false,
