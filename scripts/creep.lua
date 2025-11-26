@@ -8,9 +8,9 @@ local function generate_creep(entities) -- all entities must be strictly from on
   local surface = entities[1].surface
   local min_r = 2
   for _, entity in pairs(entities) do
-    if entity.type == "unit-spawner" then min_r = 2 else min_r = 1 end
+    if entity.type == "unit-spawner" then min_r = 3 else min_r = 1 end
     storage.creep.creep_queue[storage.creep.creep_id_counter] = {
-      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.5*(min_r+1)),
+      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.7*(min_r+1)),
       position = entity.position,
       stage = 0,
       surface = surface,
