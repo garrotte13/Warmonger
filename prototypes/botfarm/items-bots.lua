@@ -38,7 +38,7 @@ data:extend({
     ingredients =
     {
       {type="item", name="steel-plate", amount=7},
-      {type="item", name="electronic-circuit", amount=25},
+      {type="item", name="electronic-circuit", amount=15},
       {type="item", name="engine-unit", amount=4},
       {type="item", name="light-armor", amount=1}
     },
