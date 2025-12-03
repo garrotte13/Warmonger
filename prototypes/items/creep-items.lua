@@ -175,7 +175,7 @@ data:extend(
     },
 		subgroup = "raw-material",
 		order = "a[wm-ochre]",
-		stack_size = 50
+		stack_size = 100
 	},
 
   {

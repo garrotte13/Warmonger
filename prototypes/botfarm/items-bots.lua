@@ -83,14 +83,6 @@ data:extend({
         type = "unlock-recipe",
         recipe = "wm-droid-1"
       },
-      {
-        type = "unlock-recipe",
-        recipe = "wm-ochre"
-      },
-      --{
-      --  type = "unlock-recipe",
-      --  recipe = "wm-droid-1-dummy"
-      --},
     },
     order = "c-c-e"
   },
