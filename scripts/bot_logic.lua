@@ -223,7 +223,7 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
     ToConsume = (e_tick - mbot.t_activity) * Fuel_Coeff * bot_fuel_consumption    
     if ToConsume > 0 then
         mbot.fuel = mbot.fuel - ToConsume
-        mbot.entity.surface.pollute(mbot.entity.position, ToConsume/1800, mbot.entity.name)
+        mbot.entity.surface.pollute(mbot.entity.position, ToConsume/2100, mbot.entity.name)
         if mbot.fuel < 1 then
             game.print("Unit " .. r .. " overconsumed fuel by value of " .. -mbot.fuel)
         end
