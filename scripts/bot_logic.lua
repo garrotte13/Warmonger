@@ -151,7 +151,7 @@ local function gg_fuel_items()
                 table.insert(fuel_items, {name = item.name, value = item.fuel_value * 0.0008})
             end
         end
-        table.sort(fuel_items, function(a, b) return prototypes.item[a.name].stack_size > prototypes.item[b.name].stack_size end)
+        table.sort(fuel_items, function(a, b) return prototypes.item[a.name].fuel_value < prototypes.item[b.name].fuel_value end)
     end
 end
 
