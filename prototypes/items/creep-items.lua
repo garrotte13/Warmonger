@@ -173,7 +173,7 @@ data:extend(
         scale = 0.5,
       },
     },
-		subgroup = "raw-material",
+    subgroup = "wm-devices",
 		order = "a[wm-ochre]",
 		stack_size = 100
 	},
