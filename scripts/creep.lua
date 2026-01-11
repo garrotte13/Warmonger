@@ -3,21 +3,108 @@ local corrosionF = require("scripts.corrosion")
 --local creep_eater = require("scripts.creep-eater")
 
 local creeping = {}
+local fields_to_update = storage.wm_updating_fields
+local bob_enemies = script.active_mods["bobenemies"] and not
+ ( script.active_mods["Rampant"] and settings.startup["rampant--newEnemies"].value == true or
+   script.active_mods["RampantFixed"] and settings.startup["rampantFixed--newEnemies"].value == true or 
+    script.active_mods["enemyracemanager"] )
+
+local function clamp(v, minv, maxv)
+  if v < minv then return minv end
+  if v > maxv then return maxv end
+  return v
+end
+
+local function Add_Fields_To_Update(cx, cy, r)
+  
+    -- Disc bounding box in tile space
+    local minX = cx - r
+    local maxX = cx + r
+    local minY = cy - r
+    local maxY = cy + r
+
+    -- Convert to zone range
+    local zminX = math.floor(minX / 8)
+    local zmaxX = math.floor(maxX / 8)
+    local zminY = math.floor(minY / 8)
+    local zmaxY = math.floor(maxY / 8)
+
+    local r2 = r * r
+    local fields = storage.wm_creep_fields
+
+    for zx = zminX, zmaxX do
+        for zy = zminY, zmaxY do
+          if fields[zx .. ":" .. zy] then
+            -- Zone bounds in tile space
+            local boxMinX = zx * 8
+            local boxMaxX = boxMinX + 8
+            local boxMinY = zy * 8
+            local boxMaxY = boxMinY + 8
+
+            -- Closest point in box to disc center
+            local closestX = clamp(cx, boxMinX, boxMaxX)
+            local closestY = clamp(cy, boxMinY, boxMaxY)
+
+            local dx = cx - closestX
+            local dy = cy - closestY
+
+            -- If distance ≤ radius → intersection
+            if (dx*dx + dy*dy) <= r2 then
+                fields_to_update[zx .. ":" .. zy] = true
+            end
+          end
+        end
+    end
+end
 
 local function generate_creep(entities) -- all entities must be strictly from one surface. Surface is pre-checked for creep allowed
   local surface = entities[1].surface
   local min_r = 2
   for _, entity in pairs(entities) do
-    if entity.type == "unit-spawner" then min_r = 3 else min_r = 1 end
-    storage.creep.creep_queue[storage.creep.creep_id_counter] = {
-      radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.7*(min_r+1)),
-      position = entity.position,
-      stage = 0,
-      surface = surface,
-      fake = false,
-      type = min_r + 1,
-      tier = 1 + math.floor(game.forces.enemy.get_evolution_factor(surface) * 9.8)
-    }
+    if bob_enemies then
+      local building_type
+      local building_tier
+      local rad
+      if entity.type == "turret" then
+        building_type = 1
+        local w_tiers = { "small", "medium", "big", "bob-huge-", "bob-giant-", "titan", "behemoth", "leviathan" }
+        for i = 1, #w_tiers do
+          if string.find(entity.name, w_tiers[i]) then
+            building_tier = i
+            break
+          end
+        end
+      elseif string.find(entity.name,"super") then
+        building_type = 3
+      else
+        building_type = 2
+      end
+      if building_tier then
+        rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * building_tier * 0.64) + building_type - 2
+      else
+        rad = math.random(3, (constants.creep_max_range + building_type - 2)) + math.floor(building_type * game.forces.enemy.get_evolution_factor(surface) * 4.3) + building_type - 2
+      end
+      storage.creep.creep_queue[storage.creep.creep_id_counter] = {
+        radius = rad,
+        position = entity.position,
+        stage = 0,
+        surface = surface,
+        fake = false,
+        type = building_type,
+        tier = building_tier
+      }
+    else
+      if entity.type == "unit-spawner" then min_r = 3 else min_r = 1 end
+      storage.creep.creep_queue[storage.creep.creep_id_counter] = {
+        radius = math.random(2, (constants.creep_max_range + min_r - 3)) + min_r + math.floor(game.forces.enemy.get_evolution_factor(surface)*4.7*(min_r+1)),
+        position = entity.position,
+        stage = 0,
+        surface = surface,
+        fake = false,
+        type = min_r + 1,
+        tier = 1 + math.floor(game.forces.enemy.get_evolution_factor(surface) * 9.8)
+      }
+    end
     storage.creep.creep_id_counter = storage.creep.creep_id_counter + 1
   end
 end
@@ -43,7 +130,7 @@ function creeping.creepify()
 
    -- if not (settings.startup["rampant--newEnemies"] and settings.startup["rampant--newEnemies"].value) then
     for _, entity in pairs(entities) do
-      if entity.valid and (not string.find(entity.name,"bob-")) then generate_creep({ entity }) end
+      if entity.valid then generate_creep({ entity }) end
     end
     --[[ else
     for _, entity in pairs(entities) do
@@ -181,15 +268,21 @@ function creeping.process_creep_queue(t)
             end
         end
         creep_pack.stage = 2
+
     elseif creep_pack.stage == 2 then
         creep_pack.surface.set_tiles(creep_pack.creep_tiles, true, false)
-        if settings.startup["wm-CreepCorrosion"].value then
-          creep_pack.stage = 3
-        else
-          storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
-          storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
-        end
-      elseif creep_pack.stage == 3 then
+        creep_pack.stage = 3
+
+    elseif creep_pack.stage == 3 then
+      Add_Fields_To_Update(creep_pack.position.x, creep_pack.position.y, creep_pack.radius + 1)
+      if settings.startup["wm-CreepCorrosion"].value then
+        creep_pack.stage = 4
+      else
+        storage.creep.creep_queue[storage.creep.last_creep_id_counter] = nil
+        storage.creep.last_creep_id_counter = storage.creep.last_creep_id_counter + 1
+      end
+
+    elseif creep_pack.stage == 4 then
 
       if creep_pack.position then -- let's quickly engage all player's entities found to be timely checked
         local entities = creep_pack.surface.find_entities_filtered{ position = creep_pack.position, radius = creep_pack.radius+1.5,  force = "player" }

@@ -9,6 +9,6 @@
 	"dependencies":
 	[
 		"base >= 2.0.40",
-		"? bobenemies"
+		"? bobenemies >= 2.0.3"
 	]
 }

@@ -15,6 +15,7 @@ script.on_init(function()
   storage.wm_creep_miners_count = 0
   storage.wm_creep_fields = {}
   storage.wm_cr_fields_meta = {}
+  storage.wm_updating_fields = {}
   storage.dissention = {}
   storage.dissention[0] = {bot = nil}
   action_ticks = storage.dissention
@@ -36,6 +37,9 @@ end)
 
 script.on_configuration_changed(function()
   if corrosion_enabled then corrosionF.init() end
+  if not storage.wm_updating_fields then
+    storage.wm_updating_fields = {}
+  end
 end)
 
 script.on_event(defines.events.on_tick, function(event)
@@ -104,6 +108,14 @@ end)
 script.on_event(defines.events.on_biter_base_built, function(e)
   creep.on_biter_base_built(e.entity)
 end)
+
+script.on_event(defines.events.script_raised_built, function(e)
+  if e.entity.force.name == "enemy" and ( e.entity.type == "unit-spawner" or e.entity.type == "turret" ) then
+    creep.on_biter_base_built(e.entity)  
+  end  
+end)
+
+
 
 script.on_event(defines.events.on_script_trigger_effect, function(e)
   local surface = game.surfaces[e.surface_index]
