@@ -208,6 +208,17 @@ function mining_bots.remove(r, entity, tempInv, e_tick)
     end
 end
 
+function mining_bots.create_system(e_tick)
+    local next_t = find_free_tick(e_tick + 60)
+    local mbots = storage.wm_creep_miners
+    mbots[0] = {
+        activity = bot_actions.system,
+        next_tick = next_t
+    }
+    storage.dissention[next_t].bot = 0
+    storage.wm_creep_miners_count = storage.wm_creep_miners_count + 1
+end
+
 function mining_bots.process(r, e_tick)
     local action_ticks = storage.dissention
     if not storage.wm_creep_miners[r] then
@@ -215,7 +226,7 @@ function mining_bots.process(r, e_tick)
         return true
     end
     local mbot = storage.wm_creep_miners[r]
-    if not mbot.entity or not mbot.entity.valid then
+    if r > 0 and (not mbot.entity or not mbot.entity.valid) then
         game.print("A registered bot was suddenly found dead/removed! Number = " .. r)
         fields_func.unlock_tiles(r)
         fields_func.unlink_fields(r)
@@ -395,6 +406,37 @@ function mining_bots.process(r, e_tick)
         else
             -- out of fuel already!
         end
+
+    elseif mbot.activity == bot_actions.system then
+        local fields_to_update = storage.wm_updating_fields
+        local fields = storage.wm_creep_fields
+        local fields_meta = storage.wm_cr_fields_meta
+        for i, f in pairs(fields_to_update) do
+            if fields[i] then
+                if fields_meta[i].bots and fields_meta[i].bots[1] then
+                    -- don't do anything for now
+                else
+                    fields[i] = nil
+                    fields_meta[i] = nil
+                    fields_to_update[i] = nil
+                end
+            else
+                fields_to_update[i] = nil
+            end
+        end
+        next_t = find_free_tick(e_tick + 30)
+        action_ticks[next_t].bot = r
+        mbot.next_tick = next_t
+
+        --[[temp code, kill me
+        if storage.wm_creep_miners_count == 1 then
+            --game.print("cleaning")
+            for i, f in pairs(fields_meta) do
+                fields[i] = nil
+                fields_meta[i] = nil
+            end
+        end
+        -- end of temp code]]
     end
 end
 

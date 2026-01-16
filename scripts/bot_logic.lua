@@ -12,7 +12,8 @@ bot_behavior.bot_actions = {
     search_field = 4,
     home = 5,
     refueling = 6,
-    depot = 7
+    depot = 7,
+    system = 8
 }
 
 local function getsign(dx)
@@ -197,7 +198,7 @@ end
 
 function bot_behavior.consume_fuel_mining(r)
     local mbot = storage.wm_creep_miners[r]
-    mbot.fuel = mbot.fuel - 750 * bot_fuel_consumption
+    mbot.fuel = mbot.fuel - 800 * bot_fuel_consumption
     if mbot.fuel < 1 then
         game.print("Unit " .. r .. " overconsumed fuel by value of " .. -mbot.fuel)
     end

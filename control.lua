@@ -12,7 +12,7 @@ remote.add_interface("kr-creep", creep.remote_interface)
 
 script.on_init(function()
   storage.wm_creep_miners = {}
-  storage.wm_creep_miners_count = 0
+  storage.wm_creep_miners_count = 0  
   storage.wm_creep_fields = {}
   storage.wm_cr_fields_meta = {}
   storage.wm_updating_fields = {}
@@ -25,6 +25,9 @@ script.on_init(function()
   strike_back = settings.global["wm-CounterStrike"].value
   corrosion_enabled =  settings.startup["wm-CreepCorrosion"].value
   if corrosion_enabled then corrosionF.init() end
+  if storage.wm_creep_miners_count == 0 then
+    creepmining.create_system(600)
+  end
 end)
 
 script.on_load(function(e)
@@ -46,6 +49,7 @@ script.on_event(defines.events.on_tick, function(event)
   local t = event.tick
   creep.process_creep_queue(t)
   local act_now = action_ticks[t]
+
   if act_now then
     if act_now.tree then
       local foundPosition
@@ -68,6 +72,7 @@ script.on_event(defines.events.on_tick, function(event)
     if act_now.bot then
       creepmining.process(act_now.bot, t)
     end
+
     if corrosion_enabled and act_now.corrosion_affected then -- we do have something to corrode today
       for _, pos in pairs(act_now.corrosion_affected) do
         local entity
