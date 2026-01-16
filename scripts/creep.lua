@@ -3,7 +3,6 @@ local corrosionF = require("scripts.corrosion")
 --local creep_eater = require("scripts.creep-eater")
 
 local creeping = {}
-local fields_to_update = storage.wm_updating_fields
 local bob_enemies = script.active_mods["bobenemies"] and not
  ( script.active_mods["Rampant"] and settings.startup["rampant--newEnemies"].value == true or
    script.active_mods["RampantFixed"] and settings.startup["rampantFixed--newEnemies"].value == true or 
@@ -16,6 +15,10 @@ local function clamp(v, minv, maxv)
 end
 
 local function Add_Fields_To_Update(cx, cy, r)
+  if not storage.wm_updating_fields then
+    storage.wm_updating_fields = {}
+  end
+  local fields_to_update = storage.wm_updating_fields
   
     -- Disc bounding box in tile space
     local minX = cx - r
