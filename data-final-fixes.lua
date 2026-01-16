@@ -4,7 +4,7 @@ if data.raw.car["tank"].terrain_friction_modifier > 0.1 then data.raw.car["tank"
 if settings.startup["wm-CreepCorrosion"].value == false then
   local buildings =
   {
-    "accumulator", "arithmetic-combinator", "turret", "electric-turret", "fluid-turret", "unit-spawner", "artillery-turret", "assembling-machine",
+    "accumulator", "arithmetic-combinator", "turret", "ammo-turret", "electric-turret", "fluid-turret", "unit-spawner", "artillery-turret", "assembling-machine",
     "beacon", "boiler", "burner-generator", "constant-combinator", "container", "curved-rail-a", "curved-rail-b", "decider-combinator", "electric-energy-interface",
     "electric-pole", "furnace", "gate", "generator", "heat-interface", "heat-pipe", "infinity-container", "infinity-pipe", "inserter", "lab", "lamp",
     "legacy-curved-rail", "legacy-straight-rail", "loader", "loader-1x1", "logistic-container", "market", "mining-drill", "offshore-pump", "pipe", "pipe-to-ground",
