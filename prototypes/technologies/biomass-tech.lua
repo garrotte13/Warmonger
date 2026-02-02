@@ -22,10 +22,10 @@ data:extend(
 				recipe = "wm-residue-sulphuric-acid"
 			}
 		},
-		prerequisites = { "rocket-silo", "power-armor-mk2"},
+		prerequisites = { "production-science-pack", "power-armor" },
 		unit =
 		{
-			count = 3000,
+			count = 300,
 			
 			ingredients = 
 			{
@@ -34,7 +34,7 @@ data:extend(
 				{"military-science-pack", 1},
 				{"chemical-science-pack", 1},
 				{"production-science-pack", 1},
-				{"utility-science-pack", 1}
+				--{"utility-science-pack", 1}
 			},
 			time = 45
 		}

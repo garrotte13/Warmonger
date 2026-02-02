@@ -1,7 +1,7 @@
---require("__Warmonger__/prototypes/categories/recipe-categories")
---require("__Warmonger__/prototypes/entities/buildings/bio-lab")
+require("__Warmonger__/prototypes/categories/recipe-categories")
+require("__Warmonger__/prototypes/entities/buildings/bio-lab")
 --require("__Warmonger__/prototypes/entities/buildings/creep-processing")
---require("__Warmonger__/prototypes/technologies/biomass-tech")
+require("__Warmonger__/prototypes/technologies/biomass-tech")
 
 require("__Warmonger__/prototypes/entities/buildings/pipe-patch")
 require("__Warmonger__/prototypes/entities/remnants/kr-big-random-pipes-remnant")

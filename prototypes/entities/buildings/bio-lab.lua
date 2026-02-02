@@ -2,6 +2,22 @@ local hit_effects = require("__base__/prototypes/entity/hit-effects")
 local sounds      = require("__base__/prototypes/entity/sounds")
 local brd_cost = settings.startup["wm-BiomassToBitersReseach"].value
 
+local  kr_pipe_path =
+ {
+	north = util.empty_sprite(),
+	east = util.empty_sprite(),
+	south = {
+	  filename = "__Warmonger__/graphics/entities/pipe-patch/hr-pipe-patch.png",
+	  priority = "high",
+	  width = 55,
+	  height = 50,
+	  scale = 0.5,
+	  shift = { 0.01, -0.58 },
+	},
+	west = util.empty_sprite(),
+  }
+  
+
 local bio_lab_working_sound =
 {
 	filename = "__Warmonger__/sounds/buildings/bio-lab.ogg",
@@ -28,11 +44,8 @@ data:extend(
 		corpse = "kr-big-random-pipes-remnant",
 		dying_explosion = "big-explosion",
 		damaged_trigger_effect = hit_effects.entity(),
-		module_specification =
-		{
-			module_slots = 2
-		},
-		allowed_effects = {"consumption", "speed", "productivity", "pollution"},
+		module_slots = 3,
+		allowed_effects = {"consumption", "speed", "pollution"},
 		resistances =
 		{
 			{type = "impact", percent = 50}
@@ -45,12 +58,25 @@ data:extend(
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
 				volume = 1000,
-				base_area = 2,
-				height = 1,
+				--base_area = 2,
+				height = 2,
 				base_level = -1,
 				pipe_connections =
 				{
-					{ flow_direction = "input", direction = defines.direction.east, position = {0, -3} },
+					{ flow_direction = "input", direction = defines.direction.east, position = {3, 0} },
+				}
+			},
+			{
+				production_type = "output",
+				pipe_picture = kr_pipe_path,
+				pipe_covers = pipecoverspictures(),
+				volume = 1000,
+				--base_area = 2,
+				height = 2,
+				base_level = -1,
+				pipe_connections =
+				{
+					{ flow_direction = "output", direction = defines.direction.west, position = {-3, 0} }
 				}
 			},
 			{
@@ -58,12 +84,12 @@ data:extend(
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
 				volume = 1000,
-				base_area = 2,
+				--base_area = 2,
 				height = 1,
 				base_level = -1,
 				pipe_connections =
 				{
-					{ flow_direction = "input-output", direction = defines.direction.west, position = {0, 3} }
+					{ flow_direction = "input", direction = defines.direction.north, position = {0, -3} }
 				}
 			},
 			{
@@ -71,63 +97,33 @@ data:extend(
 				pipe_picture = kr_pipe_path,
 				pipe_covers = pipecoverspictures(),
 				volume = 1000,
-				base_area = 2,
+				--base_area = 2,
 				height = 1,
-				base_level = 1,
+				base_level = -1,
 				pipe_connections =
 				{
-					{ flow_direction = "output", direction = defines.direction.north, position = {3, 0} }
-				}
-			},
-			{
-				production_type = "output",
-				pipe_picture = kr_pipe_path,
-				pipe_covers = pipecoverspictures(),
-				volume = 1000,
-				base_area = 2,
-				height = 1,
-				base_level = 1,
-				pipe_connections =
-				{
-					{ flow_direction = "output", direction = defines.direction.south, position = {-3, 0} }
+					{ flow_direction = "output", direction = defines.direction.south, position = {0, 3} }
 				}
 			},
 
 		},
 		collision_box = {{-3.25, -3.25}, {3.25, 3.25}},
 		selection_box = {{-3.5, -3.5}, {3.5, 3.5}},
-		--fast_replaceable_group = "kr-greenhouse",
+		graphics_set = {
 		animation =
 		{
 			layers =
 			{
 				{
-					filename = "__Warmonger__/graphics/entities/bio-lab/bio-lab.png",
-					priority = "high",
-					width = 256,
-					height = 256,
-					frame_count = 1,
-					hr_version =
-					{
 						filename = "__Warmonger__/graphics/entities/bio-lab/hr-bio-lab.png",
 						priority = "high",
 						width = 512,
 						height = 512,
 						frame_count = 1,
 						scale = 0.5
-					}
 				},
 				{
-					filename = "__Warmonger__/graphics/entities/bio-lab/bio-lab-sh.png",
-					priority = "high",
-					width = 256,
-					height = 256,
-					shift = {0.32, 0},
-					frame_count = 1,
-					draw_as_shadow = true,
-					hr_version =
-					{
-						filename = "__Warmonger__/graphics/entities/bio-lab/hr-bio-lab-sh.png",
+					filename = "__Warmonger__/graphics/entities/bio-lab/hr-bio-lab-sh.png",
 						priority = "high",
 						width = 512,
 						height = 512,
@@ -135,7 +131,6 @@ data:extend(
 						frame_count = 1,
 						draw_as_shadow = true,
 						scale = 0.5
-					}
 				}
 			}
 		},
@@ -144,26 +139,17 @@ data:extend(
 			{
 				animation =
 				{
-					filename = "__Warmonger__/graphics/entities/bio-lab/bio-lab-working.png",
-					width = 193,
-					height = 171,
+					filename = "__Warmonger__/graphics/entities/bio-lab/hr-bio-lab-working.png",
+					width = 387,
+					height = 342,
 					shift = {0.05, -0.31},
 					frame_count = 30,
 					line_length = 5,
+					scale = 0.5,
 					animation_speed = 0.35,
-					hr_version =
-					{
-						filename = "__Warmonger__/graphics/entities/bio-lab/hr-bio-lab-working.png",
-						width = 387,
-						height = 342,
-						shift = {0.05, -0.31},
-						frame_count = 30,
-						line_length = 5,
-						scale = 0.5,
-						animation_speed = 0.35,
-					}
 				}
 			}
+		}
 		},
 		crafting_categories = {"bioprocessing"},
 		scale_entity_info_icon = false,
@@ -175,24 +161,35 @@ data:extend(
 		{
 			type = "electric",
 			usage_priority = "secondary-input",
-			emissions_per_minute = { pollution = 6 }
+			emissions_per_minute = { pollution = 4 }
 		},
-		energy_usage = "210kW",
-		ingredient_count = 3,
+		energy_usage = "310kW",
+		ingredient_count = 4,
 	},
 
 	{
 		type = "recipe",
 		name = "kr-bio-lab",
-		energy_required = 20,
+		energy_required = 35,
 		enabled = false,
 		ingredients =
+		mods["bobplates"] and
 		{
-			{type = "item", name = "biomass", amount = 900},
+			{type = "item", name = "biomass", amount = 100},
+			{type = "item", name = "bob-cobalt-steel-alloy", amount = 12},
+			{type = "item", name = "bob-brass-gear-wheel", amount = 5},
+			{type = "item", name = "bob-plastic-pipe", amount = 8},
+			{type = "item", name = "bob-glass", amount = 10},
+			{type = "item", name = "advanced-circuit", amount = 12}
+		}
+		or
+		{
+			{type = "item", name = "biomass", amount = 100},
 			{type = "item", name = "steel-plate", amount = 5},
 			{type = "item", name = "iron-gear-wheel", amount = 5},
-			{type = "item", name = "pipe", amount = 5},
-			{type = "item", name = "advanced-circuit", amount = 5}
+			{type = "item", name = "plastic-bar", amount = 8},
+			{type = "item", name = "pipe", amount = 8},
+			{type = "item", name = "advanced-circuit", amount = 12}
 		},
 		results={
 			{type = "item", name ="kr-bio-lab",	amount = 1}
@@ -201,48 +198,25 @@ data:extend(
 
 	{
 		type = "recipe",
-		name = "kr-biomass-growing",
-		category = "bioprocessing",
-		energy_required = 60,
-		emissions_multiplier = 2,
-		enabled = false,
-		icon =  "__Warmonger__/graphics/icons/cards/biters-research-data.png",
-		icon_size = 64,
-		icon_mipmaps = 4,
-		subgroup = "science-pack",
-		ingredients =
-		{
-			{type = "item", name = "stone-wall", amount = 20},
-			{type = "item", name = "biomass", amount = brd_cost + 1},
-			{type = "fluid", name = "sulfuric-acid", amount = 35 }
-		},
-		results =
-    	{
-			{type = "item", name="wm-bio-remains", amount_min = math.ceil(brd_cost/3), amount_max = brd_cost+1, probability=.30},
-			{type = "item", name="biters-research-data", amount = 10}
-		},
-	},
-
-	{
-		type = "recipe",
 		name = "wm-residue-sulphuric-acid",
 		icon = "__Warmonger__/graphics/icons/items/mud_recycle.png",
 		icon_size = 32,
 		--icon_mipmaps = 4,
-		category = "bioprocessing",
+		category = "chemistry",
 		subgroup = "fluid-recipes",
 		energy_required = 4,
 		emissions_multiplier = 1.5,
 		enabled = false,
+		allow_productivity = false,
 		ingredients =
 		{
 			{type = "item", name = "wm-bio-remains", amount = 20},
-			{type = "fluid", name = "steam", amount = 10, minimum_temperature = 400, maximum_temperature = 650},
-			{type = "fluid", name = "sulfuric-acid", amount = 7 }
+			{type = "fluid", name = "steam", amount = 20, minimum_temperature = 400},
+			{type = "fluid", name = "sulfuric-acid", amount = 10 }
 		},
 		results=
 		{
-		  {type="fluid", name="sulfuric-acid", amount=25},
+		  {type="fluid", name="sulfuric-acid", amount=35},
 		  {type="fluid", name="heavy-oil", amount=5}
 		}
 	},
@@ -256,7 +230,58 @@ data:extend(
 		subgroup = "production-machine",
 		order = "d-g2[bio-lab]",
 		place_result = "kr-bio-lab",
-		stack_size = 50,
+		stack_size = 10,
 	  },
 	
 })
+
+if brd_cost > 0 then
+	data:extend(
+	{
+	{
+		type = "recipe",
+		name = "kr-biomass-growing",
+		category = "bioprocessing",
+		energy_required = (brd_cost + 1) * 15,
+		emissions_multiplier = 2,
+		enabled = false,
+		--[[icon =  "__Warmonger__/graphics/icons/cards/biters-research-data.png",
+		icon_size = 64,
+		icon_mipmaps = 4,]]
+		group = mods["bobenemies"] and "bob-resource-products" or "intermediate-products",
+		subgroup = mods["bobenemies"] and "bob-alien-artifact" or "science-pack",
+		order = "a00[biomass]",
+		main_product = "biomass",
+		allow_productivity = false,
+		allow_speed = false,
+		ingredients =
+		mods["bobplates"] and
+		{
+			{type = "item", name = "wm-bio-remains", amount = math.ceil(brd_cost * 1.5) + 5},
+			{type = "item", name = "biomass", amount = 2 * (brd_cost * 3 + 1)},
+			{type = "fluid", name = "bob-oxygen", amount = 25 + brd_cost * 5 },
+			{type = "fluid", name = "bob-pure-water", amount = 38 + brd_cost * 2 }
+		}
+		or
+		{
+			{type = "item", name = "wm-bio-remains", amount = math.ceil(brd_cost * 1.5) + 5},
+			{type = "item", name = "biomass", amount = 2* (brd_cost * 3 + 1)},
+			{type = "fluid", name = "petroleum-gas", amount = 20 + brd_cost * 5 },
+			{type = "fluid", name = "water", amount = 46 + brd_cost * 4 }
+		},
+		results =
+		mods["bobplates"] and
+    	{
+			{type = "item", name="wm-bio-remains", amount_min = 1, amount_max = 2},
+			{type = "item", name="biomass", amount = 2 * (brd_cost * 3 + 1 + math.ceil(brd_cost/2))},
+			{type = "fluid", name = "bob-sulfur-dioxide", amount = 8 + math.ceil(brd_cost/2)*2 }
+		}
+		or
+		{
+			{type = "item", name="wm-bio-remains", amount_min = 1, amount_max = 2},
+			{type = "item", name="biomass", amount = 2 * (brd_cost * 3 + 1 + math.ceil(brd_cost/2))},
+			{type = "fluid", name = "sulfuric-acid", amount = 4 + math.ceil(brd_cost/2)*2}
+		}
+	}
+	})
+end
