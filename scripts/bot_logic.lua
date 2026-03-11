@@ -3,7 +3,7 @@ local bot_behavior = {}
 local fuel_items
 local bot_fuel_capacity = 48000
 local bot_fuel_min = 22000
-local bot_fuel_consumption = 1.15
+local bot_fuel_consumption = 0.8
 
 bot_behavior.bot_actions = {
     idle = 1,
