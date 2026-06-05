@@ -44,8 +44,8 @@ data:extend(
 		corpse = "kr-big-random-pipes-remnant",
 		dying_explosion = "big-explosion",
 		damaged_trigger_effect = hit_effects.entity(),
-		module_slots = 3,
-		allowed_effects = {"consumption", "speed", "pollution"},
+		module_slots = 0,
+		--allowed_effects = {"consumption", "speed", "pollution"},
 		resistances =
 		{
 			{type = "impact", percent = 50}
@@ -163,7 +163,7 @@ data:extend(
 			usage_priority = "secondary-input",
 			emissions_per_minute = { pollution = 4 }
 		},
-		energy_usage = "310kW",
+		energy_usage = "510kW",
 		ingredient_count = 4,
 	},
 
@@ -242,7 +242,7 @@ if brd_cost > 0 then
 		type = "recipe",
 		name = "kr-biomass-growing",
 		category = "bioprocessing",
-		energy_required = (brd_cost + 1) * 15,
+		energy_required = 10 + (brd_cost + 2) * 10,
 		emissions_multiplier = 2,
 		enabled = false,
 		--[[icon =  "__Warmonger__/graphics/icons/cards/biters-research-data.png",
@@ -257,30 +257,30 @@ if brd_cost > 0 then
 		ingredients =
 		mods["bobplates"] and
 		{
-			{type = "item", name = "wm-bio-remains", amount = math.ceil(brd_cost * 1.5) + 5},
-			{type = "item", name = "biomass", amount = 2 * (brd_cost * 3 + 1)},
+			{type = "item", name = "wm-bio-remains", amount = 4 * brd_cost + 7},
+			{type = "item", name = "biomass", amount = 3 * brd_cost + 5},
 			{type = "fluid", name = "bob-oxygen", amount = 25 + brd_cost * 5 },
-			{type = "fluid", name = "bob-pure-water", amount = 38 + brd_cost * 2 }
+			{type = "fluid", name = "water", amount = 38 + brd_cost * 2 }
 		}
 		or
 		{
 			{type = "item", name = "wm-bio-remains", amount = math.ceil(brd_cost * 1.5) + 5},
 			{type = "item", name = "biomass", amount = 2* (brd_cost * 3 + 1)},
 			{type = "fluid", name = "petroleum-gas", amount = 20 + brd_cost * 5 },
-			{type = "fluid", name = "water", amount = 46 + brd_cost * 4 }
+			{type = "fluid", name = "water", amount = 46 + brd_cost * 3 }
 		},
 		results =
 		mods["bobplates"] and
     	{
-			{type = "item", name="wm-bio-remains", amount_min = 1, amount_max = 2},
-			{type = "item", name="biomass", amount = 2 * (brd_cost * 3 + 1 + math.ceil(brd_cost/2))},
-			{type = "fluid", name = "bob-sulfur-dioxide", amount = 8 + math.ceil(brd_cost/2)*2 }
+			{type = "item", name="wm-bio-remains", amount_min = brd_cost + 5, amount_max = brd_cost + 6},
+			{type = "item", name="biomass", amount = 5 * brd_cost + 5 },
+			{type = "fluid", name = "bob-sulfur-dioxide", amount = 7 + brd_cost }
 		}
 		or
 		{
 			{type = "item", name="wm-bio-remains", amount_min = 1, amount_max = 2},
 			{type = "item", name="biomass", amount = 2 * (brd_cost * 3 + 1 + math.ceil(brd_cost/2))},
-			{type = "fluid", name = "sulfuric-acid", amount = 4 + math.ceil(brd_cost/2)*2}
+			{type = "fluid", name = "sulfuric-acid", amount = 7 + brd_cost}
 		}
 	}
 	})
