@@ -66,7 +66,7 @@ data:extend({
   vision_distance = 45,
   affected_by_tiles = true,
   is_military_target = true,
-  radar_range = 1,
+  radar_range = 0,
   can_open_gates = true,
   ai_settings =
   {
