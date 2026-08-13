@@ -64,7 +64,7 @@ if mods["bobenemies"] then
 			{type = "item", name = "biomass", amount = 12}
 		},
 		results={
-			{type = "item", name ="bob-alien-artifact", amount = 2}
+			{type = "item", name ="bob-alien-artifact", amount = 3}
 		}
 	  },
 

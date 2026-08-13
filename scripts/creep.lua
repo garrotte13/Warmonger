@@ -34,10 +34,11 @@ local function Add_Fields_To_Update(cx, cy, r)
 
     local r2 = r * r
     local fields = storage.wm_creep_fields
-
+    local coord_str
     for zx = zminX, zmaxX do
         for zy = zminY, zmaxY do
-          if fields[zx .. ":" .. zy] then
+          coord_str = zx .. ":" .. zy
+          if fields[coord_str] and not fields_to_update[coord_str] then
             -- Zone bounds in tile space
             local boxMinX = zx * 8
             local boxMaxX = boxMinX + 8
@@ -53,7 +54,7 @@ local function Add_Fields_To_Update(cx, cy, r)
 
             -- If distance ≤ radius → intersection
             if (dx*dx + dy*dy) <= r2 then
-                fields_to_update[zx .. ":" .. zy] = true
+                fields_to_update[coord_str] = true
             end
           end
         end

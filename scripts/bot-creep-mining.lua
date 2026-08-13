@@ -152,7 +152,7 @@ function mining_bots.add(entity, playerN, e_tick)
         return
     end
 
-    local next_t = find_free_tick(e_tick + 90) -- give the newborn a second to look around
+    local next_t = find_free_tick(e_tick + 70) -- give the newborn a second to look around
     mbots[r] = {
         tile = nil, -- the target creep tile pos selected by bot
         extile = nil,
@@ -424,7 +424,7 @@ function mining_bots.process(r, e_tick)
                 fields_to_update[i] = nil
             end
         end
-        next_t = find_free_tick(e_tick + 30)
+        next_t = find_free_tick(e_tick + 180)
         action_ticks[next_t].bot = r
         mbot.next_tick = next_t
 

@@ -16,13 +16,13 @@ if settings.startup["wm-CreepCorrosion"].value == false then
         local enemy
         if pt.flags then
           for _, fl in pairs(pt.flags) do
-            if fl == "placeable-enemy" then
+            if fl == "player-creation" then
               enemy = true
               break
             end
           end
         end
-        if (not enemy) then
+        if enemy then
           if not pt.collision_mask then
             pt.collision_mask = data.raw["utility-constants"]["default"].default_collision_masks[tp]
           end
