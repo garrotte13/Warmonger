@@ -76,7 +76,7 @@ data:extend(
 				base_level = -1,
 				pipe_connections =
 				{
-					{ flow_direction = "output", direction = defines.direction.west, position = {-3, 0} }
+					{ flow_direction = "output", direction = defines.direction.north, position = {0, -3} }
 				}
 			},
 			{
@@ -89,7 +89,7 @@ data:extend(
 				base_level = -1,
 				pipe_connections =
 				{
-					{ flow_direction = "input", direction = defines.direction.north, position = {0, -3} }
+					{ flow_direction = "input", direction = defines.direction.west, position = {-3, 0} }
 				}
 			},
 			{
