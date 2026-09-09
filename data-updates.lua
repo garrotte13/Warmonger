@@ -1,42 +1,48 @@
 if mods["bobenemies"] then
     for _, sp in pairs(data.raw["unit-spawner"]) do
         if sp.loot and (not string.find(sp.name, "super-spawner")) then
-            local j
+            --local j
             for i = 1, #sp.loot do
                 if sp.loot[i].item == "bob-alien-artifact" then
-                    j = i
+                    --j = i
+                    sp.loot[i].count_min = math.ceil(sp.loot[i].count_min / 2)
+                    sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 3))
                 elseif string.find(sp.loot[i].item, "bob-alien-artifact-") then
                     sp.loot[i].count_min = math.ceil(sp.loot[i].count_min / 3)
                     sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 5))
                 end
             end
-            if j then
+            --[[if j then
                 table.remove(sp.loot,j)
-            end
+            end]]
         end
     end
     for _, sp in pairs(data.raw["turret"]) do
         if sp.loot then
-            local j
+            --local j
             for i = 1, #sp.loot do
                 if sp.loot[i].item == "bob-alien-artifact" then
-                    j = i
+                    --j = i
+                    sp.loot[i].count_min = math.ceil(sp.loot[i].count_min / 2)
+                    sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 3))
                 elseif string.find(sp.loot[i].item, "bob-alien-artifact-") then
                     sp.loot[i].count_min = math.ceil(sp.loot[i].count_min / 3)
                     sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 5))
                 end
             end
-            if j then
+            --[[if j then
                 table.remove(sp.loot,j)
-            end
+            end]]
         end
     end
     for _, sp in pairs(data.raw["unit"]) do
         if sp.loot then
-            local j
+            --local j
             for i = 1, #sp.loot do
                 if sp.loot[i].item == "bob-alien-artifact" or sp.loot[i].item == "bob-small-alien-artifact" then
-                    j = i
+                    sp.loot[i].count_min = math.floor(sp.loot[i].count_min / 2)
+                    sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 3))
+                    --j = i
                 elseif string.find(sp.loot[i].item, "bob-alien-artifact-") then
                     sp.loot[i].count_min = math.floor(sp.loot[i].count_min / 3)
                     sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 6))
@@ -45,9 +51,9 @@ if mods["bobenemies"] then
                     sp.loot[i].count_max = math.max(sp.loot[i].count_min, math.ceil(sp.loot[i].count_max / 7))
                 end
             end
-            if j then
+            --[[if j then
                 table.remove(sp.loot,j)
-            end
+            end]]
         end
     end
     data:extend(
