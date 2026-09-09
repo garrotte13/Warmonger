@@ -210,7 +210,7 @@ data:extend(
 		allow_productivity = false,
 		ingredients =
 		{
-			{type = "item", name = "wm-bio-remains", amount = 20},
+			{type = "item", name = "wm-bio-remains", amount = 10},
 			{type = "fluid", name = "steam", amount = 20, minimum_temperature = 400},
 			{type = "fluid", name = "sulfuric-acid", amount = 10 }
 		},
@@ -259,14 +259,14 @@ if brd_cost > 0 then
 		{
 			{type = "item", name = "wm-bio-remains", amount = 4 * brd_cost + 7},
 			{type = "item", name = "biomass", amount = 3 * brd_cost + 5},
-			{type = "fluid", name = "bob-oxygen", amount = 25 + brd_cost * 5 },
+			{type = "fluid", name = "bob-oxygen", amount = 2 * (5 + brd_cost * 5 )},
 			{type = "fluid", name = "water", amount = 38 + brd_cost * 2 }
 		}
 		or
 		{
 			{type = "item", name = "wm-bio-remains", amount = math.ceil(brd_cost * 1.5) + 5},
 			{type = "item", name = "biomass", amount = 2* (brd_cost * 3 + 1)},
-			{type = "fluid", name = "petroleum-gas", amount = 20 + brd_cost * 5 },
+			{type = "fluid", name = "petroleum-gas", amount = 2 * (3 + brd_cost * 5) },
 			{type = "fluid", name = "water", amount = 46 + brd_cost * 3 }
 		},
 		results =
