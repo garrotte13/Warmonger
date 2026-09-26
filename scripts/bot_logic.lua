@@ -19,7 +19,7 @@ bot_behavior.bot_actions = {
 local function getsign(dx)
     if dx < 0 then
         dx = -1
-    elseif dx > 0 then
+    else
         dx = 1
     end
     return dx
