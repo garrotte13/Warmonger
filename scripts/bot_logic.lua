@@ -1,9 +1,11 @@
+local floor = math.floor
+local tinsert = table.insert
 local bot_behavior = {}
 
 local fuel_items
 local bot_fuel_capacity = 48000
 local bot_fuel_min = 22000
-local bot_fuel_consumption = 0.8
+local bot_fuel_consumption = 1
 
 bot_behavior.bot_actions = {
     idle = 1,
@@ -34,8 +36,8 @@ end
 function bot_behavior.search_zones_near(r)
     local mbot = storage.wm_creep_miners[r]
     local origin_pos = {
-        x = math.floor((mbot.pos_found_tiles.x)/8),
-        y = math.floor((mbot.pos_found_tiles.y)/8)
+        x = floor((mbot.pos_found_tiles.x)/8),
+        y = floor((mbot.pos_found_tiles.y)/8)
         }
     local our_field
     local diff_x = mbot.entity.position.x - (origin_pos.x*8 + 4)
@@ -67,9 +69,9 @@ function bot_behavior.search_zones_near(r)
         }
     end
     if diff_x * diff_x > 9 or diff_y * diff_y > 9 then
-        table.insert(autolist_offsets, 4, {0,0})
+        tinsert(autolist_offsets, 4, {0,0})
     else
-        table.insert(autolist_offsets, 1, {0,0})
+        tinsert(autolist_offsets, 1, {0,0})
     end
     local cur_pos
     for i = 1, 9 do
@@ -77,14 +79,14 @@ function bot_behavior.search_zones_near(r)
             x = origin_pos.x + autolist_offsets[i][1],
             y = origin_pos.y + autolist_offsets[i][2]
         }
-        our_field = storage.wm_cr_fields_meta[cur_pos.x .. ":" .. cur_pos.y]
-        if not our_field then
-            return cur_pos
+        our_field = storage.wm_cr_fields_meta[cur_pos.x .. ":" .. cur_pos.y] -- get metadata for this chunk page
+        if not our_field then  -- if metadata is nil, then the page is fresh and should be searched for creep immediately
+            return cur_pos -- return page position, only next time we'll analyze it. We don't want to continue.
         end
         -- ( ((1 + #our_field.bots)*4) <= our_field.size_now or (mbot.searching_field.final and #our_field.bots < our_field.size_now) )
-        if our_field.size_now > 0 and (not v_in_table(r, our_field.bots)) then
-            table.insert(our_field.bots, r)
-            table.insert(mbot.field, cur_pos)
+        if our_field.size_now > 0 and (not v_in_table(r, our_field.bots)) then --field has creep to gather and bot isn't linked with it
+            tinsert(our_field.bots, r)
+            tinsert(mbot.field, cur_pos)
             mbot.activity = bot_behavior.bot_actions.idle
             return
         end
@@ -149,7 +151,7 @@ local function gg_fuel_items()
         fuel_items = {}
         for _, item in pairs (prototypes.get_item_filtered{{ filter = 'fuel-value', comparison = '>', value = '1'}}) do
             if item.fuel_category == "chemical" then
-                table.insert(fuel_items, {name = item.name, value = item.fuel_value * 0.0008})
+                tinsert(fuel_items, {name = item.name, value = item.fuel_value * 0.0008})
             end
         end
         table.sort(fuel_items, function(a, b) return prototypes.item[a.name].fuel_value < prototypes.item[b.name].fuel_value end)
@@ -186,7 +188,7 @@ function bot_behavior.extract_fuel(fuel, fuel_name)
         gg_fuel_items()
         for _, item in pairs (fuel_items) do
             if item.name == fuel_name then
-                f = math.floor(fuel / item.value)
+                f = floor(fuel / item.value)
                 if f > 0 then return f end
                 return
             end
@@ -233,7 +235,7 @@ function bot_behavior.consume_fuel_basic(r, e_tick, Fuel_Coeff)
         if mbot.fuel < 2200 then
             mbot.entity.active = false
             if mbot.tileOid then
-                storage.wm_creep_fields[math.floor((mbot.tile.x)/8) .. ":" .. math.floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
+                storage.wm_creep_fields[floor((mbot.tile.x)/8) .. ":" .. floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
             end
             mbot.tileOid = nil
             mbot.activity = bot_behavior.bot_actions.refueling

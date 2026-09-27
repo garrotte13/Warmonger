@@ -2,6 +2,7 @@ local mining_bots = {}
 local fields_func = require("fields_logic")
 local bot_func = require("bot_logic")
 
+local NEAR_SQ = 1.65 * 1.65 -- the max range early bots can reach creep tiles without moving
 local direction_vectors = {
     [defines.direction.north]          = { 0, -1 },
     [defines.direction.northnortheast] = { 1, -2 },
@@ -282,16 +283,16 @@ function mining_bots.process(r, e_tick)
             SendHome(r, e_tick)
         else
             if not mbot.searching_field then
-                mbot.searching_field = {n = 1, final = false}
+                mbot.searching_field = {n = 1, final = false} -- bot searches first time after deployment, prefers pages with less bots
             end
             local res = bot_func.search_zones_near(r)
-            if mbot.activity == bot_actions.home then
+            if mbot.activity == bot_actions.home then --last possible page is empty, go home
                 SendHome(r, e_tick)
                 game.get_player("garrotte").create_local_flying_text{text = "No more creep around. Going home", position = mbot.entity.position, time_to_live = 150}
                 return
-            elseif res then
+            elseif res then -- we got a fresh page
                 fields_func.create(res)
-                fields_func.search_creep(res)
+                fields_func.search_creep(res) -- fill it and will search for more pages
                 next_t = find_free_tick(e_tick + 40)
             else
                 next_t = find_free_tick(e_tick + 20)
@@ -310,9 +311,9 @@ function mining_bots.process(r, e_tick)
         elseif not mbot.field or not mbot.field[1] then
             mbot.activity = bot_actions.search_field
             next_t = find_free_tick(e_tick + 40)
-        elseif mbot.searching_field.n < 3 then
+        elseif mbot.searching_field.n < 5 then -- bot needs to add more pages to start gathering
             local res = bot_func.search_zones_near(r)
-            if res then
+            if res then --fresh page should be filled with data
                 fields_func.create(res)
                 fields_func.search_creep(res)
                 next_t = find_free_tick(e_tick + 40)
@@ -321,46 +322,44 @@ function mining_bots.process(r, e_tick)
                 next_t = find_free_tick(e_tick + 10)
             end
         else
-            local sort_tiles = {}
             local my_pos = mbot.entity.position
-            for k=1, #mbot.field do
-                local found_tiles = storage.wm_creep_fields[mbot.field[k].x .. ":" .. mbot.field[k].y]
-                for i=1,#found_tiles do
-                    if found_tiles[i] and found_tiles[i].x and (not found_tiles[i].hunter) then
+            local ext = mbot.extile
+            local best_dist, best_fkey, best_oid, best_tile
+            for k = 1, #mbot.field do
+                local fkey = mbot.field[k].x .. ":" .. mbot.field[k].y
+                local found_tiles = storage.wm_creep_fields[fkey]
+                for i = 1, #found_tiles do
+                    local t = found_tiles[i]
+                    if t and t.x and not t.hunter then
                         local tile_unreachable
-                        if mbot.extile and mbot.extile[1] then
-                            for j=1,#mbot.extile do
-                                if found_tiles[i].x == mbot.extile[j].x and found_tiles[i].y == mbot.extile[j].y then
+                        if ext and ext[1] then
+                            for j = 1, #ext do
+                                if t.x == ext[j].x and t.y == ext[j].y then
                                     tile_unreachable = true
                                     break
                                 end
                             end
                         end
-                        local ddistance = (my_pos.x - (found_tiles[i].x + 0.5))^2 + (my_pos.y - (found_tiles[i].y + 0.5))^2
-                        if (not tile_unreachable) or (ddistance <= 1.65^2) then
-                            table.insert(sort_tiles, {
-                                distance = ddistance,
-                                oid = i,
-                                field = mbot.field[k].x .. ":" .. mbot.field[k].y
-                            })
+                        local dx = my_pos.x - (t.x + 0.5)
+                        local dy = my_pos.y - (t.y + 0.5)
+                        local d = dx*dx + dy*dy
+                        if (not tile_unreachable) or d <= NEAR_SQ then
+                            if not best_dist or d < best_dist then
+                                best_dist, best_fkey, best_oid, best_tile = d, fkey, i, t
+                            end
                         end
                     end
                 end
             end
-            table.sort(sort_tiles, function (i1, i2) return i1.distance < i2.distance end )
-            if sort_tiles[1] then
-                local selected_tile = {
-                    x = storage.wm_creep_fields[sort_tiles[1].field][sort_tiles[1].oid].x,
-                    y = storage.wm_creep_fields[sort_tiles[1].field][sort_tiles[1].oid].y
-                }
-                mbot.tileOid = sort_tiles[1].oid
-                storage.wm_creep_fields[sort_tiles[1].field][sort_tiles[1].oid].hunter = r
-                mbot.tile = selected_tile
-                if sort_tiles[1].distance > 1.65^2 then
+            if best_dist then
+                mbot.tileOid = best_oid
+                storage.wm_creep_fields[best_fkey][best_oid].hunter = r
+                mbot.tile = best_tile
+                if best_dist > NEAR_SQ then
                     mbot.activity = bot_actions.running
                     mbot.entity.commandable.set_command({
                         type = defines.command.go_to_location,
-                        destination = {x = selected_tile.x + 0.5, y = selected_tile.y + 0.5},
+                        destination = {x = best_tile.x + 0.5, y = best_tile.y + 0.5},
                         radius = 0.99,
                         distraction = defines.distraction.none
                     })
@@ -370,11 +369,11 @@ function mining_bots.process(r, e_tick)
                     mbot.activity = bot_actions.mining
                     next_t = find_free_tick(e_tick + 119) -- mining lock
                     mbot.entity.commandable.set_command({type = defines.command.stop, distraction = defines.distraction.none})
-                    mbot.entity.direction = posititionsToDirect(my_pos, {x = selected_tile.x + 0.5, y = selected_tile.y + 0.5})
+                    mbot.entity.direction = posititionsToDirect(my_pos, {x = best_tile.x + 0.5, y = best_tile.y + 0.5})
                     --mbot.entity.direction = defines.direction.north -- need to calculate direction here
                 end
                 if mbot.searching_field.n < 9 then
-                    mbot.searching_field.n = 2
+                    mbot.searching_field.n = 2 -- after reaching and collecting the creep tile bot will try to add more wm_creep_fields
                 end
             else
                 -- no free creep
