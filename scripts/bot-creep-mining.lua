@@ -134,6 +134,7 @@ function mining_bots.add(entity, playerN, e_tick)
         entity.active = false
         mbots[r] = {
             tile = nil,
+            type = 3,
             extile = nil,
             entity = entity,
             fuel = 0,
@@ -157,6 +158,7 @@ function mining_bots.add(entity, playerN, e_tick)
     mbots[r] = {
         tile = nil, -- the target creep tile pos selected by bot
         extile = nil,
+        type = 3,
         entity = entity,
         fuel = fuel, -- 12x4MJ 12 units of coal or 4 units of solid fuel. 80% efficiency means 15 coal or 5 solid is needed.
         fuel_name = fuel_item,
@@ -240,9 +242,8 @@ function mining_bots.process(r, e_tick)
  
     -- MINING
     if mbot.activity == bot_actions.mining then
-        local pos_f = {x = math.floor((mbot.tile.x)/8), y = math.floor((mbot.tile.y)/8)}
-        local field_meta = storage.wm_cr_fields_meta[ pos_f.x .. ":" .. pos_f.y ]
-        local field = storage.wm_creep_fields[ pos_f.x .. ":" .. pos_f.y ]
+        local field_meta = storage.wm_cr_fields_meta[ mbot.field_key ]
+        local field = storage.wm_creep_fields[ mbot.field_key ]
         mbot.extile = nil
         mbot.entity.surface.set_tiles({{
             name = field[mbot.tileOid].hidden_tile or "landfill",
@@ -260,10 +261,12 @@ function mining_bots.process(r, e_tick)
         else
             field[mbot.tileOid] = {}
         end
+
+        field_meta.size_now = field_meta.size_now - 1
+        if field_meta.size_now == 0 then fields_func.delete({x = math.floor((mbot.tile.x)/8), y = math.floor((mbot.tile.y)/8)}) end
         mbot.tile = nil
         mbot.tileOid = nil
-        field_meta.size_now = field_meta.size_now - 1
-        if field_meta.size_now == 0 then fields_func.delete(pos_f) end
+        mbot.field_key = nil
         mbot.ochre = mbot.ochre - 1
         bot_func.consume_fuel_mining(r)
         mbot.t_activity = e_tick
@@ -353,6 +356,7 @@ function mining_bots.process(r, e_tick)
             end
             if best_dist then
                 mbot.tileOid = best_oid
+                mbot.field_key = best_fkey
                 storage.wm_creep_fields[best_fkey][best_oid].hunter = r
                 mbot.tile = best_tile
                 if best_dist > NEAR_SQ then
@@ -373,7 +377,7 @@ function mining_bots.process(r, e_tick)
                     --mbot.entity.direction = defines.direction.north -- need to calculate direction here
                 end
                 if mbot.searching_field.n < 9 then
-                    mbot.searching_field.n = 2 -- after reaching and collecting the creep tile bot will try to add more wm_creep_fields
+                    mbot.searching_field.n = 3 -- after reaching and collecting the creep tile bot will try to add more wm_creep_fields
                 end
             else
                 -- no free creep

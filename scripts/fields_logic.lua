@@ -1,5 +1,12 @@
 local creep_fields = {}
 
+local wm_processed_types = {
+    system = 1,
+    controller = 2,
+    early_bot = 3,
+    mid_bot = 4,
+   big_bot = 5
+}
 
 function creep_fields.create(f_pos)
     storage.wm_cr_fields_meta[f_pos.x .. ":" .. f_pos.y] = {
@@ -74,10 +81,30 @@ function creep_fields.unlink_fields(r) --bot data existence is pre-checked
     end
 end
 
+function controller_release_trip(controller, unit_number)
+    local trip = controller.active_trips[unit_number]
+    if not trip then return end
+    for i = 1, #trip.tiles do
+        local t = trip.tiles[i]
+        local tiles = storage.wm_creep_fields[t.field_key]
+        if tiles and tiles[t.oid] then
+            local entry = tiles[t.oid]
+            if entry.hunter == unit_number then
+                entry.hunter = nil
+            end
+        end
+    end
+    controller.active_trips[unit_number] = nil
+end
+
 function creep_fields.unlock_tiles(r) --bot data existence is pre-checked
     local mbot = storage.wm_creep_miners[r]
+    local controller = mbot.controller_id and storage.wm_creep_miners[mbot.controller_id]
+    if controller and controller.type == wm_processed_types.controller then
+        controller_release_trip(controller, r)
+    end
     if mbot.tileOid then
-        storage.wm_creep_fields[math.floor((mbot.tile.x)/8) .. ":" .. math.floor((mbot.tile.y)/8)][mbot.tileOid].hunter = nil
+        storage.wm_creep_fields[mbot.field_key][mbot.tileOid].hunter = nil
     end
     --mbot.tileOid = nil
 end

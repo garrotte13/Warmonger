@@ -1,14 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
-Date: 2025-09-12
+Date: 2026-10-02
   Major Features:
     - Factorio2.0 compatibility. Enemy bases decorations replaced with creep.
-    - Corrosion is removed. New damage system under consideration. Strike back counteraction works.
-    - Ecomode of trees reviving is temporary down. Is it worth it without Rampant?
-    - Creep processors and biolab removed. Need new way to remove creep and get some products (or not)
+    - Corrosion is removed in default mode. New damage system under consideration. Strike back counteraction works.
+    - Creep processors are removed. Need new way to remove creep and get some products.
+    - Early game droids for creep gathering. Advanced droids are to be added later
   Info:
     - Old games 1.1 migration not implemented.
-    - Alpha version.
     - Creep is formed only on Nauvis.
     - Rampant 3.2.0+ is in dead state. Considering focus on noRampant playthrough now.
 ---------------------------------------------------------------------------------------------------

@@ -101,51 +101,7 @@ function bot_behavior.search_zones_near(r)
         mbot.searching_field.final = true
     end
 end
---[[
-function bot_behavior.search_zones_legacy(r)
-    local offsets_list = {
-        {x = 0, y = 0},
-        {x = 0, y = -1},
-        {x = 1, y = -1},
-        {x = 1, y = 0},
-        {x = 1, y = 1},
-        {x = 0, y = 1},
-        {x = -1, y = 1},
-        {x = -1, y = 0},
-        {x = -1, y = -1}
-    }
-    local mbot = storage.wm_creep_miners[r]
-    local n = mbot.searching_field.n
-    local f_pos = {
-        x = math.floor((mbot.pos_found_tiles.x)/8) + offsets_list[n].x,
-        y = math.floor((mbot.pos_found_tiles.y)/8) + offsets_list[n].y
-        }
-    local our_field = storage.wm_cr_fields_meta[f_pos.x .. ":" .. f_pos.y]
-    if not our_field then
-        return f_pos
-    end
-    if our_field.size_now > 0 and (((1 + #our_field.bots)*4) <= our_field.size_now or
-     (mbot.searching_field.final and #our_field.bots < our_field.size_now))
-      then
-        table.insert(our_field.bots, r)
-        table.insert(mbot.field, f_pos)
-        mbot.activity = bot_behavior.bot_actions.idle
-        return
-    else
-        if mbot.searching_field.n < #offsets_list then
-            mbot.searching_field.n = mbot.searching_field.n + 1
-        elseif mbot.searching_field.final then
-            mbot.searching_field = nil
-            mbot.activity = bot_behavior.bot_actions.home
-            return
-        else
-            mbot.searching_field.n = 1
-            mbot.searching_field.final = true
-        end
-        return bot_behavior.search_zones_legacy(r)
-    end
-end
-]]
+
 local function gg_fuel_items()
     if not fuel_items then
         fuel_items = {}

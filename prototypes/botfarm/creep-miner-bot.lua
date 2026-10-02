@@ -16,7 +16,7 @@ local function robotAnimation(sheet, tint, scale)
   return {
     layers = {
       {
-          filename = BOTPATH .. "hr-" .. sheet .. ".png",
+          filename = BOTPATH .. "hr-" .. sheet .. "_green.png",
           width = 160,
           height = 160,
           --tint = tint,
