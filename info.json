@@ -1,14 +1,14 @@
 {
 	"name": "Warmonger",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"title": "Warmonger",
 	"description": "Creep from Krastorio without entire K2, but with many new creep features. Enhanced mechanics with Bob Enemies",
 	"author": "garrotte",
 	"homepage" : "https://mods.factorio.com/mod/Warmonger",
-	"factorio_version": "2.0",
+	"factorio_version": "2.1",
 	"dependencies":
 	[
-		"base >= 2.0.40",
-		"? bobenemies >= 2.0.3"
+		"base >= 2.1.20",
+		"? bobenemies >= 3.0.0"
 	]
 }

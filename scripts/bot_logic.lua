@@ -106,7 +106,7 @@ local function gg_fuel_items()
     if not fuel_items then
         fuel_items = {}
         for _, item in pairs (prototypes.get_item_filtered{{ filter = 'fuel-value', comparison = '>', value = '1'}}) do
-            if item.fuel_category == "chemical" then
+            if item.fuel_categories == {"chemical"} then
                 tinsert(fuel_items, {name = item.name, value = item.fuel_value * 0.0008})
             end
         end

@@ -33,7 +33,7 @@ data:extend({
     type = "recipe",
     name = "wm-droid-1",
     enabled = false,
-    category = "advanced-crafting",
+    categories = {"advanced-crafting"},
     energy_required = 10,
     ingredients =
     {

@@ -202,7 +202,7 @@ data:extend(
 		icon = "__Warmonger__/graphics/icons/items/mud_recycle.png",
 		icon_size = 32,
 		--icon_mipmaps = 4,
-		category = "chemistry",
+		categories = {"chemistry"},
 		subgroup = "fluid-recipes",
 		energy_required = 4,
 		emissions_multiplier = 1.5,
@@ -241,7 +241,7 @@ if brd_cost > 0 then
 	{
 		type = "recipe",
 		name = "kr-biomass-growing",
-		category = "bioprocessing",
+		categories = {"bioprocessing"},
 		energy_required = 10 + (brd_cost + 2) * 10,
 		emissions_multiplier = 2,
 		enabled = false,

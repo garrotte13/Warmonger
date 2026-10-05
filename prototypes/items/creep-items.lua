@@ -18,7 +18,7 @@ local bioremains = {
 }
 
 if not mods["bobenemies"] then
-bioremains.fuel_category = "chemical"
+bioremains.fuel_categories = {"chemical"}
 bioremains.fuel_value = "1MJ"
 bioremains.fuel_emissions_multiplier = 2.0
 bioremains.fuel_acceleration_multiplier = 0.9

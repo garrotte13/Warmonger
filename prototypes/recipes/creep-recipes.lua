@@ -1,10 +1,10 @@
 local brd_cost = settings.startup["wm-BiomassToBitersReseach"].value
-local ochre_crafting_categories = "advanced-crafting"
+local ochre_crafting_categories = {"advanced-crafting"}
 local ochre_ingredients
 local ochre_tech
 if mods["bobplates"] then
 	ochre_tech = "bob-chemical-processing-1"
-	ochre_crafting_categories = "bob-chemical-furnace"
+	ochre_crafting_categories = {"bob-chemical-furnace"}
 	ochre_ingredients =	{
 		{type = "item", name = "stone", amount = 1},
 		{type = "item", name = "iron-ore", amount = 3},
@@ -25,7 +25,7 @@ data:extend(
 		type = "recipe",
 		name = "wm-ochre",
 		energy_required = 8,
-		category = ochre_crafting_categories,
+		categories = ochre_crafting_categories,
 		--emissions_multiplier = 2,
 		enabled = false,
 		ingredients = ochre_ingredients,
@@ -38,7 +38,7 @@ data:extend(
 		type = "recipe",
 		name = "biters-research-data",
 		energy_required = 5,
-		category = "advanced-crafting",
+		categories = {"advanced-crafting"},
 		emissions_multiplier = 2,
 		enabled = false,
 		ingredients =

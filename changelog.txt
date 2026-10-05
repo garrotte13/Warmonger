@@ -2,14 +2,20 @@
 Version: 2.0.0
 Date: 2026-10-02
   Major Features:
-    - Factorio2.0 compatibility. Enemy bases decorations replaced with creep.
-    - Corrosion is removed in default mode. New damage system under consideration. Strike back counteraction works.
-    - Creep processors are removed. Need new way to remove creep and get some products.
-    - Early game droids for creep gathering. Advanced droids are to be added later
+    - Factorio2.0 compatibility.
+    - Enemy bases decorations replaced with creep.
+    - Corrosion is removed in default mode. Can't build on creep instead. Strike back counteraction works with less damage, no clouds so far.
+    - Creep processors are removed.
+    - Early game droids for creep gathering. Graphics from robot army. Advanced droids are to be added later.
+    - Set zero if you don't want military science recipe include biomass, but what will be your goal?
   Info:
-    - Old games 1.1 migration not implemented.
+    - Old games 1.1 migration is not implemented. And no migration to 2.1 probably will be.
+    - AlienBiome breaks gameplay, so I still don't recommend it. I don't have time to fix everything that mod corrupts, but there is a mod addressing it.
     - Creep is formed only on Nauvis.
-    - Rampant 3.2.0+ is in dead state. Considering focus on noRampant playthrough now.
+    - Early game droids are deployed manually. Need some fuel and ochre in your inventory.
+    - Bob enemies integration. Recommended military science cost 1..2 with Bob and 3..4 without Bob.
+    - Let me know what you think about it. Maybe other modpacks to integrate biomass use and ochre recipe with?
+    - I don't play with SA, doesn't look interesting for me now.
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.24
 Date: 2023-08-?
