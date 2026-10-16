@@ -203,6 +203,7 @@ data:extend(
     },
     always_include_tiles = true,
     show_in_library = false,
+    skip_fog_of_war = true
   },
 
 	{
